@@ -1,0 +1,2 @@
+IDSection,IDComponent,IDComponentKind,IDMacroKind,Name,Value1,Value2,Parassite,IDUnit1,IDUnit2,IDUnit3,TolerancePos,ToleranceNeg,TotalPinNumber,X,Y,Z,Rotation,Shape,PosInSection,PosInSectionCap,State,Statistics,Diagnosis,SingleMultiple,RParal,CParal,LParal,Group,Xdim,Ydim,Position,Permissions,Tolerance2,AdditionalInfo
+0,0,0,0,<unknown>,0.0,0.0,0.0,0,0,0,0.0,0.0,0,0.0,0.0,0.0,0.0, ,0,0,0,0, , ,-1.0,0.0,0.0,0,0.0,0.0,0,0,0.0,

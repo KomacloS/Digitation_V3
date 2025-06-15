@@ -1,0 +1,186 @@
+IDUnit,Name,Enumerators
+0,<unknown>,"<R><ITEM Name=""&lt;unknown&gt;"" IsEnum=""0""/></R>"
+1,F,"<R><ITEM Name=""Farad"" IsEnum=""0""/></R>"
+2,H,"<R><ITEM Name=""Henry"" IsEnum=""0""/></R>"
+3,O,"<R><ITEM Name=""Ohm"" IsEnum=""0""/></R>"
+4,V,"<R><ITEM Name=""Volt"" IsEnum=""0""/></R>"
+5,s,"<R><ITEM Name=""Second"" IsEnum=""0""/></R>"
+6,A,"<R><ITEM Name=""Ampere"" IsEnum=""0""/></R>"
+7,Hz,"<R><ITEM Name=""Hertz"" IsEnum=""0""/></R>"
+8,m,"<R><ITEM Name=""Meter"" IsEnum=""0""/></R>"
+9,Nr,"<R><ITEM Name=""Number"" IsEnum=""0""/></R>"
+10,<MeasureMode>,"<R><ITEM Name=""{ Measure Mode }"" IsEnum=""1""/><E N=""AUTO"" V=""0""/><E N=""DC STANDARD""/><E N=""DC SMALL VALUE""/><E N=""DC DOUBLE PRECISION""/><E N=""AC""/><E N=""HIGH VALUE""/></R>"
+11,<ErrorMode>,"<R><ITEM Name=""{ Error Mode }"" IsEnum=""1""/><E N=""DEFAULT"" V=""-1""/><E N=""SET ERROR"" V=""1""/><E N=""NO ERROR"" V=""0""/><E N=""FORCE ERROR"" V=""2""/><E N=""CLEAR ALL"" V=""3""/></R>"
+12,<RecycleMode>,"<R><ITEM Name=""{ Recycle Mode }"" IsEnum=""1""/><E N=""DEFAULT"" V=""-1""/><E N=""AVERAGE""/><E N=""PROGRAMMED""/><E N=""POSITIVE""/><E N=""HIGHEST""/><E N=""LOWEST""/><E N=""DIFFERENCE""/></R>"
+13,<UsePin>,"<R><ITEM Name=""{ Use Pin }"" IsEnum=""1""/><E N=""AUTO"" V=""0""/><E N=""PIN1""/><E N=""PIN2""/></R>"
+14,<OnOff>,"<R><ITEM Name=""{ On / Off }"" IsEnum=""1""/><E N=""ON"" V=""0""/><E N=""OFF"" V=""1""/></R>"
+15,<YesNo>,"<R><ITEM Name=""{ Yes / No }"" IsEnum=""1""/><E N=""YES"" V=""1""/><E N=""NO"" V=""0""/></R>"
+16,<TrueFalse>,"<R><ITEM Name=""{ True / False }"" IsEnum=""1""/><E N=""TRUE"" V=""1""/><E N=""FALSE"" V=""0""/></R>"
+17,<InShortWith>,"<R><ITEM Name=""{ In Short With }"" IsEnum=""1""/><E N=""NONE""/><E N=""DR1""/><E N=""DR2""/></R>"
+18,<PositiveNegative>,"<R><ITEM Name=""{ Positive / Negative }"" IsEnum=""1""/><E N=""POSITIVE"" V=""2""/><E N=""NEGATIVE"" V=""1""/></R>"
+19,<DR1Mode>,"<R><ITEM Name=""{ DR1 Mode }"" IsEnum=""1""/><E N=""CURRENT GENERATOR""/><E N=""VOLTAGE GENERATOR""/><E N=""INDUCTOR TEST""/></R>"
+20,<PulseNoPulse>,"<R><ITEM Name=""{ Pulse / No Pulse }"" IsEnum=""1""/><E N=""PULSE"" V=""1""/><E N=""NO PULSE"" V=""0""/></R>"
+21,<PULMode>,"<R><ITEM Name=""{ PUL Mode }"" IsEnum=""1""/><E N=""NOT CONNECTED""/><E N=""UP""/><E N=""DOWN""/><E N=""EXTERNAL""/></R>"
+22,<GUAFollow>,"<R><ITEM Name=""{ GUA Follow }"" IsEnum=""1""/><E N=""DR1"" V=""1""/><E N=""EXTERNAL"" V=""3""/></R>"
+23,<ViewMode>,"<R><ITEM Name=""{ View Mode }"" IsEnum=""1""/><E N=""NONE""/><E N=""VIEW""/><E N=""REPEAT""/><E N=""VIEW and REPEAT""/></R>"
+24,<OpenClose>,"<R><ITEM Name=""{ Open / Close }"" IsEnum=""1""/><E N=""OPEN"" V=""1""/><E N=""CLOSE"" V=""0""/></R>"
+25,<HighLow>,"<R><ITEM Name=""{ High / Low }"" IsEnum=""1""/><E N=""HIGH"" V=""1""/><E N=""LOW"" V=""0""/></R>"
+26,<SyncAsync>,"<R><ITEM Name=""{ Synchronous / Asynchronous }"" IsEnum=""1""/><E N=""Synchronous"" V=""0""/><E N=""Asynchronous"" V=""1""/></R>"
+27,<FemtoBehavior>,"<R><ITEM Name=""{ Measure / Learn }"" IsEnum=""1""/><E N=""Measure"" V=""0""/><E N=""Learn"" V=""1""/></R>"
+28,fF,"<R><ITEM Name=""femtoFarad"" IsEnum=""0""/></R>"
+29,<CapReadBehavior>,"<R><ITEM Name=""{ FemtoOnly / LamOnly / Autorange / ReadParasite }"" IsEnum=""1""/><E N=""FemtoOnly"" V=""0""/><E N=""LamOnly"" V=""1""/><E N=""Autorange"" V=""2""/><E N=""ReadParasite"" V=""3""/><E N=""NoMeasure"" V=""4""/></R>"
+30,W,"<R><ITEM Name=""Watt"" IsEnum=""0""/></R>"
+31,<ACLTestResult>,"<R><ITEM Name=""{ ACL Test Result }"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""Test Result"" V=""1""/><E N=""Force Pass"" V=""0""/><E N=""Force Fail"" V=""2""/><E N=""Force Skip"" V=""3""/></R>"
+32,<ACLMeasType>,"<R><ITEM Name=""{ ACL Measure Type }"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""Normal"" V=""0""/><E N=""Average"" V=""1""/><E N=""RecOnError"" V=""2""/><E N=""Maximum"" V=""3""/><E N=""Minimum"" V=""4""/><E N=""PeakToPeak"" V=""6""/><E N=""Not Mounted"" V=""7""/><E N=""Short"" V=""8""/></R>"
+33,<ACLMeasMode>,"<R><ITEM Name=""{ ACL Measure Mode }"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""DC_Active"" V=""0""/><E N=""DC_Passive"" V=""1""/><E N=""AC_Passive"" V=""2""/><E N=""Auto"" V=""3""/></R>"
+34,<ACLWire>,"<R><ITEM Name=""{ ACL Wire }"" IsEnum=""1""/><E N=""Auto"" V=""-1""/><E N=""2 Wire"" V=""2""/><E N=""3 Wire"" V=""3""/><E N=""4 Wire"" V=""4""/><E N=""6 Wire"" V=""6""/></R>"
+35,<ACLJunction>,"<R><ITEM Name=""{ ACL Junction }"" IsEnum=""1""/><E N=""Direct"" V=""0""/><E N=""Invert"" V=""1""/></R>"
+36,<ACL_FAN_View>,"<R><ITEM Name=""{ ACL FAN ViewMode }"" IsEnum=""1""/><E N=""Current"" V=""0""/><E N=""Phase"" V=""1""/><E N=""CapPar"" V=""2""/><E N=""ResPar"" V=""3""/><E N=""IndPar"" V=""4""/><E N=""CapSer"" V=""5""/><E N=""ResSer"" V=""6""/><E N=""IndSer"" V=""7""/></R>"
+37,<ACL_FAN_Scope>,"<R><ITEM Name=""{ ACL FAN ScopeMode }"" IsEnum=""1""/><E N=""Time"" V=""0""/><E N=""FFT"" V=""1""/><E N=""I Module"" V=""2""/><E N=""I Phase"" V=""3""/></R>"
+38,Dg,"<R><ITEM Name=""Degree"" IsEnum=""0""/></R>"
+39,<ACL_IND_MeasMode>,"<R><ITEM Name=""{ ACL IND Measure Mode }"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""AC_Passive"" V=""2""/><E N=""Auto"" V=""3""/></R>"
+40,<ACL_CAP_MeasMode>,"<R><ITEM Name=""{ ACL CAP Measure Mode }"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""DC_Active"" V=""0""/><E N=""AC_Passive"" V=""2""/><E N=""Auto"" V=""3""/><E N=""Femto"" V=""4""/></R>"
+41,<ACLWire_NO_DP>,"<R><ITEM Name=""{ ACL Wire NoDP }"" IsEnum=""1""/><E N=""Auto"" V=""-1""/><E N=""2 Wire"" V=""2""/><E N=""3 Wire"" V=""3""/></R>"
+42,<ACLBJT_Technology>,"<R><ITEM Name=""{ ACL BJT Technology }"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""BJT NPN"" V=""0""/><E N=""BJT PNP"" V=""1""/><E N=""MOS N"" V=""2""/><E N=""MOS P"" V=""3""/><E N=""Auto"" V=""4""/></R>"
+43,<ACLBJT_TestMode>,"<R><ITEM Name=""{ ACL BJT TestMode }"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""On-Off"" V=""0""/><E N=""On"" V=""1""/><E N=""Off"" V=""2""/></R>"
+44,<ACL_Logic_Function>,"<R><ITEM Name=""{ ACL Logic Function }"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""2NAND"" V=""0""/><E N=""2NOR"" V=""1""/><E N=""2AND"" V=""2""/><E N=""2OR"" V=""3""/><E N=""2XOR"" V=""4""/><E N=""2XNOR"" V=""5""/><E N=""3NAND"" V=""6""/><E N=""3NOR"" V=""7""/><E N=""3AND"" V=""8""/><E N=""3OR"" V=""9""/><E N=""3XOR"" V=""10""/><E N=""3XNOR"" V=""11""/><E N=""NOT"" V=""12""/><E N=""NE_BUF"" V=""13""/><E N=""E_BUF"" V=""14""/><E N=""NE_NBUF"" V=""15""/><E N=""EN_BUF"" V=""16""/><E N=""BUF243"" V=""243""/><E N=""BUF245"" V=""245""/></R>"
+45,<ACL_Logic_Family>,"<R><ITEM Name=""{ ACL Logic Family }"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""Standard"" V=""0""/><E N=""L"" V=""1""/><E N=""S"" V=""3""/><E N=""H"" V=""5""/><E N=""LS"" V=""9""/><E N=""AS"" V=""11""/><E N=""ALS"" V=""13""/><E N=""F"" V=""15""/><E N=""C"" V=""17""/><E N=""HC"" V=""22""/><E N=""HCT"" V=""26""/><E N=""AHC"" V=""28""/><E N=""AHCT"" V=""32""/><E N=""FCT"" V=""34""/><E N=""AC"" V=""36""/><E N=""ACT"" V=""40""/><E N=""ACQ"" V=""42""/><E N=""ACTQ"" V=""46""/><E N=""ABT"" V=""48""/><E N=""GTL"" V=""50""/><E N=""GTLP"" V=""52""/><E N=""ALB"" V=""54""/><E N=""LV"" V=""56""/><E N=""LVC"" V=""63""/><E N=""LVCH"" V=""69""/><E N=""ALVC"" V=""71""/><E N=""LVT"" V=""75""/><E N=""ALVCR"" V=""77""/><E N=""ALVCH"" V=""80""/><E N=""LCX"" V=""83""/><E N=""VCX"" V=""86""/></R>"
+46,<ACL_Transf_MeasMode>,"<R><ITEM Name=""{ ACL Transf Measure Mode }"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""Current"" V=""0""/><E N=""Voltage"" V=""1""/></R>"
+47,<ACL_Triac_MeasMode>,"<R><ITEM Name=""{ ACL Triac Measure Mode }"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""On"" V=""0""/><E N=""Off"" V=""1""/><E N=""Inv_On"" V=""2""/><E N=""Inv_Off"" V=""3""/></R>"
+48,<ACL_Opto_MeasMode>,"<R><ITEM Name=""{ ACL Opto Measure Mode }"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""ON"" V=""0""/><E N=""OFF"" V=""1""/><E N=""None"" V=""2""/></R>"
+49,<ModuleType>,"<R><ITEM Name=""{ Module Type }"" IsEnum=""1""/><E N=""NONE"" V=""0""/><E N=""VL"" V=""1""/><E N=""VBS"" V=""2""/><E N=""VL_DYNAMIC"" V=""3""/></R>"
+50,<PowerModeType>,"<R><ITEM Name=""{ Power Mode Type }"" IsEnum=""1""/><E N=""NONE"" V=""0""/><E N=""DONTCARE"" V=""1""/><E N=""POWERED"" V=""2""/><E N=""POWERON"" V=""3""/><E N=""POWEROFF"" V=""4""/></R>"
+51,<ACLJunctionZener>,"<R><ITEM Name=""{ ACL Junction Zener}"" IsEnum=""1""/><E N=""Direct"" V=""0""/><E N=""Zener"" V=""1""/></R>"
+52,<ACLBBTMeasMode>,"<R><ITEM Name=""{ ACL BBT MeasMode}"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""Femto"" V=""0""/><E N=""ACL"" V=""1""/><E N=""Autorange"" V=""2""/><E N=""Parasite"" V=""3""/><E N=""NoMeasure"" V=""4""/></R>"
+53,<ACLCalibrate>,"<R><ITEM Name=""{ ACL Calibrate}"" IsEnum=""1""/><E N=""FixedMeasure"" V=""0""/><E N=""Calibrate"" V=""1""/><E N=""AutoExitCalibrate"" V=""2""/></R>"
+54,<ACLOpenFixMode>,"<R><ITEM Name=""{ ACL OpenFix TestMode}"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""RMS Low"" V=""0""/><E N=""AC Low"" V=""1""/><E N=""RMS High"" V=""2""/><E N=""AC High"" V=""3""/></R>"
+55,<ACLParametricFNode>,"<R><ITEM Name=""{ ACL Parametric FNode}"" IsEnum=""1""/><E N=""Default"" V=""0""/><E N=""ViewMode"" V=""1""/><E N=""Resistor"" V=""2""/><E N=""Capacitor"" V=""3""/><E N=""Inductor"" V=""4""/><E N=""DirectJunction"" V=""5""/><E N=""InvertJunction"" V=""6""/></R>"
+56,<MsgBoxIcon>,"<R><ITEM Name=""{MsgBox Icon}"" IsEnum=""1""/><E N=""Critical"" V=""16""/><E N=""Question"" V=""32""/><E N=""Exclamation"" V=""48""/><E N=""Information"" V=""64""/></R>"
+57,<MsgBoxButton>,"<R><ITEM Name=""{MsgBox Button}"" IsEnum=""1""/><E N=""OK"" V=""0""/><E N=""OkCancel"" V=""1""/><E N=""AbortRetryIgnore"" V=""2""/><E N=""YesNoCancel"" V=""3""/><E N=""YesNo"" V=""4""/><E N=""RetryCancel"" V=""5""/></R>"
+58,<MsgBoxDefButton>,"<R><ITEM Name=""{MsgBox DefaultButton}"" IsEnum=""1""/><E N=""Button1"" V=""0""/><E N=""Button2"" V=""256""/><E N=""Button3"" V=""512""/></R>"
+59,<ACL_S20_MMD>,"<R><ITEM Name=""{S20 MMD}"" IsEnum=""1""/><E N=""V1"" V=""1""/><E N=""V4"" V=""2""/><E N=""R"" V=""3""/><E N=""N"" V=""4""/><E N=""D"" V=""5""/><E N=""C"" V=""6""/></R>"
+60,<ACL_S20_DRM>,"<R><ITEM Name=""{S20 DRM}"" IsEnum=""1""/><E N=""I"" V=""1""/><E N=""V"" V=""2""/><E N=""L"" V=""3""/></R>"
+61,<ACL_S20_VIM>,"<R><ITEM Name=""{S20 VIM}"" IsEnum=""1""/><E N=""V"" V=""1""/><E N=""O"" V=""2""/><E N=""F"" V=""3""/><E N=""A"" V=""4""/><E N=""L"" V=""5""/><E N=""H"" V=""6""/><E N=""T"" V=""7""/></R>"
+62,<ACL_S20_PUM>,"<R><ITEM Name=""{S20 PUM}"" IsEnum=""1""/><E N=""N"" V=""1""/><E N=""U"" V=""2""/><E N=""D"" V=""3""/><E N=""E"" V=""4""/></R>"
+63,<ACL_S20_POP>,"<R><ITEM Name=""{S20 POP}"" IsEnum=""1""/><E N=""N"" V=""1""/><E N=""+"" V=""2""/><E N=""-"" V=""3""/><E N=""*"" V=""4""/><E N=""/"" V=""5""/><E N=""!"" V=""6""/><E N=""^"" V=""7""/></R>"
+64,<ACL_S20_SCA>,"<R><ITEM Name=""{S20 SCA}"" IsEnum=""1""/><E N=""H"" V=""1""/><E N=""L"" V=""2""/></R>"
+65,<ACL_Fnode_Scale>,"<R><ITEM Name=""{ACL FNode Scale}"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""Logarithmic"" V=""0""/><E N=""Linear"" V=""1""/></R>"
+66,<ACL_OpAmp_View>,"<R><ITEM Name=""{ACL OpAmp View}"" IsEnum=""1""/><E N=""Output"" V=""0""/><E N=""Input Pos."" V=""1""/><E N=""Input Neg."" V=""2""/></R>"
+67,DgC,"<R><ITEM Name=""DegreeC"" IsEnum=""0""/></R>"
+68,DgC/s,"<R><ITEM Name=""DegreeC/s"" IsEnum=""0""/></R>"
+69,mm/s,"<R><ITEM Name=""mm/s"" IsEnum=""0""/></R>"
+70,<PowerOnOff>,"<R><ITEM Name=""{ PwOn / Off }"" IsEnum=""1""/><E N=""OFF"" V=""0""/><E N=""ON"" V=""1""/></R>"
+71,<ACL_GateViewScope>,"<R><ITEM Name=""{ACL Gate View}"" IsEnum=""1""/><E N=""Ch1"" V=""1""/><E N=""Ch2"" V=""2""/><E N=""Ch3"" V=""3""/><E N=""Ch4"" V=""4""/></R>"
+72,<ACL_Kelvin_Wire>,"<R><ITEM Name=""{ ACL Kelvin Wire }"" IsEnum=""1""/><E N=""Auto"" V=""-1""/><E N=""2 Wire"" V=""2""/><E N=""4 Wire"" V=""4""/></R>"
+73,DgF,"<R><ITEM Name=""DegreeF"" IsEnum=""0""/></R>"
+74,<OnOffHold>,"<R><ITEM Name=""{ On / Off / Hold}"" IsEnum=""1""/><E N=""HOLD"" V=""0""/><E N=""ON"" V=""1""/><E N=""OFF"" V=""2""/></R>"
+75,W/s,"<R><ITEM Name=""W/s"" IsEnum=""0""/></R>"
+76,<LedCheckColorRef>,"<R><ITEM Name=""{ LedCheck Colors }"" IsEnum=""1""/><E N=""OFF"" V=""0""/><E N=""Red"" V=""1""/><E N=""Green"" V=""2""/><E N=""Blue"" V=""3""/><E N=""Yellow"" V=""4""/><E N=""Orange"" V=""5""/><E N=""White"" V=""6""/></R>"
+77,<LedCheckRange>,"<R><ITEM Name=""{ LedCheck RangeCapture }"" IsEnum=""1""/><E N=""Low"" V=""1""/><E N=""Medium"" V=""2""/><E N=""High"" V=""3""/><E N=""Super"" V=""4""/><E N=""Ultra"" V=""5""/><E N=""UserRange"" V=""6""/></R>"
+78,<LedCheckMeasView>,"<R><ITEM Name=""{ LedCheck MeasView }"" IsEnum=""1""/><E N=""HUE"" V=""1""/><E N=""Saturation"" V=""2""/><E N=""Intensity"" V=""3""/><E N=""X"" V=""4""/><E N=""Y"" V=""5""/></R>"
+79,<DRA_DRB_Mode>,"<R><ITEM Name=""{ DRA DRB Mode }"" IsEnum=""1""/><E N=""HOLD"" V=""0""/><E N=""DC"" V=""1""/><E N=""SINE"" V=""2""/><E N=""TRI"" V=""3""/><E N=""RECT"" V=""4""/><E N=""OFF"" V=""5""/></R>"
+80,<DRC_Mode>,"<R><ITEM Name=""{ DRC Mode }"" IsEnum=""1""/><E N=""HOLD"" V=""0""/><E N=""DC"" V=""1""/><E N=""OFF"" V=""2""/></R>"
+81,<AGND_Mode>,"<R><ITEM Name=""{ AGND Mode }"" IsEnum=""1""/><E N=""HOLD"" V=""0""/><E N=""ON"" V=""1""/><E N=""OFF"" V=""2""/></R>"
+82,<IMM_Mode>,"<R><ITEM Name=""{ IMM Mode }"" IsEnum=""1""/><E N=""OFF"" V=""0""/><E N=""AVERAGE_V"" V=""1""/><E N=""MAX_V"" V=""2""/><E N=""MIN_V"" V=""3""/><E N=""PEAK_V"" V=""4""/><E N=""PP_V"" V=""5""/><E N=""RMS_V"" V=""6""/><E N=""OFFSET_V"" V=""7""/></R>"
+83,<SCounter_Mode>,"<R><ITEM Name=""{SCounter Mode }"" IsEnum=""1""/><E N=""OFF"" V=""0""/><E N=""FREQ"" V=""1""/><E N=""PERIOD"" V=""2""/><E N=""TINT_A"" V=""3""/><E N=""TINT_AB"" V=""4""/><E N=""COUNT"" V=""5""/><E N=""COUNT_B"" V=""6""/><E N=""COUNT_GATE"" V=""7""/></R>"
+84,<DRA_Line>,"<R><ITEM Name=""{ DRA Line }"" IsEnum=""1""/><E N=""NONE"" V=""0""/><E N=""L1"" V=""1""/><E N=""L2"" V=""2""/><E N=""L8"" V=""8""/></R>"
+85,<DRB_Line>,"<R><ITEM Name=""{ DRB Line }"" IsEnum=""1""/><E N=""NONE"" V=""0""/><E N=""L1"" V=""1""/><E N=""L2"" V=""2""/><E N=""L3"" V=""3""/><E N=""L4"" V=""4""/><E N=""L5"" V=""5""/><E N=""L7"" V=""7""/></R>"
+86,<DRC_Line>,"<R><ITEM Name=""{ DRC Line }"" IsEnum=""1""/><E N=""NONE"" V=""0""/><E N=""L1"" V=""1""/><E N=""L2"" V=""2""/><E N=""L4"" V=""4""/><E N=""L6"" V=""6""/></R>"
+87,<AGND_Line>,"<R><ITEM Name=""{ AGND Line }"" IsEnum=""1""/><E N=""NONE"" V=""0""/><E N=""L1"" V=""1""/><E N=""L2"" V=""2""/><E N=""L3"" V=""3""/><E N=""L4"" V=""4""/><E N=""L5"" V=""5""/><E N=""L6"" V=""6""/><E N=""L7"" V=""7""/><E N=""L8"" V=""8""/></R>"
+88,<Pos_Line>,"<R><ITEM Name=""{ Pos Line }"" IsEnum=""1""/><E N=""NONE"" V=""0""/><E N=""L1"" V=""1""/><E N=""L2"" V=""2""/><E N=""L4"" V=""4""/><E N=""L6"" V=""6""/><E N=""GND"" V=""7""/></R>"
+89,<Neg_Line>,"<R><ITEM Name=""{ Neg Line }"" IsEnum=""1""/><E N=""NONE"" V=""0""/><E N=""L1"" V=""1""/><E N=""L2"" V=""2""/><E N=""L3"" V=""3""/><E N=""L4"" V=""4""/><E N=""L5"" V=""5""/><E N=""L7"" V=""7""/><E N=""GND"" V=""8""/></R>"
+90,<A_Line>,"<R><ITEM Name=""{ A Line }"" IsEnum=""1""/><E N=""NONE"" V=""0""/><E N=""L4"" V=""4""/><E N=""L6"" V=""6""/></R>"
+91,<B_Line>,"<R><ITEM Name=""{ B Line }"" IsEnum=""1""/><E N=""NONE"" V=""0""/><E N=""L2"" V=""2""/><E N=""L8"" V=""8""/></R>"
+92,<SignalKind>,"<R><ITEM Name=""{ SignalKind }"" IsEnum=""1""/><E N=""UNK"" V=""0""/><E N=""GND"" V=""1""/><E N=""PWR"" V=""2""/><E N=""NC"" V=""3""/><E N=""MIX"" V=""4""/><E N=""DIG"" V=""5""/><E N=""ANA"" V=""6""/></R>"
+93,<ACL_CRY_MeasMode>,"<R><ITEM Name=""{ ACL CRY Measure Mode }"" IsEnum=""1""/><E N=""Default"" V=""-1""/><E N=""ACLAM"" V=""0""/><E N=""Femto"" V=""1""/></R>"
+94,<LedCheckCaptureType>,"<R><ITEM Name=""{ LedCheck Capture Type }"" IsEnum=""1""/><E N=""None"" V=""0""/><E N=""Range"" V=""1""/><E N=""FactorPWM"" V=""2""/></R>"
+95,<LedCheckUserType>,"<R><ITEM Name=""{ LedCheck User Type }"" IsEnum=""1""/><E N=""None"" V=""0""/><E N=""Gain"" V=""1""/><E N=""Software"" V=""2""/><E N=""XYOffsets"" V=""3""/></R>"
+96,<PowerSupplyType>,"<R><ITEM Name=""{ Power Supply Type }"" IsEnum=""1""/><E N=""Auto"" V=""0""/><E N=""Int"" V=""1""/><E N=""Ext"" V=""2""/></R>"
+97,<TransistorDeviceKind>,"<R><ITEM Name=""{ Transistor Device Kind }"" IsEnum=""1""/><E N=""TRANSISTOR_N"" V=""0""/><E N=""TRANSISTOR_P"" V=""1""/><E N=""MOS_N"" V=""2""/><E N=""MOS_P"" V=""3""/></R>"
+98,<ACL_Relay2_Wire>,"<R><ITEM Name=""{ ACL Relay2 Wire }"" IsEnum=""1""/>
+<E N=""Auto"" V=""-1"" W=""1""/>
+<E N=""4 Wire"" V=""0"" W=""1""/>
+<E N=""6 Wire"" V=""1"" W=""1""/>
+</R>"
+99,<LS_ModePW>,"<R><ITEM Name=""{ LS_ModePW }"" IsEnum=""1""/>
+<E N=""Standard"" V=""0"" W=""1""/>
+<E N=""Ext_HV"" V=""1"" W=""1""/>
+<E N=""None"" V=""2"" W=""1""/>
+</R>"
+100,<PWSelect>,"<R><ITEM Name=""{ PWSelect }"" IsEnum=""1""/>
+<E N=""AUTO"" V=""0"" W=""1""/>
+<E N=""PW1"" V=""1"" W=""1""/>
+<E N=""PW2"" V=""2"" W=""1""/>
+<E N=""PW3"" V=""3"" W=""1""/>
+<E N=""PW4"" V=""4"" W=""1""/>
+<E N=""PW5"" V=""5"" W=""1""/>
+<E N=""PW6"" V=""6"" W=""1""/>
+<E N=""PW7"" V=""7"" W=""1""/>
+<E N=""PW8"" V=""8"" W=""1""/>
+<E N=""PWEXT"" V=""9"" W=""1""/>
+</R>"
+101,<PWSelect_Remove>,"<R><ITEM Name=""{ PWSelect_Remove }"" IsEnum=""1""/>
+<E N=""AUTO"" V=""0"" W=""1""/>
+<E N=""PW1"" V=""1"" W=""1""/>
+<E N=""PW2"" V=""2"" W=""1""/>
+<E N=""PW3"" V=""3"" W=""1""/>
+<E N=""PW4"" V=""4"" W=""1""/>
+<E N=""PW5"" V=""5"" W=""1""/>
+<E N=""PW6"" V=""6"" W=""1""/>
+<E N=""PW7"" V=""7"" W=""1""/>
+<E N=""PW8"" V=""8"" W=""1""/>
+<E N=""PWEXT"" V=""9"" W=""1""/>
+<E N=""ALL"" V=""10"" W=""1""/>
+</R>"
+102,<ApplyMode>,"<R><ITEM Name=""{ ApplyMode }"" IsEnum=""1""/>
+<E N=""Prepare"" V=""0"" W=""1""/>
+<E N=""On"" V=""1"" W=""1""/>
+<E N=""AllOn"" V=""2"" W=""1""/>
+</R>"
+103,<ConnectionMode>,"<R><ITEM Name=""{ ConnectionMode }"" IsEnum=""1""/>
+<E N=""Default"" V=""-1"" W=""1""/>
+<E N=""Fixed"" V=""0"" W=""1""/>
+<E N=""Flying"" V=""1"" W=""1""/>
+</R>"
+104,<Fly_Mode>,"<R><ITEM Name=""{ FlyMode }"" IsEnum=""1""/>
+<E N=""Add"" V=""0"" W=""1""/>
+<E N=""Remove"" V=""1"" W=""1""/>
+</R>"
+106,<FlyPODOnProbe>,"<R><ITEM Name=""{ FlyPODOnProbe }"" IsEnum=""1""/>
+<E N=""OnProbe1"" V=""0"" W=""1""/>
+<E N=""OnProbe2"" V=""1"" W=""1""/>
+<E N=""OnProbe3"" V=""2"" W=""1""/>
+<E N=""OnProbe4"" V=""3"" W=""1""/>
+</R>"
+105,<LedSensorCheckMeasView>,"<R><ITEM Name=""{ LedSensorCheck MeasView }"" IsEnum=""1""/>
+<E N=""HUE"" V=""1""/>
+<E N=""Saturation"" V=""2""/>
+<E N=""Intensity"" V=""3""/>
+<E N=""x"" V=""4""/>
+<E N=""y"" V=""5""/>
+<E N=""Watt"" V=""6""/>
+<E N=""Wave Length"" V=""7""/>
+<E N=""CCT"" V=""8""/>
+<E N=""Delta E"" V=""9""/>
+<E N=""RGB"" V=""10""/>
+<E N=""Red"" V=""11""/>
+<E N=""Green"" V=""12""/>
+<E N=""Blue"" V=""13""/>
+<E N=""XYZ"" V=""14""/>
+<E N=""X"" V=""15""/>
+<E N=""Y"" V=""16""/>
+<E N=""Z"" V=""17""/>
+</R>"
+107,<PullSet>,"<R><ITEM Name=""{ PullSet }"" IsEnum=""1""/>
+<E N=""NONE"" V=""0"" W=""1""/>
+<E N=""100-5V"" V=""1"" W=""1""/>
+<E N=""1k-5V"" V=""2"" W=""1""/>
+<E N=""10k-5V"" V=""3"" W=""1""/>
+<E N=""100k-5V"" V=""4"" W=""1""/>
+<E N=""1meg-5V"" V=""5"" W=""1""/>
+<E N=""100-GND"" V=""17"" W=""1""/>
+<E N=""1k-GND"" V=""18"" W=""1""/>
+<E N=""10k-GND"" V=""19"" W=""1""/>
+<E N=""100k-GND"" V=""20"" W=""1""/>
+<E N=""1meg-GND"" V=""21"" W=""1""/>
+</R>"

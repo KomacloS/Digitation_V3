@@ -1,0 +1,57 @@
+*SIGNAL         COMP.     PIN    X          Y          PAD              POS TECN TEST CHANNEL USER              
+
+"$FOFE$_t3/1"   "COMP_2"  1      105.522    100.584    X80Y30A90        T   S    F    0           
+
+"$FOFE$_t3/10"  "COMP_2"  10     99.807     92.329     X80Y30A180       T   S    F    0           
+
+"$FOFE$_t3/11"  "COMP_2"  11     99.807     91.059     X80Y30A180       T   S    F    0           
+
+"$FOFE$_t3/12"  "COMP_2"  12     101.712    89.154     X80Y30A90        T   S    F    0           
+
+"$FOFE$_t3/13"  "COMP_2"  13     102.982    89.154     X80Y30A90        T   S    F    0           
+
+"$FOFE$_t3/14"  "COMP_2"  14     104.252    89.154     X80Y30A90        T   S    F    0           
+
+"$FOFE$_t3/15"  "COMP_2"  15     105.522    89.154     X80Y30A90        T   S    F    0           
+
+"$FOFE$_t3/16"  "COMP_2"  16     106.792    89.154     X80Y30A90        T   S    F    0           
+
+"$FOFE$_t3/17"  "COMP_2"  17     108.062    89.154     X80Y30A90        T   S    F    0           
+
+"$FOFE$_t3/18"  "COMP_2"  18     109.332    89.154     X80Y30A90        T   S    F    0           
+
+"$FOFE$_t3/19"  "COMP_2"  19     111.237    91.059     X80Y30A180       T   S    F    0           
+
+"$FOFE$_t3/2"   "COMP_2"  2      104.252    100.584    X80Y30A90        T   S    F    0           
+
+"$FOFE$_t3/20"  "COMP_2"  20     111.237    92.329     X80Y30A180       T   S    F    0           
+
+"$FOFE$_t3/21"  "COMP_2"  21     111.237    93.599     X80Y30A180       T   S    F    0           
+
+"$FOFE$_t3/22"  "COMP_2"  22     111.237    94.869     X80Y30A180       T   S    F    0           
+
+"$FOFE$_t3/23"  "COMP_2"  23     111.237    96.139     X80Y30A180       T   S    F    0           
+
+"$FOFE$_t3/24"  "COMP_2"  24     111.237    97.409     X80Y30A180       T   S    F    0           
+
+"$FOFE$_t3/25"  "COMP_2"  25     111.237    98.679     X80Y30A180       T   S    F    0           
+
+"$FOFE$_t3/26"  "COMP_2"  26     109.332    100.584    X80Y30A90        T   S    F    0           
+
+"$FOFE$_t3/27"  "COMP_2"  27     108.062    100.584    X80Y30A90        T   S    F    0           
+
+"$FOFE$_t3/28"  "COMP_2"  28     106.792    100.584    X80Y30A90        T   S    F    0           
+
+"$FOFE$_t3/3"   "COMP_2"  3      102.982    100.584    X80Y30A90        T   S    F    0           
+
+"$FOFE$_t3/4"   "COMP_2"  4      101.712    100.584    X80Y30A90        T   S    F    0           
+
+"$FOFE$_t3/5"   "COMP_2"  5      99.807     98.679     X80Y30A180       T   S    F    0           
+
+"$FOFE$_t3/6"   "COMP_2"  6      99.807     97.409     X80Y30A180       T   S    F    0           
+
+"$FOFE$_t3/7"   "COMP_2"  7      99.807     96.139     X80Y30A180       T   S    F    0           
+
+"$FOFE$_t3/8"   "COMP_2"  8      99.807     94.869     X80Y30A180       T   S    F    0           
+
+"$FOFE$_t3/9"   "COMP_2"  9      99.807     93.599     X80Y30A180       T   S    F    0           

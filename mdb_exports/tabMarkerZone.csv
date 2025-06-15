@@ -1,0 +1,6 @@
+ID,BoardID,Name,Global,Kind,Enabled,EnabledManual,Top,Bottom,Left,Right,IDPin1,IDPin2,IDPin3,XOffTP1,YOffTP1,XOffTP2,YOffTP2,XOffTP3,YOffTP3,AdditionalInfo
+0,0,Board Markers,1,2,False,False,100.0,0.0,0.0,100.0,0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,"<R><D DM=""0""/>
+<B N=""""/>
+<TP1 B=""0""/>
+<TP2 B=""0""/>
+</R>"

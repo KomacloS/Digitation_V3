@@ -1,0 +1,33 @@
+*SIGNAL        COMP.    PIN    X          Y          PAD              POS TECN TEST CHANNEL USER   
+
+"$NONE$_t4/1"  "COMP_3" 1      48.387     112.825    X69Y22A90        T   S    N    0           
+
+"$NONE$_t4/10" "COMP_3" 10     56.007     118.569    X69Y22A90        T   S    N    0           
+
+"$NONE$_t4/11" "COMP_3" 11     54.737     118.569    X69Y22A90        T   S    N    0           
+
+"$NONE$_t4/12" "COMP_3" 12     53.467     118.569    X69Y22A90        T   S    N    0           
+
+"$NONE$_t4/13" "COMP_3" 13     52.197     118.569    X69Y22A90        T   S    N    0           
+
+"$NONE$_t4/14" "COMP_3" 14     50.927     118.569    X69Y22A90        T   S    N    0           
+
+"$NONE$_t4/15" "COMP_3" 15     49.657     118.569    X69Y22A90        T   S    N    0           
+
+"$NONE$_t4/16" "COMP_3" 16     48.387     118.569    X69Y22A90        T   S    N    0           
+
+"$NONE$_t4/2"  "COMP_3" 2      49.657     112.825    X69Y22A90        T   S    N    0           
+
+"$NONE$_t4/3"  "COMP_3" 3      50.927     112.825    X69Y22A90        T   S    N    0           
+
+"$NONE$_t4/4"  "COMP_3" 4      52.197     112.825    X69Y22A90        T   S    N    0           
+
+"$NONE$_t4/5"  "COMP_3" 5      53.467     112.825    X69Y22A90        T   S    N    0           
+
+"$NONE$_t4/6"  "COMP_3" 6      54.737     112.825    X69Y22A90        T   S    N    0           
+
+"$NONE$_t4/7"  "COMP_3" 7      56.007     112.825    X69Y22A90        T   S    N    0           
+
+"$NONE$_t4/8"  "COMP_3" 8      57.277     112.825    X69Y22A90        T   S    N    0           
+
+"$NONE$_t4/9"  "COMP_3" 9      57.277     118.569    X69Y22A90        T   S    N    0           

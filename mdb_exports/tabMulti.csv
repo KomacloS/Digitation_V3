@@ -1,0 +1,2 @@
+StepID,Name,BoardNum,OffsetX,OffsetY,BoardNumXAxes,State,TP1GBoardID,TP2GBoardID,TP3GBoardID,TP1TBoardID,TP2TBoardID,TP3TBoardID,TP1BBoardID,TP2BBoardID,TP3BBoardID,OffsetChn
+0,Step0,1,0.0,0.0,1,0,0,0,0,0,0,0,0,0,0,0

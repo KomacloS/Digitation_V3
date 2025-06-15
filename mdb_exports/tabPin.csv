@@ -1,0 +1,2 @@
+IDPin,IDComponent,IDSignal,PinNumber,PinName,Shape,X,Y,Z,Xdim,Ydim,Channel,PAD,Position,Test,Nail,Technology,TestPosition,MotherArea,State,ExcludedHeads,ConnectorKind,HoleDim,Rotation,PinShape,PinHeight,PinAngle,AdditionalInfo
+0,0,0,0, ,0,0.0,0.0,0.0,0.0,0.0,0, ,B,N,0,S,B,0.0,0,0,0,0.0,0.0,0,0.0,0.0,

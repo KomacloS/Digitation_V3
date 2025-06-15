@@ -1,0 +1,65 @@
+*SIGNAL          COMP.     PIN    X          Y          PAD              POS TECN TEST CHANNEL USER 
+
+"$NONE$_t8/1"    "COMP_7"  1      50.825     998.093    X50Y22           T   S    N    0           
+
+"$NONE$_t8/10"   "COMP_7"  10     53.111     991.006    X50Y22A90        T   S    N    0           
+
+"$NONE$_t8/11"   "COMP_7"  11     53.924     991.006    X50Y22A90        T   S    N    0           
+
+"$NONE$_t8/12"   "COMP_7"  12     54.712     991.006    X50Y22A90        T   S    N    0           
+
+"$NONE$_t8/13"   "COMP_7"  13     55.524     991.006    X50Y22A90        T   S    N    0           
+
+"$NONE$_t8/14"   "COMP_7"  14     56.312     991.006    X50Y22A90        T   S    N    0           
+
+"$NONE$_t8/15"   "COMP_7"  15     57.125     991.006    X50Y22A90        T   S    N    0           
+
+"$NONE$_t8/16"   "COMP_7"  16     57.912     991.006    X50Y22A90        T   S    N    0           
+
+"$NONE$_t8/17"   "COMP_7"  17     59.411     992.505    X50Y22           T   S    N    0           
+
+"$NONE$_t8/18"   "COMP_7"  18     59.411     993.292    X50Y22           T   S    N    0           
+
+"$NONE$_t8/19"   "COMP_7"  19     59.411     994.105    X50Y22           T   S    N    0           
+
+"$NONE$_t8/2"    "COMP_7"  2      50.825     997.306    X50Y22           T   S    N    0           
+
+"$NONE$_t8/20"   "COMP_7"  20     59.411     994.893    X50Y22           T   S    N    0           
+
+"$NONE$_t8/21"   "COMP_7"  21     59.411     995.705    X50Y22           T   S    N    0           
+
+"$NONE$_t8/22"   "COMP_7"  22     59.411     996.493    X50Y22           T   S    N    0           
+
+"$NONE$_t8/23"   "COMP_7"  23     59.411     997.306    X50Y22           T   S    N    0           
+
+"$NONE$_t8/24"   "COMP_7"  24     59.411     998.093    X50Y22           T   S    N    0           
+
+"$NONE$_t8/25"   "COMP_7"  25     57.912     999.592    X50Y22A90        T   S    N    0           
+
+"$NONE$_t8/26"   "COMP_7"  26     57.125     999.592    X50Y22A90        T   S    N    0           
+
+"$NONE$_t8/27"   "COMP_7"  27     56.312     999.592    X50Y22A90        T   S    N    0           
+
+"$NONE$_t8/28"   "COMP_7"  28     55.524     999.592    X50Y22A90        T   S    N    0           
+
+"$NONE$_t8/29"   "COMP_7"  29     54.712     999.592    X50Y22A90        T   S    N    0           
+
+"$NONE$_t8/3"    "COMP_7"  3      50.825     996.493    X50Y22           T   S    N    0           
+
+"$NONE$_t8/30"   "COMP_7"  30     53.924     999.592    X50Y22A90        T   S    N    0           
+
+"$NONE$_t8/31"   "COMP_7"  31     53.111     999.592    X50Y22A90        T   S    N    0           
+
+"$NONE$_t8/32"   "COMP_7"  32     52.324     999.592    X50Y22A90        T   S    N    0           
+
+"$NONE$_t8/4"    "COMP_7"  4      50.825     995.705    X50Y22           T   S    N    0           
+
+"$NONE$_t8/5"    "COMP_7"  5      50.825     994.893    X50Y22           T   S    N    0           
+
+"$NONE$_t8/6"    "COMP_7"  6      50.825     994.105    X50Y22           T   S    N    0           
+
+"$NONE$_t8/7"    "COMP_7"  7      50.825     993.292    X50Y22           T   S    N    0           
+
+"$NONE$_t8/8"    "COMP_7"  8      50.825     992.505    X50Y22           T   S    N    0           
+
+"$NONE$_t8/9"    "COMP_7"  9      52.324     991.006    X50Y22A90        T   S    N    0           

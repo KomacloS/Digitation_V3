@@ -1,0 +1,65 @@
+*SIGNAL         COMP.     PIN    X          Y          PAD              POS TECN TEST CHANNEL USER                    
+
+"$NONE$_t5/1"   "COMP_4"  1      55.738     99.896     X94Y24A90        T   S    N    0           
+
+"$NONE$_t5/10"  "COMP_4"  10     50.203     91.821     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/11"  "COMP_4"  11     50.203     90.551     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/12"  "COMP_4"  12     50.203     89.281     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/13"  "COMP_4"  13     50.203     88.011     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/14"  "COMP_4"  14     51.928     86.286     X94Y24A90        T   S    N    0           
+
+"$NONE$_t5/15"  "COMP_4"  15     53.198     86.286     X94Y24A90        T   S    N    0           
+
+"$NONE$_t5/16"  "COMP_4"  16     54.468     86.286     X94Y24A90        T   S    N    0           
+
+"$NONE$_t5/17"  "COMP_4"  17     55.738     86.286     X94Y24A90        T   S    N    0           
+
+"$NONE$_t5/18"  "COMP_4"  18     57.008     86.286     X94Y24A90        T   S    N    0           
+
+"$NONE$_t5/19"  "COMP_4"  19     58.278     86.286     X94Y24A90        T   S    N    0           
+
+"$NONE$_t5/2"   "COMP_4"  2      54.468     99.896     X94Y24A90        T   S    N    0           
+
+"$NONE$_t5/20"  "COMP_4"  20     59.548     86.286     X94Y24A90        T   S    N    0           
+
+"$NONE$_t5/21"  "COMP_4"  21     61.273     88.011     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/22"  "COMP_4"  22     61.273     89.281     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/23"  "COMP_4"  23     61.273     90.551     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/24"  "COMP_4"  24     61.273     91.821     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/25"  "COMP_4"  25     61.273     93.091     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/26"  "COMP_4"  26     61.273     94.361     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/27"  "COMP_4"  27     61.273     95.631     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/28"  "COMP_4"  28     61.273     96.901     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/29"  "COMP_4"  29     61.273     98.171     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/3"   "COMP_4"  3      53.198     99.896     X94Y24A90        T   S    N    0           
+
+"$NONE$_t5/30"  "COMP_4"  30     59.548     99.896     X94Y24A90        T   S    N    0           
+
+"$NONE$_t5/31"  "COMP_4"  31     58.278     99.896     X94Y24A90        T   S    N    0           
+
+"$NONE$_t5/32"  "COMP_4"  32     57.008     99.896     X94Y24A90        T   S    N    0           
+
+"$NONE$_t5/4"   "COMP_4"  4      51.928     99.896     X94Y24A90        T   S    N    0           
+
+"$NONE$_t5/5"   "COMP_4"  5      50.203     98.171     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/6"   "COMP_4"  6      50.203     96.901     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/7"   "COMP_4"  7      50.203     95.631     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/8"   "COMP_4"  8      50.203     94.361     X94Y24A180       T   S    N    0           
+
+"$NONE$_t5/9"   "COMP_4"  9      50.203     93.091     X94Y24A180       T   S    N    0           

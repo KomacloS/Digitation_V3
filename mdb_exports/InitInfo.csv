@@ -1,0 +1,1759 @@
+Section,Key,Value
+ACL Macro Options,AddPowerToGuard,1
+ACL Macro Options,AddPowerToGuard_FA,0
+ACL Macro Options,AdjustCapTol,0
+ACL Macro Options,AdjustCapTol_FA,0
+ACL Macro Options,AdjustIndTol,0
+ACL Macro Options,AdjustIndTol_FA,0
+ACL Macro Options,AdjustResTol,0
+ACL Macro Options,AdjustResTol_FA,0
+ACL Macro Options,AutoDebugInvertPin,0
+ACL Macro Options,AutodebugInvertPin_FA,0
+ACL Macro Options,AutoDebugStopTolFactor,0.2
+ACL Macro Options,AutoDebugTolFactor,0.7
+ACL Macro Options,AutoLearn_AllFAN,0
+ACL Macro Options,AutoLearn_Frequency,0
+ACL Macro Options,CapacitorDPLimit,0.001
+ACL Macro Options,FanFrequencyOptimize,1
+ACL Macro Options,FanGuardLine3,1
+ACL Macro Options,FastFnode,0
+ACL Macro Options,FastFnode_FA,1
+ACL Macro Options,FNodePhaseTollAdjust_Cover,0.2
+ACL Macro Options,FNodePhaseTollAdjust_Iso,0.2
+ACL Macro Options,FNodePhaseTollAdjust_Speed,0.2
+ACL Macro Options,FNodePhaseTollAdjust_Std,1.0
+ACL Macro Options,FNodeTollAdjust_Cover,0.2
+ACL Macro Options,FNodeTollAdjust_Iso,0.2
+ACL Macro Options,FNodeTollAdjust_Speed,0.2
+ACL Macro Options,FNodeTollAdjust_Std,1.0
+ACL Macro Options,FNodeTollAdjust_VLC_HI_Cover,0.4
+ACL Macro Options,FNodeTollAdjust_VLC_HI_Iso,0.4
+ACL Macro Options,GuardToOptimize,10
+ACL Macro Options,GuardToOptimize_FA,10
+ACL Macro Options,InductorDPLimit,0.001
+ACL Macro Options,Iso_Cont_ErrorType,0
+ACL Macro Options,JScanPassOptimized,5
+ACL Macro Options,MaxBoNUsedGuard,10
+ACL Macro Options,MeasShortDPPin,1
+ACL Macro Options,OptimizeGuardOnDPTest,0
+ACL Macro Options,ResistorDPLimit,100.0
+ACL Macro Options,StopAutodebugPass,1
+ACL Macro Options,StopAutodebugPass_FA,1
+ACL Macro Options,UseLessGuards,0
+Board Configuration,ACLamUsed,1
+Board Configuration,ALLGuarding,0
+Board Configuration,AllowSendRPSData,1
+Board Configuration,AssignOffset,0
+Board Configuration,AssignTP,
+Board Configuration,AutomaticLoaderSet,0
+Board Configuration,AutomaticNFZ,Y
+Board Configuration,BarcodeAutostart,N
+Board Configuration,BarcodeMask,
+Board Configuration,BarcodePort,None
+Board Configuration,BarcodeVerify,N
+Board Configuration,BatchCode, 
+Board Configuration,BinaryTraceEnabled,0
+Board Configuration,BoardCode,0
+Board Configuration,BoardCurrentLimit,0.5
+Board Configuration,BoardCurrentLimitLI,0.
+Board Configuration,BoardCurrentLimitLV,0.
+Board Configuration,BoardDescription, 
+Board Configuration,BoardPowerLimit,10.
+Board Configuration,BoardSensorPresent,N
+Board Configuration,BoardStatus,129
+Board Configuration,BoardThickness,0.
+Board Configuration,BoardVoltageLimit,100.
+Board Configuration,BoardVoltageLimitLI,0.
+Board Configuration,BoardVoltageLimitLV,0.
+Board Configuration,BottomLightB,128
+Board Configuration,BottomLightG,128
+Board Configuration,BottomLightR,128
+Board Configuration,BuzzerTimeout,0
+Board Configuration,CalibrationLightB_1,128
+Board Configuration,CalibrationLightB_2,128
+Board Configuration,CalibrationLightB_3,128
+Board Configuration,CalibrationLightB_4,128
+Board Configuration,CalibrationLightG_1,128
+Board Configuration,CalibrationLightG_2,128
+Board Configuration,CalibrationLightG_3,128
+Board Configuration,CalibrationLightG_4,128
+Board Configuration,CalibrationLightR_1,128
+Board Configuration,CalibrationLightR_2,128
+Board Configuration,CalibrationLightR_3,128
+Board Configuration,CalibrationLightR_4,128
+Board Configuration,CapacitiveSupported,0
+Board Configuration,CapSectionOption,1
+Board Configuration,CastlePresent,Y
+Board Configuration,CompatibilityFlags,3.3.0.1 
+Board Configuration,CompatibilityRSERAuto,N
+Board Configuration,CreateCompLaserTest,0
+Board Configuration,CreateCompLedSensor,0
+Board Configuration,CreateCompThermal,0
+Board Configuration,CreateContinuityPin,0
+Board Configuration,CreatePowerProbe,0
+Board Configuration,Data Version,14.
+Board Configuration,DataLogEnable,0
+Board Configuration,DataLogProgram,
+Board Configuration,DeviceFunctionFile,
+Board Configuration,DIGIPLEX,Y
+Board Configuration,DigitalLanguage,
+Board Configuration,DigitalLoadMode,Y
+Board Configuration,DigitalMasterClockF50,Y
+Board Configuration,DisableGroupTolerance,0
+Board Configuration,DisablePinUnderComp,0
+Board Configuration,DisableSetMechanical,0
+Board Configuration,Diversities,1
+Board Configuration,Diversities4Board,0
+Board Configuration,EnableBoardLimit,0
+Board Configuration,EnableDischarge,1
+Board Configuration,EnableGuarding,1
+Board Configuration,EnableParallel,1
+Board Configuration,EnhStrayManagement,1
+Board Configuration,F40MemoryEnd,0
+Board Configuration,F40MemoryStart,0
+Board Configuration,FalseRepairCause,
+Board Configuration,FixedGround,0
+Board Configuration,FixtureAsBoardPosition,N
+Board Configuration,FixtureInvert,N
+Board Configuration,FixtureProgram,None
+Board Configuration,FixtureType,Flying
+Board Configuration,ForcedFile,
+Board Configuration,GenerateSRG,0
+Board Configuration,HeadExclusionMargin,0.0
+Board Configuration,HRTestsEnabled,N
+Board Configuration,ICTOptimizationType,1
+Board Configuration,IfErrorBarcodeCounter,N
+Board Configuration,IgnoreCompDevice,0
+Board Configuration,IncludeGuardingDigital,1
+Board Configuration,InternalDIGInstrument,
+Board Configuration,InternalPWRInstrument,N
+Board Configuration,IsKit,0
+Board Configuration,IsLibrary,1
+Board Configuration,IVILightB_1,128
+Board Configuration,IVILightB_2,128
+Board Configuration,IVILightB_3,128
+Board Configuration,IVILightB_4,128
+Board Configuration,IVILightG_1,128
+Board Configuration,IVILightG_2,128
+Board Configuration,IVILightG_3,128
+Board Configuration,IVILightG_4,128
+Board Configuration,IVILightR_1,128
+Board Configuration,IVILightR_2,128
+Board Configuration,IVILightR_3,128
+Board Configuration,IVILightR_4,128
+Board Configuration,LeaveTestabOnlyForced,0
+Board Configuration,LevelCompatibility,NO
+Board Configuration,LightOn,N
+Board Configuration,LightTimeout,30
+Board Configuration,LocalWorkPath,1
+Board Configuration,LongBrdEdgeX,130.
+Board Configuration,LoopInWizard,0
+Board Configuration,MakeDrlEnable,1
+Board Configuration,MakeDrlPinsSplitted,0
+Board Configuration,MaxGuarding,10
+Board Configuration,MaxNumberOfContactForTestPoint,40
+Board Configuration,NoExtraDownTHValue,0.2
+Board Configuration,NotTestableFile,
+Board Configuration,NVLVirtualSupported,N
+Board Configuration,OFConversionDone,1
+Board Configuration,OneStepConnect,N
+Board Configuration,OnlyFromBarcodeReader,N
+Board Configuration,OperatorPriority,
+Board Configuration,OptMode,1
+Board Configuration,PadRelearned,0
+Board Configuration,PanelDeformation,1
+Board Configuration,ParFilePresent,N
+Board Configuration,PCSpeed,
+Board Configuration,PinHeightFile,
+Board Configuration,PinLodgeEnable,0
+Board Configuration,PinLodgeExclusionHeads,0
+Board Configuration,PinLodgeInLineSMDComp,1
+Board Configuration,PinLodgeNMSMDCompDisable,1
+Board Configuration,PinLodgeShiftComponents,
+Board Configuration,PinLodgeShiftComponentsFromCorner,
+Board Configuration,PinLodgeShiftPads,0.0
+Board Configuration,PinLodgeShiftPadsFromCorner,0.0
+Board Configuration,PinLodgeSMDPadsNoTest,0
+Board Configuration,PowerProbeDone,0
+Board Configuration,PrintAllComponents,0
+Board Configuration,PrintAllTests,0
+Board Configuration,PrinterCol,40
+Board Configuration,PrinterLineFeed,5
+Board Configuration,PrinterPort,Default
+Board Configuration,PrinterReportPass,N
+Board Configuration,PrinterResetESCSequence,
+Board Configuration,PrinterSetupESCSequence,
+Board Configuration,ProcessLaminatedPresent,1
+Board Configuration,ProgramVersion,1
+Board Configuration,ProgramVersionsFolder,
+Board Configuration,QTClear,1
+Board Configuration,QTSequenceWorkpath,W:\BOARD\SYSTEM_MACRO\
+Board Configuration,RemoveUnlistedChns,0
+Board Configuration,RepairBoardAlias,
+Board Configuration,RepairDllName,
+Board Configuration,RepairFile,D:\CRS\CONV\S20.DL
+Board Configuration,RepairProgram,
+Board Configuration,RepairType,None
+Board Configuration,RepairWorkPath,W:\BOARD\SYSTEM_MACRO\
+Board Configuration,RepairWorkPath_BACKUP,
+Board Configuration,ResetPositionDone,1
+Board Configuration,RetestFailType,0
+Board Configuration,SameBoardValidation,0
+Board Configuration,SaveAsciiCapValues,0
+Board Configuration,SelectFirstError,1
+Board Configuration,SetAlternative,1
+Board Configuration,SetBuzzer,1
+Board Configuration,SetFlashingLight,1
+Board Configuration,ShowBoardLimit,1
+Board Configuration,SideToTest,B
+Board Configuration,SideToView,-1
+Board Configuration,SinglePointTest,1
+Board Configuration,SPCEnabled,0
+Board Configuration,SPCErase,0
+Board Configuration,SPCIdxCmb,0
+Board Configuration,SPCRadCD,0
+Board Configuration,SPCRecSingle,0
+Board Configuration,SPCRecWhole,0
+Board Configuration,SplitLongBrdEnabled,0
+Board Configuration,sRemoteWorkpath1,
+Board Configuration,StaggeringDone,0
+Board Configuration,StaggeringEnable,0
+Board Configuration,StaggeringValue,0.635
+Board Configuration,StopProgramOnBoardLimit,1
+Board Configuration,StrayCapacitance,1650.
+Board Configuration,StrayCapacitanceAC,17.
+Board Configuration,StrayImpedence,1.
+Board Configuration,StrayInductance,3.5
+Board Configuration,StrayReleImpedence,0.6
+Board Configuration,SysSUBModelTypeForThisBrd,1
+Board Configuration,SystemLibraryVL,OLD
+Board Configuration,SysTypeForThisBrd,30
+Board Configuration,TalonBoardConfiguration,
+Board Configuration,TaperPinsPresent,N
+Board Configuration,TestableFile,
+Board Configuration,TestPointsDistribution,0
+Board Configuration,ThroughHoleOffsetAngle,90.
+Board Configuration,ThroughHoleOffsetDone,0
+Board Configuration,ThroughHoleOffsetEnable,0
+Board Configuration,ThroughHoleOffsetValue,0.254
+Board Configuration,TopLightB,128
+Board Configuration,TopLightG,128
+Board Configuration,TopLightR,128
+Board Configuration,TouchType,0
+Board Configuration,TPMultiplexerEnable,0
+Board Configuration,UpdateComplexDone,1
+Board Configuration,UserLibraryVL,user_macro
+Board Configuration,UserLibraryVL2,
+Board Configuration,UserLibraryVL3,
+Board Configuration,UseSysStrayInBoard,1
+Board Configuration,VacuumPresent,N
+Board Configuration,ValidateMode,1
+Board Configuration,VariableLenght,
+Board Configuration,ViewAllComponents,1
+Board Configuration,ViewProbeLightB_1,128
+Board Configuration,ViewProbeLightB_2,128
+Board Configuration,ViewProbeLightB_3,128
+Board Configuration,ViewProbeLightB_4,128
+Board Configuration,ViewProbeLightG_1,128
+Board Configuration,ViewProbeLightG_2,128
+Board Configuration,ViewProbeLightG_3,128
+Board Configuration,ViewProbeLightG_4,128
+Board Configuration,ViewProbeLightR_1,128
+Board Configuration,ViewProbeLightR_2,128
+Board Configuration,ViewProbeLightR_3,128
+Board Configuration,ViewProbeLightR_4,128
+Board Configuration,VisCompTolerance,50.0
+Board Configuration,VisMaxSquareInt,0.2
+Board Configuration,VivaVersion,14.5.0.6 
+Board Configuration,VivaVersion_first,12.0.0.1 
+Board Configuration,ZBottomDownPosition,0.
+Board Configuration,ZBottomExtraDownPosition,0.
+Board Configuration,ZBottomFlyPODDownPosition,0.
+Board Configuration,ZBottomMOPDownPosition,0.
+Board Configuration,ZBottomNearPosition,0.
+Board Configuration,ZBottomUpPosition,0.
+Board Configuration,ZDownPosition,0.
+Board Configuration,ZExtraDownPosition,0.
+Board Configuration,ZFlyPODDownPosition,0.
+Board Configuration,ZMarkersEnable,1
+Board Configuration,ZMOPDownPosition,0.
+Board Configuration,ZNearPosition,0.
+Board Configuration,ZSLPos,0.
+Board Configuration,ZSLSpeed,100.
+Board Configuration,ZSpeed,10
+Board Configuration,ZUpPosition,0.
+Board Configuration,ZUpSpeed,10
+Board Grid Settings,BoardCurrentLimit,0.5
+Board Grid Settings,BoardCurrentLimitLV,0.5
+Board Grid Settings,BoardVoltageLimit,100.
+Board Grid Settings,BoardVoltageLimitLV,100.
+Board Grid Settings,GridFlags,2
+Board Grid Settings,GridWidth,427
+Board Grid Settings,ViewCompComplex,1
+Board Grid Settings,WPCol0Width,10
+Board Grid Settings,WPCol1Width,50
+Board Grid Settings,WPCol2Width,125
+Board Grid Settings,WPCol3Width,40
+Board Grid Settings,WPCol4Width,40
+Board Grid Settings,WPCol5Width,40
+Board Grid Settings,WPCol6Width,35
+Board Grid Settings,WPCol7Width,40
+Board Grid Settings,WPCol8Width,40
+Board Grid Settings,WPCol9Width,40
+Board Grid Settings,WPFlags,0
+Board Grid Settings,WPMaxPosX,-1
+Board Grid Settings,WPMaxPosY,-1
+Board Grid Settings,WPMinPosX,-1
+Board Grid Settings,WPMinPosY,-1
+Board Grid Settings,WPNormPosB,973
+Board Grid Settings,WPNormPosL,1
+Board Grid Settings,WPNormPosR,1269
+Board Grid Settings,WPNormPosT,1
+Board Grid Settings,WPShowCmd,1
+Board Schema,Update Date,05-Sep-2014 17:54:57
+Board Schema,Version Number,1
+Board Settings,BoardWatcher,N
+Board Settings,Camera,N
+Board Settings,FUN,N
+Board Settings,Grid,N
+Board Settings,RepairStation,N
+Board Settings,Test,N
+Board Settings,ToolbarPosition,"10,20,300,200"
+Board Settings,VisualTasks,N
+Board Settings,Wizard,N
+Board Settings,Wizard_X,148
+Board Settings,Wizard_Y,50
+CAD Options,IPC_Force_Record099,0
+CAD Options,IPC_Hole_Offset,9999
+CAD Options,IPC_Merge_Record,1
+CAD Options,IPC_Record099,1
+CAD Options,IPC_Remove_DoublePoints,1
+CAD Options,IPC_REMOVE_PANELEDGE,0
+Camera Setting,CameraPosition,"210,220,300,200"
+Capacitive Configuration,CapValidateShortAccuracy,20
+Capacitive Configuration,CapValidateShortToll,400
+Capacitive Configuration,EnableCapError,0
+Capacitive Configuration,ForcedUpProbe,N
+Capacitive Configuration,IsoOnlyOnForcedError,N
+Capacitive Configuration,LearnRunTimeIsoGeneration,N
+Capacitive Configuration,MaxRunTimeIso,1000
+Capacitive Configuration,MaxShortPlane,7
+Capacitive Configuration,NoGndPlane,N
+Capacitive Configuration,OnBoardParasite,N
+Capacitive Configuration,OneShortAddFrom2Net,Y
+Capacitive Configuration,OneTestPerNet,N
+Capacitive Configuration,PadAreaAlgorithm,N
+Capacitive Configuration,ParasiteOffsetSupported,1
+Capacitive Configuration,ParasiteUpPosition,1.0
+Capacitive Configuration,RealOpenSearch,N
+Capacitive Configuration,RunTimeIsoGeneration,Y
+Capacitive Configuration,TestValidationMode,1
+Capacitive Configuration,TouchSensorZDown,-0.2
+Capacitive Configuration,TouchSensorZRetry,0
+Capacitive Configuration,UpProbe,N
+Capacitive Configuration,UpProbeOnSameSignal,Y
+Capacitive Configuration,ValidateOnGNDOpen,N
+Capacitive Configuration,ValidateOnGNDShort,N
+CChildFrameBV,nSplitterL,306
+CChildFrameBV,nSplitterM,427
+CChildFrameBV,nSplitterR,400
+DBI Import Data,AskForBBTComp,0
+DBI Import Data,EnableOptimization,1
+DBI Import Data,fGndFound,0
+DBI Import Data,SMDPads,X20
+DBI Import Data,THPads,R50H25
+DBI Import Data,TPPads,R20
+DBI Import Data,VIAPads,R30H15
+DlgRSErrors,EnableBARCODE,0
+Fixture Identification,Kind,0
+Fixture Identification,RFIDTime,0
+Fixturing Settings,MinimumDistance100,2.02
+Fixturing Settings,MinimumDistance50,1.28
+Fixturing Settings,MinimumDistance75,1.68
+FUN Font,CharSet,0
+FUN Font,ClipPrecision,2
+FUN Font,Escapement,0
+FUN Font,FaceName,Fixedsys
+FUN Font,Height,-12
+FUN Font,Italic,0
+FUN Font,Orientation,0
+FUN Font,OutPrecision,1
+FUN Font,PitchAndFamily,49
+FUN Font,Quality,1
+FUN Font,StrikeOut,0
+FUN Font,Underline,0
+FUN Font,Weight,400
+FUN Font,Width,0
+FUN View,Compare,
+FUN View,Editor,
+FUN View,nCurrPagIdx,0
+FUN View,WPFlags,0
+FUN View,WPMaxPosX,-1
+FUN View,WPMaxPosY,-1
+FUN View,WPMinPosX,-1
+FUN View,WPMinPosY,-1
+FUN View,WPNormPosB,870
+FUN View,WPNormPosL,72
+FUN View,WPNormPosR,1074
+FUN View,WPNormPosT,25
+FUN View,WPShowCmd,1
+FUN View DIA,ColWidth0,150
+FUN View DIA,ColWidth1,30
+FUN View DIA,ColWidth2,50
+FUN View DIA,ColWidth3,710
+FUN View DIA,DrawType,1
+FUN View DIA,IDStartRow,2
+FUN View DIA,Marker,116
+FUN View DIA,StartScrollBar,0
+FUN View DIA,StopScrollBar,0
+FUN View DIA,WidthCellWave,710
+FUN View LAN,ColWidth0,150
+FUN View LAN,ColWidth1,30
+FUN View LAN,ColWidth2,50
+FUN View LAN,ColWidth3,710
+FUN View LAN WorkSpaceDef,DrawType,1
+FUN View LAN WorkSpaceDef,IDStartRow,1
+FUN View LAN WorkSpaceDef,Marker,116
+FUN View LAN WorkSpaceDef,StartScrollBar,0
+FUN View LAN WorkSpaceDef,StopScrollBar,0
+FUN View LAN WorkSpaceDef,WidthCellWave,710
+FUN View Main,File1,ACL.PAT
+FUN View Main,SyncPattern1,0
+FUN View Main,SyncPattNum1,0
+FUN View Main,BreakPattern1,0
+FUN View Main,BreakPattNum1,0
+FUN View Main,LoopPattern1,0
+FUN View Main,LoopStartPatt1,0
+FUN View Main,LoopStopPatt1,0
+FUN View Main,Version1,0
+FUN View Main,State1,A
+FUN View Main,Advanced1,O
+FUN View Main,File2,ALI.PAT
+FUN View Main,SyncPattern2,0
+FUN View Main,SyncPattNum2,0
+FUN View Main,BreakPattern2,0
+FUN View Main,BreakPattNum2,0
+FUN View Main,LoopPattern2,0
+FUN View Main E,ACL_PAT_WPFlags,0
+FUN View Main E,ACL_PAT_WPMaxPosX,-1
+FUN View Main E,ACL_PAT_WPMaxPosY,-1
+FUN View Main E,ACL_PAT_WPMinPosX,-1
+FUN View Main E,ACL_PAT_WPMinPosY,-1
+FUN View Main E,ACL_PAT_WPNormPosB,924
+FUN View Main E,ACL_PAT_WPNormPosL,250
+FUN View Main E,ACL_PAT_WPNormPosR,1220
+FUN View Main E,ACL_PAT_WPNormPosT,250
+FUN View Main E,ACL_PAT_WPShowCmd,1
+FUN View Main E,ALI_PAT_WPFlags,0
+FUN View Main E,ALI_PAT_WPMaxPosX,-1
+FUN View Main E,ALI_PAT_WPMaxPosY,-1
+FUN View Main E,ALI_PAT_WPMinPosX,-1
+FUN View Main E,ALI_PAT_WPMinPosY,-1
+FUN View Main E,ALI_PAT_WPNormPosB,699
+FUN View Main E,ALI_PAT_WPNormPosL,25
+FUN View Main E,ALI_PAT_WPNormPosR,995
+FUN View Main E,ALI_PAT_WPNormPosT,25
+FUN View Main E,ALI_PAT_WPShowCmd,1
+FUN View Main E,CHECK_STUCK_PAT_WPFlags,0
+FUN View Main E,CHECK_STUCK_PAT_WPMaxPosX,-1
+FUN View Main E,CHECK_STUCK_PAT_WPMaxPosY,-1
+FUN View Main E,CHECK_STUCK_PAT_WPMinPosX,-1
+FUN View Main E,CHECK_STUCK_PAT_WPMinPosY,-1
+FUN View Main E,CHECK_STUCK_PAT_WPNormPosB,733
+FUN View Main E,CHECK_STUCK_PAT_WPNormPosL,167
+FUN View Main E,CHECK_STUCK_PAT_WPNormPosR,1137
+FUN View Main E,CHECK_STUCK_PAT_WPNormPosT,59
+FUN View Main E,CHECK_STUCK_PAT_WPShowCmd,1
+FUN View Main E,COMPARATOR_PAT_WPFlags,0
+FUN View Main E,COMPARATOR_PAT_WPMaxPosX,-1
+FUN View Main E,COMPARATOR_PAT_WPMaxPosY,-1
+FUN View Main E,COMPARATOR_PAT_WPMinPosX,-1
+FUN View Main E,COMPARATOR_PAT_WPMinPosY,-1
+FUN View Main E,COMPARATOR_PAT_WPNormPosB,824
+FUN View Main E,COMPARATOR_PAT_WPNormPosL,150
+FUN View Main E,COMPARATOR_PAT_WPNormPosR,1120
+FUN View Main E,COMPARATOR_PAT_WPNormPosT,150
+FUN View Main E,COMPARATOR_PAT_WPShowCmd,1
+FUN View Main E,CRYSTAL_PAT_WPFlags,0
+FUN View Main E,CRYSTAL_PAT_WPMaxPosX,-1
+FUN View Main E,CRYSTAL_PAT_WPMaxPosY,-1
+FUN View Main E,CRYSTAL_PAT_WPMinPosX,-1
+FUN View Main E,CRYSTAL_PAT_WPMinPosY,-1
+FUN View Main E,CRYSTAL_PAT_WPNormPosB,849
+FUN View Main E,CRYSTAL_PAT_WPNormPosL,175
+FUN View Main E,CRYSTAL_PAT_WPNormPosR,1145
+FUN View Main E,CRYSTAL_PAT_WPNormPosT,175
+FUN View Main E,CRYSTAL_PAT_WPShowCmd,1
+FUN View Main E,DIGPIN_PAT_WPFlags,0
+FUN View Main,LoopStartPatt2,0
+FUN View Main,LoopStopPatt2,0
+FUN View Main,Version2,0
+FUN View Main,State2,A
+FUN View Main,Advanced2,O
+FUN View Main,File3,CHECK_STUCK.PAT
+FUN View Main,SyncPattern3,0
+FUN View Main,SyncPattNum3,0
+FUN View Main,BreakPattern3,0
+FUN View Main,BreakPattNum3,0
+FUN View Main,LoopPattern3,0
+FUN View Main,LoopStartPatt3,0
+FUN View Main,LoopStopPatt3,0
+FUN View Main,Version3,0
+FUN View Main,State3,A
+FUN View Main,Advanced3,O
+FUN View Main,File4,COMPARATOR.PAT
+FUN View Main,SyncPattern4,0
+FUN View Main E,DIGPIN_PAT_WPMaxPosX,-1
+FUN View Main E,DIGPIN_PAT_WPMaxPosY,-1
+FUN View Main E,DIGPIN_PAT_WPMinPosX,-1
+FUN View Main E,DIGPIN_PAT_WPMinPosY,-1
+FUN View Main E,DIGPIN_PAT_WPNormPosB,824
+FUN View Main E,DIGPIN_PAT_WPNormPosL,150
+FUN View Main E,DIGPIN_PAT_WPNormPosR,1120
+FUN View Main E,DIGPIN_PAT_WPNormPosT,150
+FUN View Main E,DIGPIN_PAT_WPShowCmd,1
+FUN View Main E,GATE_PAT_WPFlags,0
+FUN View Main E,GATE_PAT_WPMaxPosX,-1
+FUN View Main E,GATE_PAT_WPMaxPosY,-1
+FUN View Main E,GATE_PAT_WPMinPosX,-1
+FUN View Main E,GATE_PAT_WPMinPosY,-1
+FUN View Main E,GATE_PAT_WPNormPosB,874
+FUN View Main E,GATE_PAT_WPNormPosL,200
+FUN View Main E,GATE_PAT_WPNormPosR,1170
+FUN View Main E,GATE_PAT_WPNormPosT,200
+FUN View Main E,GATE_PAT_WPShowCmd,1
+FUN View Main E,GNDREF_PAT_WPFlags,0
+FUN View Main E,GNDREF_PAT_WPMaxPosX,-1
+FUN View Main E,GNDREF_PAT_WPMaxPosY,-1
+FUN View Main E,GNDREF_PAT_WPMinPosX,-1
+FUN View Main E,GNDREF_PAT_WPMinPosY,-1
+FUN View Main E,GNDREF_PAT_WPNormPosB,749
+FUN View Main E,GNDREF_PAT_WPNormPosL,75
+FUN View Main E,GNDREF_PAT_WPNormPosR,1045
+FUN View Main E,GNDREF_PAT_WPNormPosT,75
+FUN View Main E,GNDREF_PAT_WPShowCmd,1
+FUN View Main E,IMPCHECK_PAT_WPFlags,0
+FUN View Main E,IMPCHECK_PAT_WPMaxPosX,-1
+FUN View Main E,IMPCHECK_PAT_WPMaxPosY,-1
+FUN View Main E,IMPCHECK_PAT_WPMinPosX,-1
+FUN View Main E,IMPCHECK_PAT_WPMinPosY,-1
+FUN View Main E,IMPCHECK_PAT_WPNormPosB,974
+FUN View Main E,IMPCHECK_PAT_WPNormPosL,300
+FUN View Main E,IMPCHECK_PAT_WPNormPosR,1270
+FUN View Main E,IMPCHECK_PAT_WPNormPosT,300
+FUN View Main E,IMPCHECK_PAT_WPShowCmd,1
+FUN View Main E,LEAKAGE_PAT_WPFlags,0
+FUN View Main E,LEAKAGE_PAT_WPMaxPosX,-1
+FUN View Main E,LEAKAGE_PAT_WPMaxPosY,-1
+FUN View Main E,LEAKAGE_PAT_WPMinPosX,-1
+FUN View Main E,LEAKAGE_PAT_WPMinPosY,-1
+FUN View Main E,LEAKAGE_PAT_WPNormPosB,949
+FUN View Main E,LEAKAGE_PAT_WPNormPosL,275
+FUN View Main E,LEAKAGE_PAT_WPNormPosR,1245
+FUN View Main E,LEAKAGE_PAT_WPNormPosT,275
+FUN View Main E,LEAKAGE_PAT_WPShowCmd,1
+FUN View Main E,LED_SENSOR_PAT_WPFlags,0
+FUN View Main E,LED_SENSOR_PAT_WPMaxPosX,-1
+FUN View Main E,LED_SENSOR_PAT_WPMaxPosY,-1
+FUN View Main E,LED_SENSOR_PAT_WPMinPosX,-1
+FUN View Main E,LED_SENSOR_PAT_WPMinPosY,-1
+FUN View Main E,LED_SENSOR_PAT_WPNormPosB,852
+FUN View Main E,LED_SENSOR_PAT_WPNormPosL,120
+FUN View Main E,LED_SENSOR_PAT_WPNormPosR,1205
+FUN View Main E,LED_SENSOR_PAT_WPNormPosT,89
+FUN View Main E,LED_SENSOR_PAT_WPShowCmd,1
+FUN View Main E,LOADCAP_PAT_WPFlags,0
+FUN View Main E,LOADCAP_PAT_WPMaxPosX,-1
+FUN View Main E,LOADCAP_PAT_WPMaxPosY,-1
+FUN View Main E,LOADCAP_PAT_WPMinPosX,-1
+FUN View Main E,LOADCAP_PAT_WPMinPosY,-1
+FUN View Main E,LOADCAP_PAT_WPNormPosB,899
+FUN View Main E,LOADCAP_PAT_WPNormPosL,225
+FUN View Main E,LOADCAP_PAT_WPNormPosR,1195
+FUN View Main E,LOADCAP_PAT_WPNormPosT,225
+FUN View Main E,LOADCAP_PAT_WPShowCmd,1
+FUN View Main E,LOADFDO_PAT_WPFlags,0
+FUN View Main E,LOADFDO_PAT_WPMaxPosX,-1
+FUN View Main E,LOADFDO_PAT_WPMaxPosY,-1
+FUN View Main E,LOADFDO_PAT_WPMinPosX,-1
+FUN View Main E,LOADFDO_PAT_WPMinPosY,-1
+FUN View Main E,LOADFDO_PAT_WPNormPosB,924
+FUN View Main E,LOADFDO_PAT_WPNormPosL,250
+FUN View Main E,LOADFDO_PAT_WPNormPosR,1220
+FUN View Main E,LOADFDO_PAT_WPNormPosT,250
+FUN View Main E,LOADFDO_PAT_WPShowCmd,1
+FUN View Main E,MOVEPROBE_PAT_WPFlags,0
+FUN View Main E,MOVEPROBE_PAT_WPMaxPosX,-1
+FUN View Main E,MOVEPROBE_PAT_WPMaxPosY,-1
+FUN View Main E,MOVEPROBE_PAT_WPMinPosX,-1
+FUN View Main E,MOVEPROBE_PAT_WPMinPosY,-1
+FUN View Main E,MOVEPROBE_PAT_WPNormPosB,674
+FUN View Main E,MOVEPROBE_PAT_WPNormPosL,0
+FUN View Main E,MOVEPROBE_PAT_WPNormPosR,970
+FUN View Main E,MOVEPROBE_PAT_WPNormPosT,0
+FUN View Main E,MOVEPROBE_PAT_WPShowCmd,1
+FUN View Main E,OBP_PAT_WPFlags,0
+FUN View Main E,OBP_PAT_WPMaxPosX,-1
+FUN View Main E,OBP_PAT_WPMaxPosY,-1
+FUN View Main E,OBP_PAT_WPMinPosX,-1
+FUN View Main E,OBP_PAT_WPMinPosY,-1
+FUN View Main E,OBP_PAT_WPNormPosB,899
+FUN View Main E,OBP_PAT_WPNormPosL,225
+FUN View Main E,OBP_PAT_WPNormPosR,1195
+FUN View Main E,OBP_PAT_WPNormPosT,225
+FUN View Main E,OBP_PAT_WPShowCmd,1
+FUN View Main E,OPAMP_PAT_WPFlags,0
+FUN View Main E,OPAMP_PAT_WPMaxPosX,-1
+FUN View Main E,OPAMP_PAT_WPMaxPosY,-1
+FUN View Main E,OPAMP_PAT_WPMinPosX,-1
+FUN View Main E,OPAMP_PAT_WPMinPosY,-1
+FUN View Main E,OPAMP_PAT_WPNormPosB,974
+FUN View Main E,OPAMP_PAT_WPNormPosL,300
+FUN View Main E,OPAMP_PAT_WPNormPosR,1270
+FUN View Main E,OPAMP_PAT_WPNormPosT,300
+FUN View Main E,OPAMP_PAT_WPShowCmd,1
+FUN View Main E,OPEN_PAT_WPFlags,0
+FUN View Main E,OPEN_PAT_WPMaxPosX,-1
+FUN View Main E,OPEN_PAT_WPMaxPosY,-1
+FUN View Main E,OPEN_PAT_WPMinPosX,-1
+FUN View Main E,OPEN_PAT_WPMinPosY,-1
+FUN View Main E,OPEN_PAT_WPNormPosB,674
+FUN View Main E,OPEN_PAT_WPNormPosL,0
+FUN View Main E,OPEN_PAT_WPNormPosR,970
+FUN View Main E,OPEN_PAT_WPNormPosT,0
+FUN View Main E,OPEN_PAT_WPShowCmd,1
+FUN View Main E,OPTO_PAT_WPFlags,0
+FUN View Main E,OPTO_PAT_WPMaxPosX,-1
+FUN View Main E,OPTO_PAT_WPMaxPosY,-1
+FUN View Main E,OPTO_PAT_WPMinPosX,-1
+FUN View Main E,OPTO_PAT_WPMinPosY,-1
+FUN View Main E,OPTO_PAT_WPNormPosB,951
+FUN View Main E,OPTO_PAT_WPNormPosL,31
+FUN View Main E,OPTO_PAT_WPNormPosR,1001
+FUN View Main E,OPTO_PAT_WPNormPosT,277
+FUN View Main E,OPTO_PAT_WPShowCmd,1
+FUN View Main E,POWER_PAT_WPFlags,0
+FUN View Main E,POWER_PAT_WPMaxPosX,-1
+FUN View Main E,POWER_PAT_WPMaxPosY,-1
+FUN View Main E,POWER_PAT_WPMinPosX,-1
+FUN View Main E,POWER_PAT_WPMinPosY,-1
+FUN View Main E,POWER_PAT_WPNormPosB,724
+FUN View Main E,POWER_PAT_WPNormPosL,50
+FUN View Main E,POWER_PAT_WPNormPosR,1020
+FUN View Main E,POWER_PAT_WPNormPosT,50
+FUN View Main E,POWER_PAT_WPShowCmd,1
+FUN View Main E,PWCHECK_PAT_WPFlags,0
+FUN View Main E,PWCHECK_PAT_WPMaxPosX,-1
+FUN View Main E,PWCHECK_PAT_WPMaxPosY,-1
+FUN View Main E,PWCHECK_PAT_WPMinPosX,-1
+FUN View Main E,PWCHECK_PAT_WPMinPosY,-1
+FUN View Main E,PWCHECK_PAT_WPNormPosB,949
+FUN View Main E,PWCHECK_PAT_WPNormPosL,275
+FUN View Main E,PWCHECK_PAT_WPNormPosR,1245
+FUN View Main E,PWCHECK_PAT_WPNormPosT,275
+FUN View Main E,PWCHECK_PAT_WPShowCmd,1
+FUN View Main E,REGULATOR_PAT_WPFlags,0
+FUN View Main E,REGULATOR_PAT_WPMaxPosX,-1
+FUN View Main E,REGULATOR_PAT_WPMaxPosY,-1
+FUN View Main E,REGULATOR_PAT_WPMinPosX,-1
+FUN View Main E,REGULATOR_PAT_WPMinPosY,-1
+FUN View Main E,REGULATOR_PAT_WPNormPosB,813
+FUN View Main E,REGULATOR_PAT_WPNormPosL,90
+FUN View Main E,REGULATOR_PAT_WPNormPosR,1060
+FUN View Main E,REGULATOR_PAT_WPNormPosT,139
+FUN View Main E,REGULATOR_PAT_WPShowCmd,1
+FUN View Main E,RELE_PAT_WPFlags,0
+FUN View Main E,RELE_PAT_WPMaxPosX,-1
+FUN View Main E,RELE_PAT_WPMaxPosY,-1
+FUN View Main E,RELE_PAT_WPMinPosX,-1
+FUN View Main E,RELE_PAT_WPMinPosY,-1
+FUN View Main E,RELE_PAT_WPNormPosB,869
+FUN View Main E,RELE_PAT_WPNormPosL,28
+FUN View Main E,RELE_PAT_WPNormPosR,998
+FUN View Main E,RELE_PAT_WPNormPosT,195
+FUN View Main E,RELE_PAT_WPShowCmd,1
+FUN View Main E,RESETACLAIO_PAT_WPFlags,0
+FUN View Main E,RESETACLAIO_PAT_WPMaxPosX,-1
+FUN View Main E,RESETACLAIO_PAT_WPMaxPosY,-1
+FUN View Main E,RESETACLAIO_PAT_WPMinPosX,-1
+FUN View Main E,RESETACLAIO_PAT_WPMinPosY,-1
+FUN View Main E,RESETACLAIO_PAT_WPNormPosB,799
+FUN View Main E,RESETACLAIO_PAT_WPNormPosL,125
+FUN View Main E,RESETACLAIO_PAT_WPNormPosR,1095
+FUN View Main E,RESETACLAIO_PAT_WPNormPosT,125
+FUN View Main E,RESETACLAIO_PAT_WPShowCmd,1
+FUN View Main E,RESICC_PAT_WPFlags,0
+FUN View Main E,RESICC_PAT_WPMaxPosX,-1
+FUN View Main E,RESICC_PAT_WPMaxPosY,-1
+FUN View Main E,RESICC_PAT_WPMinPosX,-1
+FUN View Main E,RESICC_PAT_WPMinPosY,-1
+FUN View Main E,RESICC_PAT_WPNormPosB,774
+FUN View Main E,RESICC_PAT_WPNormPosL,100
+FUN View Main E,RESICC_PAT_WPNormPosR,1070
+FUN View Main E,RESICC_PAT_WPNormPosT,100
+FUN View Main E,RESICC_PAT_WPShowCmd,1
+FUN View Main E,SCR_PAT_WPFlags,0
+FUN View Main E,SCR_PAT_WPMaxPosX,-1
+FUN View Main E,SCR_PAT_WPMaxPosY,-1
+FUN View Main E,SCR_PAT_WPMinPosX,-1
+FUN View Main E,SCR_PAT_WPMinPosY,-1
+FUN View Main E,SCR_PAT_WPNormPosB,824
+FUN View Main E,SCR_PAT_WPNormPosL,150
+FUN View Main E,SCR_PAT_WPNormPosR,1120
+FUN View Main E,SCR_PAT_WPNormPosT,150
+FUN View Main E,SCR_PAT_WPShowCmd,1
+FUN View Main E,SETWRHW_PAT_WPFlags,0
+FUN View Main E,SETWRHW_PAT_WPMaxPosX,-1
+FUN View Main E,SETWRHW_PAT_WPMaxPosY,-1
+FUN View Main E,SETWRHW_PAT_WPMinPosX,-1
+FUN View Main E,SETWRHW_PAT_WPMinPosY,-1
+FUN View Main E,SETWRHW_PAT_WPNormPosB,699
+FUN View Main E,SETWRHW_PAT_WPNormPosL,25
+FUN View Main E,SETWRHW_PAT_WPNormPosR,995
+FUN View Main E,SETWRHW_PAT_WPNormPosT,25
+FUN View Main E,SETWRHW_PAT_WPShowCmd,1
+FUN View Main E,SHORT_PAT_WPFlags,0
+FUN View Main E,SHORT_PAT_WPMaxPosX,-1
+FUN View Main E,SHORT_PAT_WPMaxPosY,-1
+FUN View Main E,SHORT_PAT_WPMinPosX,-1
+FUN View Main E,SHORT_PAT_WPMinPosY,-1
+FUN View Main E,SHORT_PAT_WPNormPosB,849
+FUN View Main E,SHORT_PAT_WPNormPosL,175
+FUN View Main E,SHORT_PAT_WPNormPosR,1145
+FUN View Main E,SHORT_PAT_WPNormPosT,175
+FUN View Main E,SHORT_PAT_WPShowCmd,1
+FUN View Main E,SYSTEM_PAT_WPFlags,0
+FUN View Main E,SYSTEM_PAT_WPMaxPosX,-1
+FUN View Main E,SYSTEM_PAT_WPMaxPosY,-1
+FUN View Main E,SYSTEM_PAT_WPMinPosX,-1
+FUN View Main E,SYSTEM_PAT_WPMinPosY,-1
+FUN View Main E,SYSTEM_PAT_WPNormPosB,859
+FUN View Main E,SYSTEM_PAT_WPNormPosL,412
+FUN View Main E,SYSTEM_PAT_WPNormPosR,1275
+FUN View Main E,SYSTEM_PAT_WPNormPosT,185
+FUN View Main E,SYSTEM_PAT_WPShowCmd,1
+FUN View Main E,TRANSFORMER_PAT_WPFlags,0
+FUN View Main E,TRANSFORMER_PAT_WPMaxPosX,-1
+FUN View Main E,TRANSFORMER_PAT_WPMaxPosY,-1
+FUN View Main E,TRANSFORMER_PAT_WPMinPosX,-1
+FUN View Main E,TRANSFORMER_PAT_WPMinPosY,-1
+FUN View Main E,TRANSFORMER_PAT_WPNormPosB,874
+FUN View Main E,TRANSFORMER_PAT_WPNormPosL,200
+FUN View Main E,TRANSFORMER_PAT_WPNormPosR,1170
+FUN View Main E,TRANSFORMER_PAT_WPNormPosT,200
+FUN View Main E,TRANSFORMER_PAT_WPShowCmd,1
+FUN View Main E,TRIAC_PAT_WPFlags,0
+FUN View Main E,TRIAC_PAT_WPMaxPosX,-1
+FUN View Main E,TRIAC_PAT_WPMaxPosY,-1
+FUN View Main E,TRIAC_PAT_WPMinPosX,-1
+FUN View Main E,TRIAC_PAT_WPMinPosY,-1
+FUN View Main E,TRIAC_PAT_WPNormPosB,899
+FUN View Main E,TRIAC_PAT_WPNormPosL,225
+FUN View Main E,TRIAC_PAT_WPNormPosR,1195
+FUN View Main E,TRIAC_PAT_WPNormPosT,225
+FUN View Main E,TRIAC_PAT_WPShowCmd,1
+FUN View Main E,TRIMMER_PAT_WPFlags,0
+FUN View Main E,TRIMMER_PAT_WPMaxPosX,-1
+FUN View Main E,TRIMMER_PAT_WPMaxPosY,-1
+FUN View Main E,TRIMMER_PAT_WPMinPosX,-1
+FUN View Main E,TRIMMER_PAT_WPMinPosY,-1
+FUN View Main E,TRIMMER_PAT_WPNormPosB,924
+FUN View Main E,TRIMMER_PAT_WPNormPosL,250
+FUN View Main E,TRIMMER_PAT_WPNormPosR,1220
+FUN View Main E,TRIMMER_PAT_WPNormPosT,250
+FUN View Main E,TRIMMER_PAT_WPShowCmd,1
+FUN View Main E,USRBRD_PAT_WPFlags,0
+FUN View Main E,USRBRD_PAT_WPMaxPosX,-1
+FUN View Main E,USRBRD_PAT_WPMaxPosY,-1
+FUN View Main E,USRBRD_PAT_WPMinPosX,-1
+FUN View Main E,USRBRD_PAT_WPMinPosY,-1
+FUN View Main E,USRBRD_PAT_WPNormPosB,887
+FUN View Main E,USRBRD_PAT_WPNormPosL,81
+FUN View Main E,USRBRD_PAT_WPNormPosR,1051
+FUN View Main E,USRBRD_PAT_WPNormPosT,213
+FUN View Main E,USRBRD_PAT_WPShowCmd,1
+Import ICT_TOL Capacitor,Capacitor_Toll_1,5
+Import ICT_TOL Capacitor,Capacitor_Toll_10,20
+Import ICT_TOL Capacitor,Capacitor_Toll_3,8
+Import ICT_TOL Capacitor,Capacitor_Toll_5,10
+Import ICT_TOL Inductance,Inductance_Toll_1,10
+Import ICT_TOL Inductance,Inductance_Toll_10,20
+Import ICT_TOL Inductance,Inductance_Toll_3,10
+Import ICT_TOL Inductance,Inductance_Toll_5,20
+Import ICT_TOL Resistor,Resistor_Toll_1,3
+Import ICT_TOL Resistor,Resistor_Toll_10,10
+Import ICT_TOL Resistor,Resistor_Toll_3,5
+Import ICT_TOL Resistor,Resistor_Toll_5,7
+Library Settings,LibraryMacro1,
+Library Settings,LibraryMacro2,
+Library Settings,LibraryMacro3,
+Library Settings,LibraryMacro4,
+Library Settings,LibraryMacro5,
+MakeDrill Settings,EnableForced2,1
+MakeDrill Settings,IgnoreForced,0
+MakeDrill Settings,MinimumDistance100,2.02
+MakeDrill Settings,MinimumDistance50,1.28
+MakeDrill Settings,MinimumDistance75,1.68
+MakeDrill Settings,OnlySignalsInPriority,0
+MES Settings,SecondaryMachineID,
+Motion Configuration,Board Support,N
+Motion Configuration,EnableZOptimization,N
+Motion Configuration,ProbeNeedle,0
+Motion Configuration,ProbesHFMounted,"0,0,0,0,0,0,0,0"
+Motion Configuration,ZOptimizationDistance,10.0
+Motion Configuration,ZOptimizationUp,1.5
+NFZ Settings,SecurityDistance,0.2
+NL Configuration,FirstSignal,0
+NL Configuration,SecondSignal,0
+NL Configuration,SecondSignalGND,0
+NL Configuration,SplitNets,0
+OTPN Optimize,Capacitor,-0.00000000002
+OTPN Optimize,Inductance,0.1
+OTPN Optimize,OTPNTollNegWithOptimizationICT,0.7
+OTPN Optimize,OTPNTollPosWithOptimizationICT,0.7
+OTPN Optimize,Resistor,1000000
+OTPN Optimize,ValueOnNodeNC,0.0000006
+PageBWRepairStation,SelectiveDrawComponents,1
+Planimetry,DisableFast,3.0
+Planimetry,DisableZOpt,2.0
+Planimetry,DownThinEnabled,N
+Planimetry,Enabled,0
+Planimetry,MaxDownBoard,-3.0
+Planimetry,MaxUpBoard,3.0
+Planimetry,MinDimCorona,0.254
+Planimetry,NewProbeMode,1
+Planimetry,OffsetDistance,3.0
+Planimetry,ReadLowLimit,130
+Planimetry,SafeProbeClearance,2.0
+Planimetry,SaveZMarkerReport,0
+Planimetry,SaveZMarkerReportDir,
+Planimetry,SaveZMarkerReportFormat,
+Planimetry,SaveZMarkerReportName,
+Planimetry,SaveZMarkerReportSep,
+Planimetry,UseKelvinTest,N
+Planimetry,UseLaserZMarker,2
+Planimetry,UseNearestZMarker,N
+Planimetry,UseZMarkersLocal,N
+Planimetry,ZMarkerReport,N
+Repair Settings,DisableStandardReport,1
+Repair Settings,RepairPosition,"110,120,300,200"
+Stamp Configuration,ComponentOffsetX,0.
+Stamp Configuration,ComponentOffsetY,0.
+Stamp Configuration,CreateBoardStamp,N
+Stamp Configuration,CreateComponentStamp,0
+Stamp Configuration,StampOnBoard,0
+Stamp Configuration,StampOnComponent,0
+Stamp Configuration,StampOnPanel,0
+Test Configuration,AutWaitTime,1100
+Test Configuration,BarcodeJPG,0
+Test Configuration,CheckTimIOPort,Y
+Test Configuration,ContactCheckBeforeTest,N
+Test Configuration,ContactRetryNumber,0
+Test Configuration,ContactZUpPosition,3.
+Test Configuration,CustomReportFile,
+Test Configuration,DiagnosticType,4
+Test Configuration,DoShortRetest,0
+Test Configuration,DoShortRetry,0
+Test Configuration,DTPrintAllPins,Y
+Test Configuration,DTUseBusGuide,N
+Test Configuration,DTVerifySignals,Y
+Test Configuration,EnableStopper,Y
+Test Configuration,LockFixture,Y
+Test Configuration,LockFixturePosition,0.0
+Test Configuration,ManWaitTime,100
+Test Configuration,MaxPrintedErrors,100
+Test Configuration,MaxTestedBoards,0.
+Test Configuration,MaxTestedErrors,0
+Test Configuration,MoveAfterStopper,N
+Test Configuration,MoveAfterStopperPosition,0.0
+Test Configuration,MoveAfterUnloadPosition,0.0
+Test Configuration,MoveFromStopper,N
+Test Configuration,MoveFromStopperPosition,50
+Test Configuration,PneuWaitTime,500
+Test Configuration,ProgramJPG,0
+Test Configuration,RemovePass,Y
+Test Configuration,RemoveTime,N
+Test Configuration,ReportItem,2
+Test Configuration,ReportType,0
+Test Configuration,RetestErrors,N
+Test Configuration,RetestFailedOnly,0
+Test Configuration,RetryMicro,50
+Test Configuration,RetryNumber,0
+Test Configuration,SaveMarkerReport,0
+Test Configuration,SaveMarkerReportDir,
+Test Configuration,SaveMarkerReportFormat,
+Test Configuration,SaveMarkerReportName,
+Test Configuration,SaveMarkerReportSep,
+Test Configuration,SaveReport,0
+Test Configuration,SaveReportDir,
+Test Configuration,SaveReportFormat,
+Test Configuration,SaveReportName,
+Test Configuration,SaveReportSep,
+Test Configuration,Secondary Program,None
+Test Configuration,SilentTest,N
+Test Configuration,StartWaitTime,10
+Test Configuration,TerminalBkColor,16711680
+Test Configuration,TerminalFrColor,16777215
+Test Configuration,TestSimulation,N
+Test Configuration,TwinWaitTime,0
+Test Configuration,ZAxisRetryNumberOfError,0
+Test Report,fEnableParentMDI,0
+Test Report,WPFlags,0
+Test Report,WPMaxPosX,-1
+Test Report,WPMaxPosY,-1
+Test Report,WPMinPosX,-1
+Test Report,WPMinPosY,-1
+Test Report,WPNormPosB,937
+Test Report,WPNormPosL,72
+Test Report,WPNormPosR,940
+Test Report,WPNormPosT,41
+Test Report,WPShowCmd,1
+Test Settings,AbortForComponentWithoutMacro,Y
+Test Settings,AutoAdjustment,0
+Test Settings,AutoDebug,0
+Test Settings,AutoLearn,0
+Test Settings,AutomaticRPSAlwaysEnabled,N
+Test Settings,AutomaticRPSSupported,N
+Test Settings,BoardsCounter,N
+Test Settings,BoardTestResultDeferred,N
+Test Settings,CapOperationMode,2
+Test Settings,CheckBoardsBeforeRun,N
+Test Settings,CheckProfile,0
+Test Settings,Component,0
+Test Settings,DisableVIRefresh,N
+Test Settings,EnableRetestError,0
+Test Settings,ExternalProgram,
+Test Settings,ExternalProgramEnd,
+Test Settings,Fail,0
+Test Settings,FailNr,0
+Test Settings,FastAutodebug,0
+Test Settings,FNodeAlwaysNoError,N
+Test Settings,FNodeError,N
+Test Settings,FNodeNoMeasure,N
+Test Settings,GroundPlanePresent,Y
+Test Settings,IsoAutorange,N
+Test Settings,IsoRLCSerie,N
+Test Settings,Kelvin2WiresComponentPrefix,G
+Test Settings,Kelvin2WiresOptimization,N
+Test Settings,KelvinCheckVoltage,0.1
+Test Settings,KitSettingsOverride,N
+Test Settings,LastComponent,
+Test Settings,LearnParasiteCapValue,0
+Test Settings,LearnParasiteValue,0
+Test Settings,Live,0
+Test Settings,LiveOffsetX,10
+Test Settings,LiveOffsetY,10
+Test Settings,Loop,0
+Test Settings,ManualMarkers,0
+Test Settings,ManualRetest,0
+Test Settings,Marker,0
+Test Settings,Marker_OffsetX,0.
+Test Settings,Marker_OffsetY,0.
+Test Settings,MarkerAcquisitionStore,N
+Test Settings,MarkerReport,N
+Test Settings,NetlistLearning,0
+Test Settings,nTotalFailed,0
+Test Settings,nTotalPassed,0
+Test Settings,NumeroProgressivo,-1
+Test Settings,NumLoop,10
+Test Settings,PassNr,0
+Test Settings,PauseOnError,0
+Test Settings,PrintTestReport,0
+Test Settings,ResetAllATEBoardsType,0
+Test Settings,ResetCap,0
+Test Settings,RetestFailMode,0
+Test Settings,RetestFailType,1
+Test Settings,Retry,0
+Test Settings,SaveFailedAutomaticMarkers,0
+Test Settings,SaveMotionMove,N
+Test Settings,ShowReportOnFail,0
+Test Settings,ShowTestReport,1
+Test Settings,SolderedBoardAutolearn,0
+Test Settings,SolderSimulation,0
+Test Settings,SortReportBy,0
+Test Settings,StartWithCastleOpen,N
+Test Settings,STCmbActualIndex,-1
+Test Settings,STCmbActualName,Normal Test
+Test Settings,StepbyStep,0
+Test Settings,StopOnError,0
+Test Settings,STSetRegister,0
+Test Settings,TestCheck,0
+Test Settings,TestFail_Barcode,
+Test Settings,TestMessageOutput,0
+Test Settings,TestNr,100
+Test Settings,TestRetryType,0
+Test Settings,TestStepbyStep,0
+Test Settings,TimeOptimization,0
+Test Settings,TotalFailed,0
+Test Settings,TotalPassed,0
+Test Settings,UnloadBoardPhase,0
+Test Settings,VBSResetMode,0
+Test Settings,ViewTestReport,0
+Test Settings,WPFlags,0
+Test Settings,WPMaxPosX,-1
+Test Settings,WPMaxPosY,-1
+Test Settings,WPMinPosX,-1
+Test Settings,WPMinPosY,-1
+Test Settings,WPNormPosB,543
+Test Settings,WPNormPosL,64
+Test Settings,WPNormPosR,730
+Test Settings,WPNormPosT,26
+Test Settings,WPShowCmd,1
+Test Settings,ZMarkers,0
+Visual Tasks,ViewPad,1
+Welder Configuration,AcquisitionData,N
+Welder Configuration,AcquisitionDataType,0
+Welder Configuration,AcquisitionDataWorkpath,
+Welder Configuration,Alloy,0
+Welder Configuration,AlloyCoilUsedFromTheBoard,41
+Welder Configuration,BoardCodeAcquisitionData,N
+Welder Configuration,CustomWireHomingSettings,1
+Welder Configuration,Flux,0.
+Welder Configuration,FluxPerc,2.2
+Welder Configuration,GenerateCheckSoldering,N
+Welder Configuration,HotAirFlow1Air,N
+Welder Configuration,HotAirFlow1BoardHoming,0.
+Welder Configuration,HotAirFlow1Enabled,N
+Welder Configuration,HotAirFlow1HeatingTime,0
+Welder Configuration,HotAirFlow1Hot,N
+Welder Configuration,HotAirFlow1MotionEnabled,Y
+Welder Configuration,HotAirFlow1StartAngle,0.
+Welder Configuration,HotAirFlow1StopAngle,0.
+Welder Configuration,HotAirFlow1SwingTime,0
+Welder Configuration,HotAirFlow1Temperature,0
+Welder Configuration,HotAirFlow1WaitHeatingTime,0
+Welder Configuration,HotAirFlow1XPosition,0.
+Welder Configuration,HotAirFlow1YPosition,0.
+Welder Configuration,HotAirFlow2Air,N
+Welder Configuration,HotAirFlow2BoardHoming,0.
+Welder Configuration,HotAirFlow2Enabled,N
+Welder Configuration,HotAirFlow2HeatingTime,0
+Welder Configuration,HotAirFlow2Hot,N
+Welder Configuration,HotAirFlow2MotionEnabled,Y
+Welder Configuration,HotAirFlow2StartAngle,0.
+Welder Configuration,HotAirFlow2StopAngle,0.
+Welder Configuration,HotAirFlow2SwingTime,0
+Welder Configuration,HotAirFlow2Temperature,0
+Welder Configuration,HotAirFlow2WaitHeatingTime,0
+Welder Configuration,HotAirFlow2XPosition,0.
+Welder Configuration,HotAirFlow2YPosition,0.
+Welder Configuration,HotAirFlow3Air,N
+Welder Configuration,HotAirFlow3BoardHoming,0.
+Welder Configuration,HotAirFlow3Enabled,N
+Welder Configuration,HotAirFlow3HeatingTime,0
+Welder Configuration,HotAirFlow3Hot,N
+Welder Configuration,HotAirFlow3MotionEnabled,Y
+Welder Configuration,HotAirFlow3StartAngle,0.
+Welder Configuration,HotAirFlow3StopAngle,0.
+Welder Configuration,HotAirFlow3SwingTime,0
+Welder Configuration,HotAirFlow3Temperature,0
+Welder Configuration,HotAirFlow3WaitHeatingTime,0
+Welder Configuration,HotAirFlow3XPosition,0.
+Welder Configuration,HotAirFlow3YPosition,0.
+Welder Configuration,HotAirFlow4Air,N
+Welder Configuration,HotAirFlow4BoardHoming,0.
+Welder Configuration,HotAirFlow4Enabled,N
+Welder Configuration,HotAirFlow4HeatingTime,0
+Welder Configuration,HotAirFlow4Hot,N
+Welder Configuration,HotAirFlow4MotionEnabled,Y
+Welder Configuration,HotAirFlow4StartAngle,0.
+Welder Configuration,HotAirFlow4StopAngle,0.
+Welder Configuration,HotAirFlow4SwingTime,0
+Welder Configuration,HotAirFlow4Temperature,0
+Welder Configuration,HotAirFlow4WaitHeatingTime,0
+Welder Configuration,HotAirFlow4XPosition,0.
+Welder Configuration,HotAirFlow4YPosition,0.
+Welder Configuration,HotAirFlow5Air,N
+Welder Configuration,HotAirFlow5BoardHoming,0.
+Welder Configuration,HotAirFlow5Enabled,N
+Welder Configuration,HotAirFlow5HeatingTime,0
+Welder Configuration,HotAirFlow5Hot,N
+Welder Configuration,HotAirFlow5MotionEnabled,Y
+Welder Configuration,HotAirFlow5StartAngle,0.
+Welder Configuration,HotAirFlow5StopAngle,0.
+Welder Configuration,HotAirFlow5SwingTime,0
+Welder Configuration,HotAirFlow5Temperature,0
+Welder Configuration,HotAirFlow5WaitHeatingTime,0
+Welder Configuration,HotAirFlow5XPosition,0.
+Welder Configuration,HotAirFlow5YPosition,0.
+Welder Configuration,HotAirFlow6Air,N
+Welder Configuration,HotAirFlow6BoardHoming,0.
+Welder Configuration,HotAirFlow6Enabled,N
+Welder Configuration,HotAirFlow6HeatingTime,0
+Welder Configuration,HotAirFlow6Hot,N
+Welder Configuration,HotAirFlow6MotionEnabled,Y
+Welder Configuration,HotAirFlow6StartAngle,0.
+Welder Configuration,HotAirFlow6StopAngle,0.
+Welder Configuration,HotAirFlow6SwingTime,0
+Welder Configuration,HotAirFlow6Temperature,0
+Welder Configuration,HotAirFlow6WaitHeatingTime,0
+Welder Configuration,HotAirFlow6XPosition,0.
+Welder Configuration,HotAirFlow6YPosition,0.
+Welder Configuration,HotAirFlow7Air,N
+Welder Configuration,HotAirFlow7BoardHoming,0.
+Welder Configuration,HotAirFlow7Enabled,N
+Welder Configuration,HotAirFlow7HeatingTime,0
+Welder Configuration,HotAirFlow7Hot,N
+Welder Configuration,HotAirFlow7MotionEnabled,Y
+Welder Configuration,HotAirFlow7StartAngle,0.
+Welder Configuration,HotAirFlow7StopAngle,0.
+Welder Configuration,HotAirFlow7SwingTime,0
+Welder Configuration,HotAirFlow7Temperature,0
+Welder Configuration,HotAirFlow7WaitHeatingTime,0
+Welder Configuration,HotAirFlow7XPosition,0.
+Welder Configuration,HotAirFlow7YPosition,0.
+Welder Configuration,HotAirFlow8Air,N
+Welder Configuration,HotAirFlow8BoardHoming,0.
+Welder Configuration,HotAirFlow8Enabled,N
+Welder Configuration,HotAirFlow8HeatingTime,0
+Welder Configuration,HotAirFlow8Hot,N
+Welder Configuration,HotAirFlow8MotionEnabled,Y
+Welder Configuration,HotAirFlow8StartAngle,0.
+Welder Configuration,HotAirFlow8StopAngle,0.
+Welder Configuration,HotAirFlow8SwingTime,0
+Welder Configuration,HotAirFlow8Temperature,0
+Welder Configuration,HotAirFlow8WaitHeatingTime,0
+Welder Configuration,HotAirFlow8XPosition,0.
+Welder Configuration,HotAirFlow8YPosition,0.
+Welder Configuration,HotAirZone1DeltaTemperatureXs,0
+Welder Configuration,HotAirZone1Enabled,N
+Welder Configuration,HotAirZone1Temperature,0
+Welder Configuration,HotAirZone1TimeMax,0
+Welder Configuration,HotAirZone1TimeMin,0
+Welder Configuration,HotAirZone2DeltaTemperatureXs,0
+Welder Configuration,HotAirZone2Enabled,N
+Welder Configuration,HotAirZone2Temperature,0
+Welder Configuration,HotAirZone2TimeMax,0
+Welder Configuration,HotAirZone2TimeMin,0
+Welder Configuration,HotAirZone3DeltaTemperatureXs,0
+Welder Configuration,HotAirZone3Enabled,N
+Welder Configuration,HotAirZone3Temperature,0
+Welder Configuration,HotAirZone3TimeMax,0
+Welder Configuration,HotAirZone3TimeMin,0
+Welder Configuration,HotAirZone4DeltaTemperatureXs,0
+Welder Configuration,HotAirZone4Enabled,N
+Welder Configuration,HotAirZone4Temperature,0
+Welder Configuration,HotAirZone4TimeMax,0
+Welder Configuration,HotAirZone4TimeMin,0
+Welder Configuration,HotFlowMobileEnabled,N
+Welder Configuration,HotFlowMobilePHAir,N
+Welder Configuration,HotFlowMobilePHHot,N
+Welder Configuration,HotFlowMobilePHN2,N
+Welder Configuration,HotFlowMobilePHTemperature,0
+Welder Configuration,HotFlowMobilePHTime,0
+Welder Configuration,HotFlowMobileSAir,N
+Welder Configuration,HotFlowMobileSHot,N
+Welder Configuration,HotFlowMobileSN2,N
+Welder Configuration,HotFlowMobileSPreHeatOnly,N
+Welder Configuration,HotFlowMobileSTemperature,0
+Welder Configuration,IntervalAcquisitionData,0
+Welder Configuration,LeadPerc,40.
+Welder Configuration,PCBColor,0
+Welder Configuration,PCBPadSurface,0
+Welder Configuration,PeriodMinTime,0
+Welder Configuration,PreHeatTemperatureType,0
+Welder Configuration,PropotionalCorrPyrometer,1.
+Welder Configuration,SampleTime,10
+Welder Configuration,SolderingProcess,0
+Welder Configuration,SoldKind,1.
+Welder Configuration,SoldSpeed,1.
+Welder Configuration,SuperficialFinish,1
+Welder Configuration,ThermoCoupleK1Enabled,N
+Welder Configuration,ThermoCoupleK2Enabled,N
+Welder Configuration,ThermoCoupleK3Enabled,N
+Welder Configuration,ThermoCoupleKSampleTime,200
+Welder Configuration,TinPerc,60.
+Welder Configuration,TMax,0
+Welder Configuration,TMin,0
+Welder Configuration,TMinStabilityTime,0
+Welder Configuration,WeldingStoreLive,N
+Welder Configuration,WireDiameter,0.
+Welder Configuration,WireHomingType,2
+Welder Configuration,WireIntervalHoming,1000.
+WelderScope Configuration,LaserSettings,N
+WelderScope Configuration,LaserSettingsAfterFeedback,N
+WelderScope Configuration,PyrometerTemperature,Y
+WelderScope Configuration,TheoricTemperature,Y
+WelderScope Configuration,ThermoCoupleKTemperature,N
+Wizard Configuration,AdjPad,1
+Wizard Configuration,AdjPin,0
+Wizard Configuration,BarrelThreshold,0.
+Wizard Configuration,BarrelTolerance,20.
+Wizard Configuration,BOMFile,
+Wizard Configuration,BOMType,
+Wizard Configuration,CadType,<none>
+Wizard Configuration,CapacitiveTest,0
+Wizard Configuration,ChStkTechnology,TTL
+Wizard Configuration,Clearance,40.
+Wizard Configuration,Continuity,1
+Wizard Configuration,ContinuityImpedance,200000.
+Wizard Configuration,ContinuityVolt,0.3
+Wizard Configuration,EnableAdjOptimization,1
+Wizard Configuration,EnableCheckStuck,N
+Wizard Configuration,FullDiag,0
+Wizard Configuration,GenerateBarrel,0
+Wizard Configuration,GenerateBBT,0
+Wizard Configuration,GenerateCheckStuck,0
+Wizard Configuration,GenerateDGT_PRG,0
+Wizard Configuration,GenerateDigital,0
+Wizard Configuration,GenerateFAN,1
+Wizard Configuration,GenerateICT,1
+Wizard Configuration,GenerateKelvin,0
+Wizard Configuration,GenerateLaserTest,0
+Wizard Configuration,GenerateLaserTestOnNotCovered,0
+Wizard Configuration,GenerateLeakageNet,0
+Wizard Configuration,GenerateLeakTest,0
+Wizard Configuration,GenerateLedSensor,0
+Wizard Configuration,GenerateMixedICTTest,1
+Wizard Configuration,GenerateNotMounted,1
+Wizard Configuration,GenerateOTPN,1
+Wizard Configuration,GeneratePAN,0
+Wizard Configuration,GeneratePower,0
+Wizard Configuration,GenerateThermal,0
+Wizard Configuration,GenerateVISION,0
+Wizard Configuration,GenerateVISIONOnNotCovered,0
+Wizard Configuration,GroundVsAll,0
+Wizard Configuration,HighShortImpedance,200000
+Wizard Configuration,HighShortVolt,20.0
+Wizard Configuration,ICVectorless,0
+Wizard Configuration,ImpFile,
+Wizard Configuration,JumpVia,0
+Wizard Configuration,KelvinThreshold,0.
+Wizard Configuration,KelvinTolerance,20.
+Wizard Configuration,LowShortImpedance,100
+Wizard Configuration,LowShortVolt,10
+Wizard Configuration,MinPinNumber,0
+Wizard Configuration,MultipleBoard,0
+Wizard Configuration,MultipleBoardNX,0
+Wizard Configuration,MultipleBoardXPos,0.
+Wizard Configuration,MultipleBoardYPos,0.
+Wizard Configuration,NewWizard,1
+Wizard Configuration,OptimizationType,1
+Wizard Configuration,Short,1
+Wizard Configuration,ShortDataGen,1
+Wizard Configuration,ShortImpedance,6.
+Wizard Configuration,ShortVolt,0.5
+Wizard Configuration,Templates List,D:\VIVABOARD 3.3.0\System Library.mdb
+Wizard Configuration,VivaManuals,D:\VIVA 3.3.0 VALID\
+Board Configuration,EnableSeries,1
+Board Configuration,PlateEnable,1
+Board Configuration,SystemHomeOnUnloadBoard,1
+Board Configuration,TemplateKind,0
+Board Settings,Wizard_Checkmark,
+Board Settings,Wizard_Checkmark0,
+Board Settings,Wizard_Checkmark1,
+Board Settings,Wizard_Checkmark10,
+Board Settings,Wizard_Checkmark11,
+Board Settings,Wizard_Checkmark12,
+Board Settings,Wizard_Checkmark13,
+Board Settings,Wizard_Checkmark14,
+Board Settings,Wizard_Checkmark15,
+Board Settings,Wizard_Checkmark16,
+Board Settings,Wizard_Checkmark17,
+Board Settings,Wizard_Checkmark18,
+Board Settings,Wizard_Checkmark19,
+Board Settings,Wizard_Checkmark2,
+Board Settings,Wizard_Checkmark20,
+Board Settings,Wizard_Checkmark21,
+Board Settings,Wizard_Checkmark22,
+Board Settings,Wizard_Checkmark23,
+Board Settings,Wizard_Checkmark24,
+Board Settings,Wizard_Checkmark25,
+Board Settings,Wizard_Checkmark26,
+Board Settings,Wizard_Checkmark27,
+Board Settings,Wizard_Checkmark28,
+Board Settings,Wizard_Checkmark29,
+Board Settings,Wizard_Checkmark3,
+Board Settings,Wizard_Checkmark30,
+Board Settings,Wizard_Checkmark31,
+Board Settings,Wizard_Checkmark32,
+Board Settings,Wizard_Checkmark33,
+Board Settings,Wizard_Checkmark34,
+Board Settings,Wizard_Checkmark35,
+Board Settings,Wizard_Checkmark36,
+Board Settings,Wizard_Checkmark37,
+Board Settings,Wizard_Checkmark38,
+Board Settings,Wizard_Checkmark39,
+Board Settings,Wizard_Checkmark4,
+Board Settings,Wizard_Checkmark40,
+Board Settings,Wizard_Checkmark41,
+Board Settings,Wizard_Checkmark42,
+Board Settings,Wizard_Checkmark43,
+Board Settings,Wizard_Checkmark44,
+Board Settings,Wizard_Checkmark45,
+Board Settings,Wizard_Checkmark46,
+Board Settings,Wizard_Checkmark47,
+Board Settings,Wizard_Checkmark48,
+Board Settings,Wizard_Checkmark49,
+Board Settings,Wizard_Checkmark5,
+Board Settings,Wizard_Checkmark50,
+Board Settings,Wizard_Checkmark51,
+Board Settings,Wizard_Checkmark52,
+Board Settings,Wizard_Checkmark53,
+Board Settings,Wizard_Checkmark54,
+Board Settings,Wizard_Checkmark55,
+Board Settings,Wizard_Checkmark56,
+Board Settings,Wizard_Checkmark57,
+Board Settings,Wizard_Checkmark58,
+Board Settings,Wizard_Checkmark59,
+Board Settings,Wizard_Checkmark6,
+Board Settings,Wizard_Checkmark60,
+Board Settings,Wizard_Checkmark61,
+Board Settings,Wizard_Checkmark62,
+Board Settings,Wizard_Checkmark63,
+Board Settings,Wizard_Checkmark64,
+Board Settings,Wizard_Checkmark65,
+Board Settings,Wizard_Checkmark66,
+Board Settings,Wizard_Checkmark67,
+Board Settings,Wizard_Checkmark68,
+Board Settings,Wizard_Checkmark69,
+Board Settings,Wizard_Checkmark7,
+Board Settings,Wizard_Checkmark70,
+Board Settings,Wizard_Checkmark71,
+Board Settings,Wizard_Checkmark72,
+Board Settings,Wizard_Checkmark73,
+Board Settings,Wizard_Checkmark74,
+Board Settings,Wizard_Checkmark75,
+Test Settings,CreateTestReport,1
+Board Configuration,BmpRect,"10.0,0.0,10.0,0.0"
+Board Configuration,DisableNeedleCheck,1
+Board Configuration,DisableTPV,0
+FUN View Main,SyncPattNum4,0
+FUN View Main,BreakPattern4,0
+FUN View Main,BreakPattNum4,0
+FUN View Main,LoopPattern4,0
+FUN View Main,LoopStartPatt4,0
+FUN View Main,LoopStopPatt4,0
+FUN View Main,Version4,0
+FUN View Main,State4,A
+FUN View Main,Advanced4,O
+FUN View Main,File5,CRYSTAL.PAT
+FUN View Main,SyncPattern5,0
+FUN View Main,SyncPattNum5,0
+FUN View Main,BreakPattern5,0
+FUN View Main,BreakPattNum5,0
+FUN View Main,LoopPattern5,0
+FUN View Main,LoopStartPatt5,0
+FUN View Main,LoopStopPatt5,0
+FUN View Main,Version5,0
+FUN View Main,State5,A
+FUN View Main,Advanced5,O
+FUN View Main,File6,DIGPIN.PAT
+FUN View Main,SyncPattern6,0
+FUN View Main,SyncPattNum6,0
+FUN View Main,BreakPattern6,0
+FUN View Main,BreakPattNum6,0
+FUN View Main,LoopPattern6,0
+FUN View Main,LoopStartPatt6,0
+FUN View Main,LoopStopPatt6,0
+FUN View Main,Version6,0
+FUN View Main,State6,A
+FUN View Main,Advanced6,O
+FUN View Main,File7,GATE.PAT
+FUN View Main,SyncPattern7,0
+FUN View Main,SyncPattNum7,0
+FUN View Main,BreakPattern7,0
+FUN View Main,BreakPattNum7,0
+FUN View Main,LoopPattern7,0
+FUN View Main,LoopStartPatt7,0
+FUN View Main,LoopStopPatt7,0
+FUN View Main,Version7,0
+FUN View Main,State7,A
+FUN View Main,Advanced7,O
+FUN View Main,File8,GNDREF.PAT
+FUN View Main,SyncPattern8,0
+FUN View Main,SyncPattNum8,0
+FUN View Main,BreakPattern8,0
+FUN View Main,BreakPattNum8,0
+FUN View Main,LoopPattern8,0
+FUN View Main,LoopStartPatt8,0
+FUN View Main,LoopStopPatt8,0
+FUN View Main,Version8,0
+FUN View Main,State8,A
+FUN View Main,Advanced8,O
+FUN View Main,File9,HV230AC.PAT
+FUN View Main,SyncPattern9,0
+FUN View Main,SyncPattNum9,0
+FUN View Main,BreakPattern9,0
+FUN View Main,BreakPattNum9,0
+FUN View Main,LoopPattern9,0
+FUN View Main,LoopStartPatt9,0
+FUN View Main,LoopStopPatt9,0
+FUN View Main,Version9,0
+FUN View Main,State9,A
+FUN View Main,Advanced9,O
+FUN View Main,File10,IMPCHECK.PAT
+FUN View Main,SyncPattern10,0
+FUN View Main,SyncPattNum10,0
+FUN View Main,BreakPattern10,0
+FUN View Main,BreakPattNum10,0
+FUN View Main,LoopPattern10,0
+FUN View Main,LoopStartPatt10,0
+FUN View Main,LoopStopPatt10,0
+FUN View Main,Version10,0
+FUN View Main,State10,A
+FUN View Main,Advanced10,O
+FUN View Main,File11,ISO_3W.PAT
+FUN View Main,SyncPattern11,0
+FUN View Main,SyncPattNum11,0
+Board Settings,Wizard_Checkmark76,
+Board Settings,Wizard_Checkmark77,
+Board Settings,Wizard_Checkmark78,
+Board Settings,Wizard_Checkmark79,
+Board Settings,Wizard_Checkmark8,
+Board Settings,Wizard_Checkmark80,
+Board Settings,Wizard_Checkmark81,
+Board Settings,Wizard_Checkmark82,
+Board Settings,Wizard_Checkmark83,
+Board Settings,Wizard_Checkmark84,
+Board Settings,Wizard_Checkmark85,
+Board Settings,Wizard_Checkmark86,
+Board Settings,Wizard_Checkmark87,
+Board Settings,Wizard_Checkmark88,
+Board Settings,Wizard_Checkmark89,
+Board Settings,Wizard_Checkmark9,
+Board Settings,Wizard_Checkmark90,
+Board Settings,Wizard_Checkmark91,
+Board Settings,Wizard_Checkmark92,
+Board Settings,Wizard_Checkmark93,
+Board Settings,Wizard_Checkmark94,
+Board Settings,Wizard_Checkmark95,
+Board Settings,Wizard_Checkmark96,
+Board Settings,Wizard_Checkmark97,
+Board Settings,Wizard_Checkmark98,
+Board Settings,Wizard_Checkmark99,
+Modules Debug Settings,Barcode-ReaderAndVerifier,N
+Modules Debug Settings,BatchChanged,N
+Modules Debug Settings,Begin-Board,N
+Modules Debug Settings,Begin-Panel,N
+Modules Debug Settings,CloseBoard,N
+Modules Debug Settings,End-Board,N
+Modules Debug Settings,End-Panel,N
+Modules Debug Settings,End-Program,N
+Modules Debug Settings,ExternalProgram,
+Modules Debug Settings,MESManager,N
+Modules Debug Settings,OpenBoard,N
+Modules Debug Settings,Start-Program,N
+Modules Debug Settings,StoreBoard,N
+Modules Debug Settings,UnFreezeBoard,N
+Modules Debug Settings,XYZ,N
+Planimetry,Scoring,0.0
+Planimetry,ZMarkersManuallyCreating,Y
+Stamp Configuration,VerifyStamp,0
+Test Configuration,AcquireContactInfo,N
+Test Configuration,AuticOptimization,1
+Test Configuration,BarcodeHeight,30
+Test Configuration,BarcodeType,0
+Test Configuration,ContactZExtraDownPosition,-0.05
+Test Configuration,EnableNVLLog,0
+Test Configuration,ReportExternalProgram,
+Test Configuration,SaveDataLog,0
+Test Configuration,SaveDataLogDir,
+Test Configuration,SaveDataLogFormat,
+Test Configuration,SaveDataLogName,
+Test Configuration,SaveDataLogSep,
+Test Configuration,ZAxisRetryMoveDown,-0.05
+Test Settings,LedSensorCalibrationProfile,
+Wizard Configuration,BT_ExpectVal,3.e-03
+Wizard Configuration,BT_TolN,80.
+Wizard Configuration,BT_TolP,10.
+Wizard Configuration,LowShortVoltMinVal,1
+Wizard Configuration,MaxRunTimeIso,1000
+Wizard Configuration,Use_ApplyRemovePW_macro,0
+Board Configuration,SysTypeForThisBrd_label,COMPACT TK/TW/DT/VL
+FUN View Main,BreakPattern11,0
+FUN View Main,BreakPattNum11,0
+FUN View Main,LoopPattern11,0
+FUN View Main,LoopStartPatt11,0
+FUN View Main,LoopStopPatt11,0
+FUN View Main,Version11,0
+FUN View Main,State11,A
+FUN View Main,Advanced11,O
+FUN View Main,File12,LEAKAGE.PAT
+FUN View Main,SyncPattern12,0
+FUN View Main,SyncPattNum12,0
+FUN View Main,BreakPattern12,0
+Board Settings,Wizard_XDim,1400
+Board Settings,Wizard_YDim,900
+FUN View Main,BreakPattNum12,0
+FUN View Main,LoopPattern12,0
+FUN View Main,LoopStartPatt12,0
+FUN View Main,LoopStopPatt12,0
+FUN View Main,Version12,0
+FUN View Main,State12,A
+FUN View Main,Advanced12,O
+FUN View Main,File13,LEAKAGE_HIR.PAT
+FUN View Main,SyncPattern13,0
+FUN View Main,SyncPattNum13,0
+FUN View Main,BreakPattern13,0
+FUN View Main,BreakPattNum13,0
+FUN View Main,LoopPattern13,0
+FUN View Main,LoopStartPatt13,0
+FUN View Main,LoopStopPatt13,0
+FUN View Main,Version13,0
+FUN View Main,State13,A
+FUN View Main,Advanced13,O
+FUN View Main,File14,LED_SENSOR.PAT
+FUN View Main,SyncPattern14,0
+FUN View Main,SyncPattNum14,0
+FUN View Main,BreakPattern14,0
+FUN View Main,BreakPattNum14,0
+FUN View Main,LoopPattern14,0
+FUN View Main,LoopStartPatt14,0
+FUN View Main,LoopStopPatt14,0
+FUN View Main,Version14,0
+FUN View Main,State14,A
+FUN View Main,Advanced14,O
+FUN View Main,File15,LIMIT.PAT
+FUN View Main,SyncPattern15,0
+FUN View Main,SyncPattNum15,0
+FUN View Main,BreakPattern15,0
+FUN View Main,BreakPattNum15,0
+FUN View Main,LoopPattern15,0
+FUN View Main,LoopStartPatt15,0
+FUN View Main,LoopStopPatt15,0
+FUN View Main,Version15,0
+FUN View Main,State15,A
+FUN View Main,Advanced15,O
+FUN View Main,File16,LOADCAP.PAT
+FUN View Main,SyncPattern16,0
+FUN View Main,SyncPattNum16,0
+FUN View Main,BreakPattern16,0
+FUN View Main,BreakPattNum16,0
+FUN View Main,LoopPattern16,0
+FUN View Main,LoopStartPatt16,0
+FUN View Main,LoopStopPatt16,0
+FUN View Main,Version16,0
+FUN View Main,State16,A
+FUN View Main,Advanced16,O
+FUN View Main,File17,LOADFDO.PAT
+FUN View Main,SyncPattern17,0
+FUN View Main,SyncPattNum17,0
+FUN View Main,BreakPattern17,0
+FUN View Main,BreakPattNum17,0
+FUN View Main,LoopPattern17,0
+FUN View Main,LoopStartPatt17,0
+FUN View Main,LoopStopPatt17,0
+FUN View Main,Version17,0
+FUN View Main,State17,A
+FUN View Main,Advanced17,O
+FUN View Main,File18,MEAS_I_POW.PAT
+FUN View Main,SyncPattern18,0
+FUN View Main,SyncPattNum18,0
+FUN View Main,BreakPattern18,0
+FUN View Main,BreakPattNum18,0
+FUN View Main,LoopPattern18,0
+FUN View Main,LoopStartPatt18,0
+FUN View Main,LoopStopPatt18,0
+FUN View Main,Version18,0
+FUN View Main,State18,A
+FUN View Main,Advanced18,O
+FUN View Main,File19,MOVEPROBE.PAT
+FUN View Main,SyncPattern19,0
+FUN View Main,SyncPattNum19,0
+FUN View Main,BreakPattern19,0
+FUN View Main,BreakPattNum19,0
+FUN View Main,LoopPattern19,0
+FUN View Main,LoopStartPatt19,0
+FUN View Main,LoopStopPatt19,0
+FUN View Main,Version19,0
+FUN View Main,State19,A
+FUN View Main,Advanced19,O
+FUN View Main,File20,OBP.PAT
+FUN View Main,SyncPattern20,0
+FUN View Main,SyncPattNum20,0
+FUN View Main,BreakPattern20,0
+FUN View Main,BreakPattNum20,0
+FUN View Main,LoopPattern20,0
+FUN View Main,LoopStartPatt20,0
+FUN View Main,LoopStopPatt20,0
+FUN View Main,Version20,0
+FUN View Main,State20,A
+FUN View Main,Advanced20,O
+FUN View Main,File21,OPAMP.PAT
+FUN View Main,SyncPattern21,0
+FUN View Main,SyncPattNum21,0
+FUN View Main,BreakPattern21,0
+FUN View Main,BreakPattNum21,0
+FUN View Main,LoopPattern21,0
+FUN View Main,LoopStartPatt21,0
+FUN View Main,LoopStopPatt21,0
+FUN View Main,Version21,0
+FUN View Main,State21,A
+FUN View Main,Advanced21,O
+FUN View Main,File22,OPEN.PAT
+FUN View Main,SyncPattern22,0
+FUN View Main,SyncPattNum22,0
+FUN View Main,BreakPattern22,0
+FUN View Main,BreakPattNum22,0
+FUN View Main,LoopPattern22,0
+FUN View Main,LoopStartPatt22,0
+FUN View Main,LoopStopPatt22,0
+FUN View Main,Version22,0
+FUN View Main,State22,A
+FUN View Main,Advanced22,O
+FUN View Main,File23,OPTO.PAT
+FUN View Main,SyncPattern23,0
+FUN View Main,SyncPattNum23,0
+FUN View Main,BreakPattern23,0
+FUN View Main,BreakPattNum23,0
+FUN View Main,LoopPattern23,0
+FUN View Main,LoopStartPatt23,0
+FUN View Main,LoopStopPatt23,0
+FUN View Main,Version23,0
+FUN View Main,State23,A
+FUN View Main,Advanced23,O
+FUN View Main,File24,POWER.PAT
+FUN View Main,SyncPattern24,0
+FUN View Main,SyncPattNum24,0
+FUN View Main,BreakPattern24,0
+FUN View Main,BreakPattNum24,0
+FUN View Main,LoopPattern24,0
+FUN View Main,LoopStartPatt24,0
+FUN View Main,LoopStopPatt24,0
+FUN View Main,Version24,0
+FUN View Main,State24,A
+FUN View Main,Advanced24,O
+FUN View Main,File25,PWCHECK.PAT
+FUN View Main,SyncPattern25,0
+FUN View Main,SyncPattNum25,0
+FUN View Main,BreakPattern25,0
+FUN View Main,BreakPattNum25,0
+FUN View Main,LoopPattern25,0
+FUN View Main,LoopStartPatt25,0
+FUN View Main,LoopStopPatt25,0
+FUN View Main,Version25,0
+FUN View Main,State25,A
+FUN View Main,Advanced25,O
+FUN View Main,File26,REGULATOR.PAT
+FUN View Main,SyncPattern26,0
+FUN View Main,SyncPattNum26,0
+FUN View Main,BreakPattern26,0
+FUN View Main,BreakPattNum26,0
+FUN View Main,LoopPattern26,0
+FUN View Main,LoopStartPatt26,0
+FUN View Main,LoopStopPatt26,0
+FUN View Main,Version26,0
+FUN View Main,State26,A
+FUN View Main,Advanced26,O
+FUN View Main,File27,RELE.PAT
+FUN View Main,SyncPattern27,0
+FUN View Main,SyncPattNum27,0
+FUN View Main,BreakPattern27,0
+FUN View Main,BreakPattNum27,0
+FUN View Main,LoopPattern27,0
+FUN View Main,LoopStartPatt27,0
+FUN View Main,LoopStopPatt27,0
+FUN View Main,Version27,0
+FUN View Main,State27,A
+FUN View Main,Advanced27,O
+FUN View Main,File28,RESETACLAIO.PAT
+FUN View Main,SyncPattern28,0
+FUN View Main,SyncPattNum28,0
+FUN View Main,BreakPattern28,0
+FUN View Main,BreakPattNum28,0
+FUN View Main,LoopPattern28,0
+FUN View Main,LoopStartPatt28,0
+FUN View Main,LoopStopPatt28,0
+FUN View Main,Version28,0
+FUN View Main,State28,A
+FUN View Main,Advanced28,O
+FUN View Main,File29,RESICC.PAT
+FUN View Main,SyncPattern29,0
+FUN View Main,SyncPattNum29,0
+FUN View Main,BreakPattern29,0
+FUN View Main,BreakPattNum29,0
+FUN View Main,LoopPattern29,0
+FUN View Main,LoopStartPatt29,0
+FUN View Main,LoopStopPatt29,0
+FUN View Main,Version29,0
+FUN View Main,State29,A
+FUN View Main,Advanced29,O
+FUN View Main,File30,SCR.PAT
+FUN View Main,SyncPattern30,0
+FUN View Main,SyncPattNum30,0
+FUN View Main,BreakPattern30,0
+FUN View Main,BreakPattNum30,0
+FUN View Main,LoopPattern30,0
+FUN View Main,LoopStartPatt30,0
+FUN View Main,LoopStopPatt30,0
+FUN View Main,Version30,0
+FUN View Main,State30,A
+FUN View Main,Advanced30,O
+FUN View Main,File31,SETWRHW.PAT
+FUN View Main,SyncPattern31,0
+FUN View Main,SyncPattNum31,0
+FUN View Main,BreakPattern31,0
+FUN View Main,BreakPattNum31,0
+FUN View Main,LoopPattern31,0
+FUN View Main,LoopStartPatt31,0
+FUN View Main,LoopStopPatt31,0
+FUN View Main,Version31,0
+FUN View Main,State31,A
+FUN View Main,Advanced31,O
+FUN View Main,File32,SHORT.PAT
+FUN View Main,SyncPattern32,0
+FUN View Main,SyncPattNum32,0
+FUN View Main,BreakPattern32,0
+FUN View Main,BreakPattNum32,0
+FUN View Main,LoopPattern32,0
+FUN View Main,LoopStartPatt32,0
+FUN View Main,LoopStopPatt32,0
+FUN View Main,Version32,0
+FUN View Main,State32,A
+FUN View Main,Advanced32,O
+FUN View Main,File33,SOFT_CON.PAT
+FUN View Main,SyncPattern33,0
+FUN View Main,SyncPattNum33,0
+FUN View Main,BreakPattern33,0
+FUN View Main,BreakPattNum33,0
+FUN View Main,LoopPattern33,0
+FUN View Main,LoopStartPatt33,0
+FUN View Main,LoopStopPatt33,0
+FUN View Main,Version33,0
+FUN View Main,State33,A
+FUN View Main,Advanced33,O
+FUN View Main,File34,TRANSFORMER.PAT
+FUN View Main,SyncPattern34,0
+FUN View Main,SyncPattNum34,0
+FUN View Main,BreakPattern34,0
+FUN View Main,BreakPattNum34,0
+FUN View Main,LoopPattern34,0
+FUN View Main,LoopStartPatt34,0
+FUN View Main,LoopStopPatt34,0
+FUN View Main,Version34,0
+FUN View Main,State34,A
+FUN View Main,Advanced34,O
+FUN View Main,File35,TRIAC.PAT
+FUN View Main,SyncPattern35,0
+FUN View Main,SyncPattNum35,0
+FUN View Main,BreakPattern35,0
+FUN View Main,BreakPattNum35,0
+FUN View Main,LoopPattern35,0
+FUN View Main,LoopStartPatt35,0
+FUN View Main,LoopStopPatt35,0
+FUN View Main,Version35,0
+FUN View Main,State35,A
+FUN View Main,Advanced35,O
+FUN View Main,File36,TRIMMER.PAT
+FUN View Main,SyncPattern36,0
+FUN View Main,SyncPattNum36,0
+FUN View Main,BreakPattern36,0
+FUN View Main,BreakPattNum36,0
+FUN View Main,LoopPattern36,0
+FUN View Main,LoopStartPatt36,0
+FUN View Main,LoopStopPatt36,0
+FUN View Main,Version36,0
+FUN View Main,State36,A
+FUN View Main,Advanced36,O
+FUN View Main,File37,USRBRD.PAT
+FUN View Main,SyncPattern37,0
+FUN View Main,SyncPattNum37,0
+FUN View Main,BreakPattern37,0
+FUN View Main,BreakPattNum37,0
+FUN View Main,LoopPattern37,0
+FUN View Main,LoopStartPatt37,0
+FUN View Main,LoopStopPatt37,0
+FUN View Main,Version37,0
+FUN View Main,State37,A
+FUN View Main,Advanced37,O

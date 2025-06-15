@@ -1,0 +1,98 @@
+*SIGNAL        COMP.    PIN    X          Y          PAD              POS TECN TEST CHANNEL USER   
+"$NONE$_t2/1"  "COMP_1" 1      59.449     129.581    X26Y8            T   S    N    0           
+
+"$NONE$_t2/10" "COMP_1" 10     59.449     125.981    X26Y8            T   S    N    0           
+
+"$NONE$_t2/11" "COMP_1" 11     59.449     125.581    X26Y8            T   S    N    0           
+
+"$NONE$_t2/12" "COMP_1" 12     59.449     125.181    X26Y8            T   S    N    0           
+
+"$NONE$_t2/13" "COMP_1" 13     60.157     124.473    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/14" "COMP_1" 14     60.557     124.473    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/15" "COMP_1" 15     60.957     124.473    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/16" "COMP_1" 16     61.357     124.473    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/17" "COMP_1" 17     61.757     124.473    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/18" "COMP_1" 18     62.157     124.473    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/19" "COMP_1" 19     62.557     124.473    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/2"  "COMP_1" 2      59.449     129.181    X26Y8            T   S    N    0           
+
+"$NONE$_t2/20" "COMP_1" 20     62.957     124.473    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/21" "COMP_1" 21     63.357     124.473    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/22" "COMP_1" 22     63.757     124.473    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/23" "COMP_1" 23     64.157     124.473    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/24" "COMP_1" 24     64.557     124.473    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/25" "COMP_1" 25     65.265     125.181    X26Y8            T   S    N    0           
+
+"$NONE$_t2/26" "COMP_1" 26     65.265     125.581    X26Y8            T   S    N    0           
+
+"$NONE$_t2/27" "COMP_1" 27     65.265     125.981    X26Y8            T   S    N    0           
+
+"$NONE$_t2/28" "COMP_1" 28     65.265     126.381    X26Y8            T   S    N    0           
+
+"$NONE$_t2/29" "COMP_1" 29     65.265     126.781    X26Y8            T   S    N    0           
+
+"$NONE$_t2/3"  "COMP_1" 3      59.449     128.781    X26Y8            T   S    N    0           
+
+"$NONE$_t2/30" "COMP_1" 30     65.265     127.181    X26Y8            T   S    N    0           
+
+"$NONE$_t2/31" "COMP_1" 31     65.265     127.581    X26Y8            T   S    N    0           
+
+"$NONE$_t2/32" "COMP_1" 32     65.265     127.981    X26Y8            T   S    N    0           
+
+"$NONE$_t2/33" "COMP_1" 33     65.265     128.381    X26Y8            T   S    N    0           
+
+"$NONE$_t2/34" "COMP_1" 34     65.265     128.781    X26Y8            T   S    N    0           
+
+"$NONE$_t2/35" "COMP_1" 35     65.265     129.181    X26Y8            T   S    N    0           
+
+"$NONE$_t2/36" "COMP_1" 36     65.265     129.581    X26Y8            T   S    N    0           
+
+"$NONE$_t2/37" "COMP_1" 37     64.557     130.289    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/38" "COMP_1" 38     64.157     130.289    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/39" "COMP_1" 39     63.757     130.289    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/4"  "COMP_1" 4      59.449     128.381    X26Y8            T   S    N    0           
+
+"$NONE$_t2/40" "COMP_1" 40     63.357     130.289    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/41" "COMP_1" 41     62.957     130.289    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/42" "COMP_1" 42     62.557     130.289    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/43" "COMP_1" 43     62.157     130.289    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/44" "COMP_1" 44     61.757     130.289    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/45" "COMP_1" 45     61.357     130.289    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/46" "COMP_1" 46     60.957     130.289    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/47" "COMP_1" 47     60.557     130.289    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/48" "COMP_1" 48     60.157     130.289    X26Y8A90         T   S    N    0           
+
+"$NONE$_t2/49" "COMP_1" 49     62.357     127.381    X165             T   S    N    0           
+
+"$NONE$_t2/5"  "COMP_1" 5      59.449     127.981    X26Y8            T   S    N    0           
+
+"$NONE$_t2/6"  "COMP_1" 6      59.449     127.581    X26Y8            T   S    N    0           
+
+"$NONE$_t2/7"  "COMP_1" 7      59.449     127.181    X26Y8            T   S    N    0           
+
+"$NONE$_t2/8"  "COMP_1" 8      59.449     126.781    X26Y8            T   S    N    0           
+
+"$NONE$_t2/9"  "COMP_1" 9      59.449     126.381    X26Y8            T   S    N    0           

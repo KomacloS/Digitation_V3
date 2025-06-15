@@ -1,0 +1,33 @@
+*SIGNAL         COMP.     PIN    X          Y          PAD              POS TECN TEST CHANNEL USER   
+
+"$NONE$_t12/1"  "COMP_11" 1      125.284    60.891     X78Y24A90        T   S    N    0           
+
+"$NONE$_t12/10" "COMP_11" 10     132.904    66.363     X78Y24A90        T   S    N    0           
+
+"$NONE$_t12/11" "COMP_11" 11     131.634    66.363     X78Y24A90        T   S    N    0           
+
+"$NONE$_t12/12" "COMP_11" 12     130.364    66.363     X78Y24A90        T   S    N    0           
+
+"$NONE$_t12/13" "COMP_11" 13     129.094    66.363     X78Y24A90        T   S    N    0           
+
+"$NONE$_t12/14" "COMP_11" 14     127.824    66.363     X78Y24A90        T   S    N    0           
+
+"$NONE$_t12/15" "COMP_11" 15     126.554    66.363     X78Y24A90        T   S    N    0           
+
+"$NONE$_t12/16" "COMP_11" 16     125.284    66.363     X78Y24A90        T   S    N    0           
+
+"$NONE$_t12/2"  "COMP_11" 2      126.554    60.891     X78Y24A90        T   S    N    0           
+
+"$NONE$_t12/3"  "COMP_11" 3      127.824    60.891     X78Y24A90        T   S    N    0           
+
+"$NONE$_t12/4"  "COMP_11" 4      129.094    60.891     X78Y24A90        T   S    N    0           
+
+"$NONE$_t12/5"  "COMP_11" 5      130.364    60.891     X78Y24A90        T   S    N    0           
+
+"$NONE$_t12/6"  "COMP_11" 6      131.634    60.891     X78Y24A90        T   S    N    0           
+
+"$NONE$_t12/7"  "COMP_11" 7      132.904    60.891     X78Y24A90        T   S    N    0           
+
+"$NONE$_t12/8"  "COMP_11" 8      134.174    60.891     X78Y24A90        T   S    N    0           
+
+"$NONE$_t12/9"  "COMP_11" 9      134.174    66.363     X78Y24A90        T   S    N    0           

@@ -1,0 +1,41 @@
+*SIGNAL        COMP.    PIN    X          Y          PAD              POS TECN TEST CHANNEL USER   
+
+"$NONE$_t5/1"  "COMP_4" 1      67.564     111.760    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/10" "COMP_4" 10     73.414     111.760    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/11" "COMP_4" 11     73.414     117.660    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/12" "COMP_4" 12     72.764     117.660    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/13" "COMP_4" 13     72.114     117.660    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/14" "COMP_4" 14     71.464     117.660    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/15" "COMP_4" 15     70.814     117.660    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/16" "COMP_4" 16     70.164     117.660    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/17" "COMP_4" 17     69.514     117.660    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/18" "COMP_4" 18     68.864     117.660    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/19" "COMP_4" 19     68.214     117.660    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/2"  "COMP_4" 2      68.214     111.760    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/20" "COMP_4" 20     67.564     117.660    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/3"  "COMP_4" 3      68.864     111.760    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/4"  "COMP_4" 4      69.514     111.760    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/5"  "COMP_4" 5      70.164     111.760    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/6"  "COMP_4" 6      70.814     111.760    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/7"  "COMP_4" 7      71.464     111.760    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/8"  "COMP_4" 8      72.114     111.760    X57Y18A90        T   S    N    0           
+
+"$NONE$_t5/9"  "COMP_4" 9      72.764     111.760    X57Y18A90        T   S    N    0           

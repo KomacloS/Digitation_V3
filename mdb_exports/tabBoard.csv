@@ -1,0 +1,2 @@
+BoardID,Name,OffsetX,OffsetY,Position,InvertTB,Kind,State,Top,Bottom,Left,Right,RotationAngle,StepID,BoardAlias,BoardSeq
+0,Global Board,0.0,0.0,0,False,0,257,100.0,0.0,0.0,100.0,0.0,0,,

@@ -1,0 +1,17 @@
+*SIGNAL         COMP.     PIN    X          Y          PAD              POS TECN TEST CHANNEL USER   
+
+"$NONE$_t10/1"  "COMP_9"  1      150.668    60.855     X81Y23A90        T   S    N    0           
+
+"$NONE$_t10/2"  "COMP_9"  2      151.938    60.855     X81Y23A90        T   S    N    0           
+
+"$NONE$_t10/3"  "COMP_9"  3      153.208    60.855     X81Y23A90        T   S    N    0           
+
+"$NONE$_t10/4"  "COMP_9"  4      154.478    60.855     X81Y23A90        T   S    N    0           
+
+"$NONE$_t10/5"  "COMP_9"  5      154.478    66.399     X81Y23A90        T   S    N    0           
+
+"$NONE$_t10/6"  "COMP_9"  6      153.208    66.399     X81Y23A90        T   S    N    0           
+
+"$NONE$_t10/7"  "COMP_9"  7      151.938    66.399     X81Y23A90        T   S    N    0           
+
+"$NONE$_t10/8"  "COMP_9"  8      150.668    66.399     X81Y23A90        T   S    N    0           

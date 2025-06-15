@@ -1,0 +1,5 @@
+*SIGNAL       COMP.    PIN    X          Y          PAD              POS TECN TEST CHANNEL USER   
+
+"$NONE$_t2/1" "COMP_1" 1      54.746     103.378    X34Y32A90        T   S    F    0           
+
+"$NONE$_t2/2" "COMP_1" 2      56.252     103.378    X34Y32A90        T   S    F    0    

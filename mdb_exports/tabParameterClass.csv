@@ -1,0 +1,61 @@
+IDParameterClass,Name,Kind,SourceReference
+0,<unknown>,0,
+1,GenericString,1,
+2,GenericNumber,2,
+3,GenericPinlist,3,
+4,Value,2,SELECT tabComponent.Value1 FROM tabComponent WHERE (((tabComponent.IDComponent)=@1))
+5,TolP,2,SELECT tabComponent.TolerancePos FROM tabComponent WHERE (((tabComponent.IDComponent)=@1))
+6,TolN,2,SELECT tabComponent.ToleranceNeg FROM tabComponent WHERE (((tabComponent.IDComponent)=@1))
+7,Pin1,3,SELECT tabPin.IDPin FROM tabPin WHERE (((tabPin.IDComponent)=@1) AND ((tabPin.PinNumber) In (1)))
+8,Pin2,3,SELECT tabPin.IDPin FROM tabPin WHERE (((tabPin.IDComponent)=@1) AND ((tabPin.PinNumber) In (2)))
+9,Name,1,SELECT tabComponent.Name FROM tabComponent WHERE (((tabComponent.IDComponent)=@1))
+10,IsolationVoltage,2,SELECT InitInfo.Value FROM InitInfo WHERE (((InitInfo.Section)='Wizard Configuration') AND ((InitInfo.Key)='ShortVolt'))
+11,IsolationImpedance,2,SELECT InitInfo.Value FROM InitInfo WHERE (((InitInfo.Section)='Wizard Configuration') AND ((InitInfo.Key)='ShortImpedance'))
+12,Pin1GUA,3,SELECT detComponentGenericPList.IDPin1 FROM tabPin INNER JOIN detComponentGenericPList ON tabPin.IDPin = detComponentGenericPList.IDPin WHERE (((tabPin.IDComponent)=@1) AND ((tabPin.PinNumber) In (1)))
+13,Pin2GUA,3,SELECT detComponentGenericPList.IDPin1 FROM tabPin INNER JOIN detComponentGenericPList ON tabPin.IDPin = detComponentGenericPList.IDPin WHERE (((tabPin.IDComponent)=@1) AND ((tabPin.PinNumber) In (2)))
+14,ContinuityCurrent,2,SELECT InitInfo.Value FROM InitInfo WHERE (((InitInfo.Section)='Wizard Configuration') AND ((InitInfo.Key)='ContinuityCurrent'))
+15,RPARAL,2,SELECT tabComponent.RParal FROM tabComponent WHERE (((tabComponent.IDComponent)=@1))
+16,CPARAL,2,SELECT tabComponent.CParal FROM tabComponent WHERE (((tabComponent.IDComponent)=@1))
+17,LPARAL,2,SELECT tabComponent.LParal FROM tabComponent WHERE (((tabComponent.IDComponent)=@1))
+18,Parassite,2,SELECT tabComponent.Parassite FROM tabComponent WHERE (((tabComponent.IDComponent)=@1))
+19,PinGnd,3,SELECT tabPin.IDPin FROM tabSignal INNER JOIN tabPin ON tabSignal.IDSignal = tabPin.IDSignal WHERE (((tabPin.Test) LIKE 'F*') AND ((tabSignal.IDSignalKind)=1))
+20,ContinuityImpedance,2,SELECT InitInfo.Value FROM InitInfo WHERE (((InitInfo.Section)='Wizard Configuration') AND ((InitInfo.Key)='ContinuityImpedance'))
+21,MeasureType,2,
+22,SensePin1,3,"SELECT tabPin.IDPin, tabPin.Channel FROM tabPin WHERE (((tabPin.Test) LIKE 'T*' Or (tabPin.Test) LIKE 'Y*' Or (tabPin.Test) LIKE 'F*') AND ((tabPin.IDSignal) In ((SELECT tabPin.IDSignal FROM  tabPin WHERE (((tabPin.IDComponent=@1) AND ((tabPin.PinNumber)=1)))))) AND ((tabPin.Channel)<>(SELECT TOP 1 tabPin.Channel FROM  tabPin WHERE (((tabPin.IDSignal)=(SELECT tabPin.IDSignal FROM tabPin WHERE (((tabPin.IDComponent=@1) AND ((tabPin.PinNumber)=1))))) AND ((tabPin.Test) LIKE 'F*'))))) ORDER BY tabPin.Test"
+23,SensePin2,3,"SELECT tabPin.IDPin, tabPin.Channel FROM tabPin WHERE (((tabPin.Test) LIKE 'T*' Or (tabPin.Test) LIKE 'Y*' Or (tabPin.Test) LIKE 'F*') AND ((tabPin.IDSignal) In ((SELECT tabPin.IDSignal FROM  tabPin WHERE (((tabPin.IDComponent=@1) AND ((tabPin.PinNumber)=2)))))) AND ((tabPin.Channel)<>(SELECT TOP 1 tabPin.Channel FROM  tabPin WHERE (((tabPin.IDSignal)=(SELECT tabPin.IDSignal FROM tabPin WHERE (((tabPin.IDComponent=@1) AND ((tabPin.PinNumber)=2))))) AND ((tabPin.Test) LIKE 'F*'))))) ORDER BY tabPin.Test"
+24,ResGuardPin1,2,
+25,CapGuardPin1,2,
+26,ResGuardPin2,2,
+27,CapGuardPin2,2,
+28,SignalPin,3,SELECT tabPin.IDPin FROM tabPin WHERE (((tabPin.IDSignal)=@15) AND ((tabPin.Test) LIKE 'F*'))
+29,Signal1Guard,3,
+30,Signal2Guard,3,
+31,SensePinGnd,3,SELECT tabPin.IDPin FROM tabSignal INNER JOIN tabPin ON tabSignal.IDSignal = tabPin.IDSignal WHERE (((tabPin.Channel)<>(SELECT TOP 1 tabPin.Channel FROM tabSignal INNER JOIN tabPin ON tabSignal.IDSignal = tabPin.IDSignal WHERE (((tabPin.Test) LIKE 'F*') AND ((tabSignal.IDSignalKind)=1)))) AND ((tabPin.Test) LIKE 'T*' Or (tabPin.Test) LIKE 'Y*' Or (tabPin.Test) LIKE 'F*') AND ((tabSignal.IDSignalKind)=1)) ORDER BY tabPin.Test
+32,Pin3,3,SELECT tabPin.IDPin FROM tabPin WHERE (((tabPin.IDComponent)=@1) AND ((tabPin.PinNumber) In (3)))
+33,Pin4,3,SELECT tabPin.IDPin FROM tabPin WHERE (((tabPin.IDComponent)=@1) AND ((tabPin.PinNumber) In (4)))
+34,Pinlist,3,SELECT tabPin.IDPin FROM tabPin WHERE (((tabPin.IDComponent)=@1))
+35,SensorNum,2,
+36,SensorPin,3,
+37,Signal1SenseGuard,3,
+38,Signal2SenseGuard,3,
+39,IsolatedPin,3,SELECT tabPin.IDPin FROM tabPin WHERE (((tabPin.IDSignal)=@40) AND ((tabPin.Test) LIKE 'F*'))
+40,ModuleName,1,
+41,ModuleType,2,
+42,PowerMode,2,
+43,PowerName,1,
+44,StartChn,2,
+45,StopChn,2,
+46,FamilyNrCont,2,
+47,FamilyNrSho,2,
+48,GPData,1,
+49,Value2,2,SELECT tabComponent.Value2 FROM tabComponent WHERE (((tabComponent.IDComponent)=@1))
+50,SignalKind,2,
+51,ChStkTechnology,1,
+52,PinHeight,2,
+53,SensePin3,3,
+54,SensePin4,3,
+55,SequenceName,1,
+56,SignalSource,2,
+57,SignalVoltage,2,
+58,SignalCurrent,2,
+59,SignalDelay,2,

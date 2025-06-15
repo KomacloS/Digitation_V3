@@ -1,0 +1,41 @@
+*SIGNAL         COMP.     PIN    X          Y          PAD              POS TECN TEST CHANNEL USER   
+
+"$NONE$_t13/1"  "COMP_12" 1      66.852     56.611     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/10" "COMP_12" 10     78.282     56.611     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/11" "COMP_12" 11     78.282     66.071     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/12" "COMP_12" 12     77.012     66.071     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/13" "COMP_12" 13     75.742     66.071     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/14" "COMP_12" 14     74.472     66.071     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/15" "COMP_12" 15     73.202     66.071     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/16" "COMP_12" 16     71.932     66.071     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/17" "COMP_12" 17     70.662     66.071     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/18" "COMP_12" 18     69.392     66.071     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/19" "COMP_12" 19     68.122     66.071     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/2"  "COMP_12" 2      68.122     56.611     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/20" "COMP_12" 20     66.852     66.071     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/3"  "COMP_12" 3      69.392     56.611     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/4"  "COMP_12" 4      70.662     56.611     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/5"  "COMP_12" 5      71.932     56.611     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/6"  "COMP_12" 6      73.202     56.611     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/7"  "COMP_12" 7      74.472     56.611     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/8"  "COMP_12" 8      75.742     56.611     X93Y23A90        T   S    N    0           
+
+"$NONE$_t13/9"  "COMP_12" 9      77.012     56.611     X93Y23A90        T   S    N    0           

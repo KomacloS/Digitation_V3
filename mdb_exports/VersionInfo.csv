@@ -1,0 +1,9 @@
+ID,Version,Kind,Description
+1,1.0,1,Wed 10 Dec 2003
+2,2.0,1,7/14/2005 11:41:24 AM
+3,3.0,1,10/11/2005 2:25:22 PM
+4,4.0,1,12/21/2006 12:07:33 PM
+5,5.0,1,2/15/2007 2:51:55 PM
+6,-1.0,2,05/10/2017 17:04:14 - TabPin_Add_AdditionalInfo
+7,6.0,1,28/01/2021 9:38:00 AM TabBoard - Add Alias e Seq
+8,7.0,1,18/02/2021 9:33:00 Add AdditionalInfo in tabComponent + tabSection; Diagnosis to 128 chr
