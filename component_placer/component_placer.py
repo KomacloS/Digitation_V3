@@ -770,7 +770,6 @@ class ComponentPlacer(QObject):
             r, c = divmod(i, cols)
             pad_grid[r][c] = pad
 
-        side   = self.board_view.flags.get_flag("side", "top").lower()
         scheme = int(params.get("number_scheme", 0))
 
         # Find Anchor-A’s position in the grid
@@ -782,9 +781,6 @@ class ComponentPlacer(QObject):
         if scheme == 0:
             # Circular / IC‐snake
             idx_list = self.snake_circular(cols, rows)
-            if side == "bottom":
-                # mirror X+Y once
-                idx_list = [(rows-1-r, cols-1-c) for (r, c) in idx_list]
             # rotate so Anchor-A is first
             start = next(i for i,(r,c) in enumerate(idx_list) if r==a_r and c==a_c)
             idx = idx_list[start:] + idx_list[:start]
@@ -792,7 +788,7 @@ class ComponentPlacer(QObject):
         elif scheme == 1:
             # By rows: natural row order, mirror X only
             row_vis = list(range(rows))
-            col_vis = list(reversed(range(cols))) if side=="bottom" else list(range(cols))
+            col_vis = list(range(cols))
 
             # rotate rows so Anchor-A’s row leads
             r0 = row_vis.index(a_r)
@@ -805,7 +801,7 @@ class ComponentPlacer(QObject):
 
         else:  # scheme == 2
             # By columns: natural row order, mirror X only
-            col_vis = list(reversed(range(cols))) if side=="bottom" else list(range(cols))
+            col_vis = list(range(cols))
             row_vis = list(range(rows))
 
             # rotate columns so Anchor-A’s column leads
