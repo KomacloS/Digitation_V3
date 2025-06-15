@@ -9,10 +9,10 @@ from objects.board_object import BoardObject
 from objects.nod_file import BoardNodFile
 from component_placer.normalizer import normalize_footprint
 from edit_pads import actions
-from objects.alf_file import parse_alf_file
 from math import radians, sin, cos
 import os
 from component_placer.component_input_dialog import ComponentInputDialog
+
 
 class Clipboard:
     def __init__(self):
@@ -29,12 +29,22 @@ class Clipboard:
     def paste(self) -> List[Dict[str, Any]]:
         return copy.deepcopy(self.copied_objects) if self.copied_objects else []
 
+
 clipboard = Clipboard()
+
 
 class ComponentPlacer(QObject):
     component_placed = pyqtSignal(str)
 
-    def __init__(self, board_view, object_library, ghost_component=None, project_manager=None, bom_handler=None, parent=None):
+    def __init__(
+        self,
+        board_view,
+        object_library,
+        ghost_component=None,
+        project_manager=None,
+        bom_handler=None,
+        parent=None,
+    ):
         super().__init__(parent)
         self.log = LogHandler()
         self.log.log("info", "ComponentPlacer initialized.")
@@ -45,18 +55,29 @@ class ComponentPlacer(QObject):
         self.footprint_rotation = 0.0
         self.is_active = False
         self.ghost_component = ghost_component
-        self.is_flipped = False 
+        self.is_flipped = False
         self.project_manager = project_manager
-        self.quick_anchors = {'A': None, 'B': None}
-        self.quick_params  = None
+        self.quick_anchors = {"A": None, "B": None}
+        self.quick_params = None
         # Use the shared BOMHandler if provided; otherwise (should not happen) create a new one.
         if bom_handler is None:
             from component_placer.bom_handler import BOMHandler
+
             self.bom_handler = BOMHandler()
-            self.log.log("warning", "No BOMHandler provided; created a new instance.", module="ComponentPlacer", func="__init__")
+            self.log.log(
+                "warning",
+                "No BOMHandler provided; created a new instance.",
+                module="ComponentPlacer",
+                func="__init__",
+            )
         else:
             self.bom_handler = bom_handler
-            self.log.log("info", "Using shared BOMHandler.", module="ComponentPlacer", func="__init__")
+            self.log.log(
+                "info",
+                "Using shared BOMHandler.",
+                module="ComponentPlacer",
+                func="__init__",
+            )
 
     def copy_selected_objects(self, selected_objects: List[BoardObject]):
         if not selected_objects:
@@ -80,7 +101,10 @@ class ComponentPlacer(QObject):
             return
         source = {"pads": copied_data}
         self.footprint = normalize_footprint(source)
-        self.log.log("info", f"Loaded clipboard footprint with {len(self.footprint['pads'])} pads.")
+        self.log.log(
+            "info",
+            f"Loaded clipboard footprint with {len(self.footprint['pads'])} pads.",
+        )
 
     def set_nod_file(self, nod_file: BoardNodFile) -> None:
         self.nod_file = nod_file
@@ -88,13 +112,21 @@ class ComponentPlacer(QObject):
 
     def load_footprint_from_nod(self, nod_file_path: str) -> bool:
         if not nod_file_path.lower().endswith(".nod"):
-            self.log.log("warning", f"Invalid file format for {nod_file_path}. Expected .nod extension.")
+            self.log.log(
+                "warning",
+                f"Invalid file format for {nod_file_path}. Expected .nod extension.",
+            )
             return False
         try:
             new_nod = BoardNodFile(nod_path=nod_file_path)
             new_nod.load()
-            self.footprint = self._convert_objects_to_footprint(new_nod.get_all_objects())
-            self.log.log("info", f"Footprint loaded from {nod_file_path}, containing {len(self.footprint['pads'])} pads.")
+            self.footprint = self._convert_objects_to_footprint(
+                new_nod.get_all_objects()
+            )
+            self.log.log(
+                "info",
+                f"Footprint loaded from {nod_file_path}, containing {len(self.footprint['pads'])} pads.",
+            )
             return True
         except Exception as e:
             self.log.log("error", f"Failed to parse .nod file: {e}")
@@ -115,12 +147,16 @@ class ComponentPlacer(QObject):
             dialog = ComponentInputDialog(bom_handler=self.bom_handler)
             # Connect the project_loaded_signal so that the dialog resets numbering if a project is loaded.
             if self.project_manager is not None:
-                self.project_manager.project_loaded_signal.connect(dialog.reset_auto_numbering)
+                self.project_manager.project_loaded_signal.connect(
+                    dialog.reset_auto_numbering
+                )
             if dialog.exec_() == dialog.Accepted:
                 input_data = dialog.get_data()
                 comp_name = input_data.get("component_name", "").strip()
                 if not comp_name:
-                    self.log.log("warning", "Placement canceled => no component name provided.")
+                    self.log.log(
+                        "warning", "Placement canceled => no component name provided."
+                    )
                     self.deactivate_placement()
                     return
             else:
@@ -131,35 +167,47 @@ class ComponentPlacer(QObject):
             x_mm, y_mm = self.board_view.converter.pixels_to_mm(scene_x, scene_y)
             self._finalize_footprint_placement(x_mm, y_mm, comp_name)
 
-
     def activate_placement(self):
         if not self.footprint:
             QMessageBox.warning(None, "No Footprint", "No footprint loaded to place.")
             return
         if self.ghost_component is None:
-            self.log.log("error", "ComponentPlacer: Ghost component is None. Cannot activate placement.")
-            QMessageBox.critical(None, "Error", "Ghost Component is missing. Restart application.")
+            self.log.log(
+                "error",
+                "ComponentPlacer: Ghost component is None. Cannot activate placement.",
+            )
+            QMessageBox.critical(
+                None, "Error", "Ghost Component is missing. Restart application."
+            )
             return
-        
+
         self.footprint_rotation = 0.0
 
         self.is_active = True
         self.ghost_component.show_ghost(
-            self.footprint,
-            self.footprint_rotation,
-            flipped=self._should_flip()
+            self.footprint, self.footprint_rotation, flipped=self._should_flip()
         )
         self.log.log("info", "ComponentPlacer: Placement mode activated.")
 
         self.board_view.setFocus(Qt.ActiveWindowFocusReason)
         self.board_view.activateWindow()
         self.board_view.raise_()
-        QTimer.singleShot(0, lambda: self.board_view.setFocus(Qt.ActiveWindowFocusReason))
-        QTimer.singleShot(0, lambda: self.board_view.viewport().setFocus(Qt.ActiveWindowFocusReason))
-        if hasattr(self.board_view, 'input_handler'):
+        QTimer.singleShot(
+            0, lambda: self.board_view.setFocus(Qt.ActiveWindowFocusReason)
+        )
+        QTimer.singleShot(
+            0, lambda: self.board_view.viewport().setFocus(Qt.ActiveWindowFocusReason)
+        )
+        if hasattr(self.board_view, "input_handler"):
             self.board_view.input_handler.set_ghost_component(self.ghost_component)
-            self.log.log("info", "InputHandler updated with new ghost component after activation.")
-        self.log.log("info", f"After activation: ghost_component.is_active = {self.ghost_component.is_active}")
+            self.log.log(
+                "info",
+                "InputHandler updated with new ghost component after activation.",
+            )
+        self.log.log(
+            "info",
+            f"After activation: ghost_component.is_active = {self.ghost_component.is_active}",
+        )
 
     def deactivate_placement(self):
         self.is_active = False
@@ -175,7 +223,9 @@ class ComponentPlacer(QObject):
             return
         self.footprint_rotation = (self.footprint_rotation + angle_deg) % 360
         self.ghost_component.show_ghost(self.footprint, self.footprint_rotation)
-        self.log.log("info", f"ComponentPlacer: Ghost rotated to {self.footprint_rotation:.2f}°")
+        self.log.log(
+            "info", f"ComponentPlacer: Ghost rotated to {self.footprint_rotation:.2f}°"
+        )
 
     def on_board_clicked(self, scene_pos: QPointF):
         if not self.is_active or not self.footprint:
@@ -184,13 +234,17 @@ class ComponentPlacer(QObject):
         dialog = ComponentInputDialog(bom_handler=self.bom_handler)
 
         if self.project_manager is not None:
-            self.project_manager.project_loaded_signal.connect(dialog.reset_auto_numbering)
+            self.project_manager.project_loaded_signal.connect(
+                dialog.reset_auto_numbering
+            )
 
         if dialog.exec_() == dialog.Accepted:
             input_data = dialog.get_data()
             comp_name = input_data.get("component_name", "").strip()
             if not comp_name:
-                self.log.log("warning", "Placement canceled => no component name provided.")
+                self.log.log(
+                    "warning", "Placement canceled => no component name provided."
+                )
                 self.deactivate_placement()
                 return
         else:
@@ -198,13 +252,14 @@ class ComponentPlacer(QObject):
             self.deactivate_placement()
             return
 
-        x_mm, y_mm = self.board_view.converter.pixels_to_mm(scene_pos.x(), scene_pos.y())
+        x_mm, y_mm = self.board_view.converter.pixels_to_mm(
+            scene_pos.x(), scene_pos.y()
+        )
         self._finalize_footprint_placement(x_mm, y_mm, comp_name)
 
-
-    def _finalize_footprint_placement(self, x_mm: float, y_mm: float, initial_comp_name: str):
-        from math import radians, sin, cos
-        import os
+    def _finalize_footprint_placement(
+        self, x_mm: float, y_mm: float, initial_comp_name: str
+    ):
 
         def transform_pad(pad):
             rad_val = radians(self.footprint_rotation)
@@ -215,14 +270,11 @@ class ComponentPlacer(QObject):
             rx = rel_x * cos(rad_val) - rel_y * sin(rad_val)
             ry = rel_x * sin(rad_val) + rel_y * cos(rad_val)
 
-            if self.is_flipped:          # mirror X if flip active
+            if self.is_flipped:  # mirror X if flip active
                 rx = -rx
 
             pos_x = x_mm + rx
             pos_y = y_mm + ry
-
-            if side == "bottom":         # existing bottom-side inversion
-                pos_x = 2 * x_mm - pos_x
 
             final_angle = (pad.get("angle_deg", 0.0) + self.footprint_rotation) % 360
             return pos_x, pos_y, final_angle
@@ -240,20 +292,33 @@ class ComponentPlacer(QObject):
                 return original_pin + highest_pin
 
         def get_alf_mapping(comp_base, comp_dir):
-            alf_path = os.path.join(comp_dir, comp_base + ".alf") if comp_dir else comp_base + ".alf"
+            alf_path = (
+                os.path.join(comp_dir, comp_base + ".alf")
+                if comp_dir
+                else comp_base + ".alf"
+            )
             self.log.log("info", f"Attempting ALF lookup at: {alf_path}")
             mapping = {}
             if os.path.exists(alf_path):
                 from objects.alf_file import parse_alf_file
+
                 relationships = parse_alf_file(alf_path)
                 if relationships:
                     try:
-                        mapping = {int(rel['pin']): rel['prefix'] for rel in relationships}
-                        self.log.log("info", f"ALF mapping obtained (total {len(mapping)} entries).")
+                        mapping = {
+                            int(rel["pin"]): rel["prefix"] for rel in relationships
+                        }
+                        self.log.log(
+                            "info",
+                            f"ALF mapping obtained (total {len(mapping)} entries).",
+                        )
                     except Exception as e:
                         self.log.log("error", f"Error processing ALF file: {e}")
                 else:
-                    self.log.log("info", f"ALF file found at {alf_path} but no valid relationships detected.")
+                    self.log.log(
+                        "info",
+                        f"ALF file found at {alf_path} but no valid relationships detected.",
+                    )
             else:
                 self.log.log("info", f"No ALF file found at {alf_path}.")
             return mapping
@@ -264,19 +329,27 @@ class ComponentPlacer(QObject):
 
         if is_move:
             # MOVE MODE: We update existing objects in-place, then do a partial re-render via bulk_update_objects(...)
-            comp_name = self.footprint["pads"][0].get("component_name", initial_comp_name)
+            comp_name = self.footprint["pads"][0].get(
+                "component_name", initial_comp_name
+            )
         else:
             # Normal (new) placement logic
-            comp_name_result, merge_choice, highest_pin, missing_pins = self._handle_duplicate_name_or_offset_pins(initial_comp_name)
+            comp_name_result, merge_choice, highest_pin, missing_pins = (
+                self._handle_duplicate_name_or_offset_pins(initial_comp_name)
+            )
             if comp_name_result is None:
-                self.log.log("warning", "Placement canceled due to duplicate name handling.")
+                self.log.log(
+                    "warning", "Placement canceled due to duplicate name handling."
+                )
                 self.deactivate_placement()
                 return
             user_comp_name = comp_name_result
             comp_name = user_comp_name
             if self.nod_file and os.path.exists(self.nod_file.nod_path):
                 comp_dir = os.path.dirname(self.nod_file.nod_path)
-                comp_base = os.path.splitext(os.path.basename(self.nod_file.nod_path))[0]
+                comp_base = os.path.splitext(os.path.basename(self.nod_file.nod_path))[
+                    0
+                ]
             else:
                 comp_dir = None
                 comp_base = user_comp_name
@@ -296,8 +369,7 @@ class ComponentPlacer(QObject):
                     ch = self._move_channels[idx]
                 except IndexError:
                     self.log.log(
-                        "error",
-                        "Mismatch between ghost pads and stored move channels."
+                        "error", "Mismatch between ghost pads and stored move channels."
                     )
                     continue
 
@@ -307,10 +379,10 @@ class ComponentPlacer(QObject):
                     continue
 
                 # --------- 1) update live fields ----------
-                orig_obj.x_coord_mm  = pos_x
-                orig_obj.y_coord_mm  = pos_y
-                orig_obj.angle_deg   = final_angle
-                orig_obj.test_position = side      # keep side in sync
+                orig_obj.x_coord_mm = pos_x
+                orig_obj.y_coord_mm = pos_y
+                orig_obj.angle_deg = final_angle
+                orig_obj.test_position = side  # keep side in sync
 
                 # --------- 2) sync backup fields ----------
                 # Most save / export code serialises the “_original” attrs
@@ -318,7 +390,7 @@ class ComponentPlacer(QObject):
                 for attr_name, value in (
                     ("x_coord_mm_original", pos_x),
                     ("y_coord_mm_original", pos_y),
-                    ("angle_deg_original", final_angle)
+                    ("angle_deg_original", final_angle),
                 ):
                     setattr(orig_obj, attr_name, value)
 
@@ -330,7 +402,7 @@ class ComponentPlacer(QObject):
                 self.log.log(
                     "info",
                     f"Move mode: updated {len(updates)} pads and synchronised "
-                    "backup coordinates."
+                    "backup coordinates.",
                 )
 
             # Reset move state
@@ -366,12 +438,13 @@ class ComponentPlacer(QObject):
                     height_mm=pad["height_mm"],
                     hole_mm=pad["hole_mm"],
                     angle_deg=final_angle,
-                    prefix=new_prefix
+                    prefix=new_prefix,
                 )
                 new_objects.append(board_obj)
 
-            self.log.log("info",
-                f"bulk_add: creating {len(new_objects)} new pads for component '{comp_name}'."
+            self.log.log(
+                "info",
+                f"bulk_add: creating {len(new_objects)} new pads for component '{comp_name}'.",
             )
 
             # PARTIAL RENDER: no big re-render
@@ -397,7 +470,6 @@ class ComponentPlacer(QObject):
             # Optionally auto-reactivate so user can place another copy
             self.activate_placement()
 
-
     def _convert_objects_to_footprint(self, board_objects: List[BoardObject]) -> dict:
         if not board_objects:
             return {"pads": [], "center_x": 0.0, "center_y": 0.0}
@@ -414,7 +486,7 @@ class ComponentPlacer(QObject):
                 "hole_mm": obj.hole_mm,
                 "angle_deg": obj.angle_deg,
                 "testability": obj.testability,
-                "technology": obj.technology
+                "technology": obj.technology,
             }
             pads_list.append(pad_data)
             xs.append(obj.x_coord_mm)
@@ -423,10 +495,12 @@ class ComponentPlacer(QObject):
         center_y = (min(ys) + max(ys)) / 2.0
         return {"pads": pads_list, "center_x": center_x, "center_y": center_y}
 
-    def _handle_duplicate_name_or_offset_pins(self, comp_name: str) -> tuple[Optional[str], Optional[bool], int, Optional[List[int]]]:
+    def _handle_duplicate_name_or_offset_pins(
+        self, comp_name: str
+    ) -> tuple[Optional[str], Optional[bool], int, Optional[List[int]]]:
         """
         Checks whether a component with the same name already exists.
-        
+
         Returns a tuple:
           - comp_name (or None if the user cancels),
           - merge_choice: True if the user chooses to fill missing pins, False if they choose to append,
@@ -434,7 +508,9 @@ class ComponentPlacer(QObject):
           - missing_pins: a sorted list of missing pin numbers (if any; otherwise None).
         """
         existing_objs = self.object_library.get_all_objects()
-        same_name_objs = [o for o in existing_objs if o.component_name.lower() == comp_name.lower()]
+        same_name_objs = [
+            o for o in existing_objs if o.component_name.lower() == comp_name.lower()
+        ]
         if not same_name_objs:
             # No existing component with this name.
             return (comp_name, None, 0, None)
@@ -449,21 +525,21 @@ class ComponentPlacer(QObject):
         # Compute missing pins in the sequence 1 ... highest_pin.
         full_set = set(range(1, highest_pin + 1))
         missing = sorted(list(full_set - set(existing_pins)))
-        
+
         # Prepare a message for the user.
         msg = f"Component '{comp_name}' already exists with pins: {sorted(existing_pins)}.\n"
         if missing:
             msg += f"Missing pins: {missing}.\nDo you want to fill these gaps with new pads?"
         else:
             msg += "No gaps found. Do you want to append new pads at the end?"
-        
+
         # Show a dialog with three options.
         msg_box = QMessageBox()
         msg_box.setWindowTitle("Duplicate Component Name")
         msg_box.setText(msg)
         fill_btn = msg_box.addButton("Fill Missing", QMessageBox.AcceptRole)
         append_btn = msg_box.addButton("Append", QMessageBox.RejectRole)
-        cancel_btn = msg_box.addButton("Cancel", QMessageBox.DestructiveRole)
+        msg_box.addButton("Cancel", QMessageBox.DestructiveRole)
         # Default button: if missing pins exist, default to Fill.
         msg_box.setDefaultButton(fill_btn if missing else append_btn)
         msg_box.exec_()
@@ -484,7 +560,7 @@ class ComponentPlacer(QObject):
         to compute a delta and align all pads.
         """
         from statistics import mean
-        
+
         # Build a footprint dictionary from the selected pads.
         pads_data = []
         for pad in selected_pads:
@@ -500,35 +576,30 @@ class ComponentPlacer(QObject):
                 "hole_mm": obj.hole_mm,
                 "angle_deg": obj.angle_deg,  # In align mode we ignore rotation changes.
                 "testability": obj.testability,
-                "technology": obj.technology
+                "technology": obj.technology,
             }
             pads_data.append(pad_data)
-        
+
         if not pads_data:
             return
-        
+
         # Compute the original center of the selected pads.
         center_x = mean([pad["x_coord_mm"] for pad in pads_data])
         center_y = mean([pad["y_coord_mm"] for pad in pads_data])
-        
+
         # Create a ghost footprint with these pads and center.
-        footprint = {
-            "pads": pads_data,
-            "center_x": center_x,
-            "center_y": center_y
-        }
+        footprint = {"pads": pads_data, "center_x": center_x, "center_y": center_y}
         component_placer.footprint = footprint
-        
+
         # Activate ghost placement.
         component_placer.activate_placement()
-        
+
     def flip_current_ghost(self):
         """Mirror the active ghost footprint and remember the state."""
         if not self.is_active or not self.ghost_component:
             return
         self.is_flipped = not self.is_flipped
         self.ghost_component.flip_horizontal()
-
 
     # 1) called by InputHandler.set_quick_anchor()
     def set_quick_anchor(self, anchor_id: str, x_px: float, y_px: float):
@@ -569,9 +640,7 @@ class ComponentPlacer(QObject):
             # Your _generate_quick_footprint should set these
             self.ghost_component.remove_ghost()
             self.ghost_component.show_ghost(
-                fp, rotation_deg=0.0,
-                flipped=self._should_flip(),
-                follow_mouse=False
+                fp, rotation_deg=0.0, flipped=self._should_flip(), follow_mouse=False
             )
         else:
             # No params yet: just ensure the two blue-cross anchors are drawn
@@ -607,33 +676,36 @@ class ComponentPlacer(QObject):
         fp = getattr(self, "_latest_quick_fp", None)
 
         if not fp or not fp.get("pads"):
-            log.warning("[QC] place_quick: nothing to place.",
-                        module="QuickCreate", func="place_quick")
+            log.warning(
+                "[QC] place_quick: nothing to place.",
+                module="QuickCreate",
+                func="place_quick",
+            )
             return
 
         # ------------------------------------------------------------------
         # 1)  Prepare pads in **numeric** order
         # ------------------------------------------------------------------
         pads_sorted = sorted(fp["pads"], key=lambda p: int(str(p["pin"])))
-        comp_name   = self.quick_params.get("component_name", "QC-COMP")
+        comp_name = self.quick_params.get("component_name", "QC-COMP")
 
         # ------------------------------------------------------------------
         # 2)  Build BoardObject list
         # ------------------------------------------------------------------
         new_objs = [
             BoardObject(
-                component_name = comp_name,
-                pin            = str(p["pin"]),
-                x_coord_mm     = p["x_coord_mm"],
-                y_coord_mm     = p["y_coord_mm"],
-                width_mm       = p["width_mm"],
-                height_mm      = p["height_mm"],
-                hole_mm        = p["hole_mm"],
-                shape_type     = p["shape_type"],
-                test_position  = p["test_position"],
-                testability    = p.get("testability", "Forced"),
-                technology     = p["technology"],
-                angle_deg      = p["angle_deg"],
+                component_name=comp_name,
+                pin=str(p["pin"]),
+                x_coord_mm=p["x_coord_mm"],
+                y_coord_mm=p["y_coord_mm"],
+                width_mm=p["width_mm"],
+                height_mm=p["height_mm"],
+                hole_mm=p["hole_mm"],
+                shape_type=p["shape_type"],
+                test_position=p["test_position"],
+                testability=p.get("testability", "Forced"),
+                technology=p["technology"],
+                angle_deg=p["angle_deg"],
             )
             for p in pads_sorted
         ]
@@ -644,14 +716,15 @@ class ComponentPlacer(QObject):
         ax, ay = self.quick_anchors.get("A", (None, None))
         bx, by = self.quick_anchors.get("B", (None, None))
 
-        pads_in_order = fp["pads"]          # exact order drawn by GhostComponent
+        pads_in_order = fp["pads"]  # exact order drawn by GhostComponent
 
         header = (
             f"[QC] Coordinate report for '{comp_name}':\n"
-            + (f" Anchors →  A=({ax:.3f}, {ay:.3f})   "
-               f"B=({bx:.3f}, {by:.3f})\n"
-               if None not in (ax, ay, bx, by)
-               else " Anchors →  A/B not defined\n")
+            + (
+                f" Anchors →  A=({ax:.3f}, {ay:.3f})   " f"B=({bx:.3f}, {by:.3f})\n"
+                if None not in (ax, ay, bx, by)
+                else " Anchors →  A/B not defined\n"
+            )
             + " Idx | Pin |   Ghost-X   Ghost-Y |  Placed-X  Placed-Y"
         )
 
@@ -663,10 +736,7 @@ class ComponentPlacer(QObject):
                 f"{obj.x_coord_mm:9.3f} {obj.y_coord_mm:9.3f}"
             )
 
-        log.debug("\n".join(lines),
-                  module="QuickCreate", func="coord_report")
-
-
+        log.debug("\n".join(lines), module="QuickCreate", func="coord_report")
 
         # ------------------------------------------------------------------
         # 4)  Add to library + BOM + UI niceties
@@ -680,24 +750,28 @@ class ComponentPlacer(QObject):
             self.bom_handler.add_component(
                 self.quick_params["component_name"],
                 self.quick_params["function"],
-                "", "", "")
+                "",
+                "",
+                "",
+            )
 
         if hasattr(self.board_view, "select_objects"):
             self.board_view.select_objects(new_objs)
 
-        log.info(f"Quick-Created {len(new_objs)} pad(s) for '{comp_name}'",
-                 module="QuickCreate", func="place_quick")
+        log.info(
+            f"Quick-Created {len(new_objs)} pad(s) for '{comp_name}'",
+            module="QuickCreate",
+            func="place_quick",
+        )
 
         # Clean up & (optionally) ready for next placement
         self.cancel_quick()
 
-
-
     def cancel_quick(self):
         """Abort Quick Creation: clear anchors, ghost, markers."""
         # reset internal state
-        self.quick_anchors = {'A': None, 'B': None}
-        self.quick_params  = None
+        self.quick_anchors = {"A": None, "B": None}
+        self.quick_params = None
 
         # remove any existing ghost
         if self.ghost_component:
@@ -747,6 +821,7 @@ class ComponentPlacer(QObject):
                         order.append((r, c))
 
         return order
+
     # ------------------------------------------------------------------
     #  Build footprint respecting the selected numbering scheme
     # ------------------------------------------------------------------
@@ -762,10 +837,10 @@ class ComponentPlacer(QObject):
 
         rows = max(int(params["y_pins"]), 1)
         cols = max(int(params["x_pins"]), 1)
-        fp   = self._build_grid_footprint(self.quick_anchors, params)
+        fp = self._build_grid_footprint(self.quick_anchors, params)
 
         # Build a 2D grid for lookup
-        pad_grid = [[None]*cols for _ in range(rows)]
+        pad_grid = [[None] * cols for _ in range(rows)]
         for i, pad in enumerate(fp["pads"]):
             r, c = divmod(i, cols)
             pad_grid[r][c] = pad
@@ -782,7 +857,9 @@ class ComponentPlacer(QObject):
             # Circular / IC‐snake
             idx_list = self.snake_circular(cols, rows)
             # rotate so Anchor-A is first
-            start = next(i for i,(r,c) in enumerate(idx_list) if r==a_r and c==a_c)
+            start = next(
+                i for i, (r, c) in enumerate(idx_list) if r == a_r and c == a_c
+            )
             idx = idx_list[start:] + idx_list[:start]
 
         elif scheme == 1:
@@ -818,10 +895,6 @@ class ComponentPlacer(QObject):
         fp["pads"] = ordered
         return fp
 
-
-
-
-
     # ------------------------------------------------------------------
     #  QUICK-CREATION  – live rebuild & redraw
     # ------------------------------------------------------------------
@@ -840,21 +913,22 @@ class ComponentPlacer(QObject):
             f"[QC] update_quick_fp anchors={anchors} "
             f"x_pins={params.get('x_pins')} y_pins={params.get('y_pins')} "
             f"scheme={params.get('number_scheme')}",
-            module="QuickCreate", func="update_quick_fp")
+            module="QuickCreate",
+            func="update_quick_fp",
+        )
 
         if None in anchors.values() or not params:
             return
 
         # <-- use the single entry-point that applies the numbering pattern
         fp = self._generate_quick_footprint(params)
-        self._latest_quick_fp = fp           # keep for place_quick()
+        self._latest_quick_fp = fp  # keep for place_quick()
 
         # refresh the fixed ghost preview (with arrows)
         if self.ghost_component:
             self.ghost_component.remove_ghost()
             self.ghost_component.show_ghost(
-                fp, flipped=self._should_flip(),
-                follow_mouse=False
+                fp, flipped=self._should_flip(), follow_mouse=False
             )
 
     # -------------------------------------------------------------------------
@@ -862,28 +936,29 @@ class ComponentPlacer(QObject):
     # -------------------------------------------------------------------------
     def _build_grid_footprint(self, anchors: dict, p: dict) -> dict:
         """Create canonical pad list for ghost + final commit."""
-        ax, ay = anchors["A"];  bx, by = anchors["B"]
+        ax, ay = anchors["A"]
+        bx, by = anchors["B"]
 
         cols = max(int(p.get("x_pins", 1)), 1)
         rows = max(int(p.get("y_pins", 1)), 1)
 
-        width  = float(p.get("width",  0.5))
+        width = float(p.get("width", 0.5))
         height = float(p.get("height", 0.5))
-        hole   = float(p.get("hole",   0.0))
+        hole = float(p.get("hole", 0.0))
 
         gui_shape = p.get("shape", "Round").lower()
         shape_map = {
-            "round":                       "Round",
-            "ellipse":                     "Ellipse",
-            "square/rectangle":            "Square/rectangle",
-            "square/rectangle with hole":  "Square/rectangle with Hole",
-            "hole":                        "Hole"
+            "round": "Round",
+            "ellipse": "Ellipse",
+            "square/rectangle": "Square/rectangle",
+            "square/rectangle with hole": "Square/rectangle with Hole",
+            "hole": "Hole",
         }
         shape_type = shape_map.get(gui_shape, "Square/rectangle")
 
-        test_pos = p.get("test_side", "top").lower()     # always lower-case
+        test_pos = p.get("test_side", "top").lower()  # always lower-case
         testab = p.get("testability", "Force")
-        tech     = p.get("technology", "SMD")
+        tech = p.get("technology", "SMD")
 
         dx = (bx - ax) / (cols - 1) if cols > 1 else 0.0
         dy = (by - ay) / (rows - 1) if rows > 1 else 0.0
@@ -891,34 +966,32 @@ class ComponentPlacer(QObject):
         pads, pin = [], 1
         for r in range(rows):
             for c in range(cols):
-                pads.append({
-                    "pin"          : pin,
-                    "x_coord_mm"   : ax + c * dx,
-                    "y_coord_mm"   : ay + r * dy,
-                    "width_mm"     : width,
-                    "height_mm"    : height,
-                    "hole_mm"      : hole,
-                    "shape_type"   : shape_type,
-                    "test_position": test_pos,
-                    "testability"  : testab,
-                    "technology"   : tech,
-                    "angle_deg"    : 0.0
-                })
+                pads.append(
+                    {
+                        "pin": pin,
+                        "x_coord_mm": ax + c * dx,
+                        "y_coord_mm": ay + r * dy,
+                        "width_mm": width,
+                        "height_mm": height,
+                        "hole_mm": hole,
+                        "shape_type": shape_type,
+                        "test_position": test_pos,
+                        "testability": testab,
+                        "technology": tech,
+                        "angle_deg": 0.0,
+                    }
+                )
                 pin += 1
 
         LogHandler().debug(
             f"[QC] built_fp rows={rows} cols={cols} pads={len(pads)} "
             f"shape_type={shape_type} "
             f"w={width:.2f} h={height:.2f} hole={hole:.2f}",
-            module="QuickCreate", func="_build_grid_fp")
-        
-        return {
-            "center_x": (ax + bx) / 2.0,
-            "center_y": (ay + by) / 2.0,
-            "pads"    : pads
-        }
+            module="QuickCreate",
+            func="_build_grid_fp",
+        )
 
-
+        return {"center_x": (ax + bx) / 2.0, "center_y": (ay + by) / 2.0, "pads": pads}
 
     # ------------------------------------------------------------------
     #  generic adaptor: pushes one pad into ObjectLibrary no matter
@@ -940,6 +1013,5 @@ class ComponentPlacer(QObject):
 
     # ── helper: should the ghost be flipped? ──────────────────────────────
     def _should_flip(self) -> bool:
-        """Return True when the current board side is bottom."""
-        side = self.board_view.flags.get_flag("side", "top").lower()
-        return side == "bottom"
+        """Return True only when the user toggled flipping."""
+        return self.is_flipped
