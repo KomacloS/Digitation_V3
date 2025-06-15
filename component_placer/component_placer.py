@@ -20,7 +20,11 @@ class Clipboard:
 
     def copy(self, objects: List[BoardObject]):
         self.copied_objects = copy.deepcopy(objects)
-        print(f"Clipboard: Copied {len(self.copied_objects)} objects.")
+        LogHandler().info(
+            f"Clipboard: Copied {len(self.copied_objects)} objects.",
+            module="Clipboard",
+            func="copy",
+        )
 
     def paste(self) -> List[Dict[str, Any]]:
         return copy.deepcopy(self.copied_objects) if self.copied_objects else []

@@ -9,14 +9,8 @@ project_root = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, project_root)
 
 # === Step 2: Import Remaining Modules After Modifying sys.path ===
-import logging  # Consider removing if not used elsewhere
 from PyQt5.QtWidgets import QApplication
 from ui.main_menu import MainWindow
-
-# === Debugging: Print sys.path to Verify ===
-print("main.py - Current sys.path:")
-for path in sys.path:
-    print(path)
 
 
 

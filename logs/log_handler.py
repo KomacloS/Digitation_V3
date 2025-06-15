@@ -99,3 +99,4 @@ class LogHandler:
 
     def getEffectiveLevel(self):
         return self.logger.getEffectiveLevel()
+

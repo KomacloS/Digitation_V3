@@ -6,7 +6,6 @@ from logs.log_handler import LogHandler
 from constants.constants import Constants
 
 log = LogHandler()
-print(">>> LOADED", __name__, "FROM", __file__)
 
 def safe_write(target_path: str, data: str, encoding: str = "utf-8") -> bool:
     """
