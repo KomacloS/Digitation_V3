@@ -6,6 +6,7 @@ from logs.log_handler import LogHandler
 
 log = LogHandler()
 
+
 class QuickCreationController(QObject):
     """
     Two-anchor Quick Creation workflow.
@@ -14,25 +15,32 @@ class QuickCreationController(QObject):
     Arrow keys nudge anchors (Δx auto-flipped on bottom side).
     """
 
-    def __init__(self, board_view, input_handler,
-                 component_placer, marker_manager, coord_converter):
+    def __init__(
+        self,
+        board_view,
+        input_handler,
+        component_placer,
+        marker_manager,
+        coord_converter,
+    ):
         super().__init__(board_view)
 
         # --- core references ------------------------------------------------
-        self.log             = LogHandler()
-        self.board_view      = board_view
-        self.flags           = board_view.flags           # FlagManager
-        self.input_handler   = input_handler
-        self.placer          = component_placer
-        self.marker_manager  = marker_manager
+        self.log = LogHandler()
+        self.board_view = board_view
+        self.flags = board_view.flags  # FlagManager
+        self.input_handler = input_handler
+        self.placer = component_placer
+        self.marker_manager = marker_manager
         self.coord_converter = coord_converter
 
         # --- state ----------------------------------------------------------
-        self.active           = False
-        self.state            = 0            # 0=idle, 1=A, 2=B, 3=drag
-        self.anchors          = {"A": None, "B": None}
-        self.selected_anchor  = None
-        self.quick_anchors    = self.anchors  # alias used by ComponentPlacer
+        self.active = False
+        self.state = 0  # 0=idle, 1=A, 2=B, 3=drag
+        self.anchors = {"A": None, "B": None}
+        self.selected_anchor = None
+        self.quick_anchors = self.anchors  # alias used by ComponentPlacer
+        self.last_params = None
 
         # --- connect signals -----------------------------------------------
         self.input_handler.mouse_clicked.connect(self._on_click)
@@ -42,18 +50,21 @@ class QuickCreationController(QObject):
 
         # arrow keys (0.02 mm nudges)
         step = 0.02
-        self.input_handler.arrow_left .connect(
-            lambda: self._nudge_selected(self._flip_dx(-step), 0.0))
+        self.input_handler.arrow_left.connect(
+            lambda: self._nudge_selected(self._flip_dx(-step), 0.0)
+        )
         self.input_handler.arrow_right.connect(
-            lambda: self._nudge_selected(self._flip_dx( step), 0.0))
-        self.input_handler.arrow_up   .connect(
-            lambda: self._nudge_selected(0.0,  step))
-        self.input_handler.arrow_down .connect(
-            lambda: self._nudge_selected(0.0, -step))
+            lambda: self._nudge_selected(self._flip_dx(step), 0.0)
+        )
+        self.input_handler.arrow_up.connect(lambda: self._nudge_selected(0.0, step))
+        self.input_handler.arrow_down.connect(lambda: self._nudge_selected(0.0, -step))
 
         # track anchor selection
-        scene = board_view.scene() if callable(getattr(board_view, "scene", None)) \
-                else getattr(board_view, "scene", None)
+        scene = (
+            board_view.scene()
+            if callable(getattr(board_view, "scene", None))
+            else getattr(board_view, "scene", None)
+        )
         if scene:
             scene.selectionChanged.connect(self._on_anchor_selection_changed)
 
@@ -75,8 +86,8 @@ class QuickCreationController(QObject):
 
     # ───────────────────────────────────────── mode control ───────────────
     def activate(self):
-        self.active  = True
-        self.state   = 0
+        self.active = True
+        self.state = 0
         self.anchors = {"A": None, "B": None}
         self.quick_anchors = self.anchors
         self.selected_anchor = None
@@ -114,8 +125,10 @@ class QuickCreationController(QObject):
 
         # --- relocate anchor in drag mode ----------------------------------
         if self.state == 3 and self.selected_anchor:
-            self._nudge_selected(x_mm - self.anchors[self.selected_anchor][0],
-                                 y_mm - self.anchors[self.selected_anchor][1])
+            self._nudge_selected(
+                x_mm - self.anchors[self.selected_anchor][0],
+                y_mm - self.anchors[self.selected_anchor][1],
+            )
             self.state = 2
             self.selected_anchor = None
 
@@ -125,10 +138,9 @@ class QuickCreationController(QObject):
             return super().eventFilter(obj, event)
 
         # context menu on anchor
-        if (event.type() == QEvent.MouseButtonPress and
-                event.button() == Qt.RightButton):
+        if event.type() == QEvent.MouseButtonPress and event.button() == Qt.RightButton:
             pos = event.pos()
-            pt  = self.board_view.mapToScene(pos)
+            pt = self.board_view.mapToScene(pos)
             for aid in ("A", "B"):
                 if self._hit_test(aid, pt.x(), pt.y()):
                     menu = QMenu(self.board_view)
@@ -148,10 +160,8 @@ class QuickCreationController(QObject):
                 return True
             if self.state in (2, 3) and self.selected_anchor:
                 step = 0.1
-                dx = (-step if key == Qt.Key_Left
-                      else step if key == Qt.Key_Right else 0)
-                dy = ( step if key == Qt.Key_Up
-                      else -step if key == Qt.Key_Down else 0)
+                dx = -step if key == Qt.Key_Left else step if key == Qt.Key_Right else 0
+                dy = step if key == Qt.Key_Up else -step if key == Qt.Key_Down else 0
                 if dx or dy:
                     self._nudge_selected(self._flip_dx(dx), dy)
                     return True
@@ -164,7 +174,8 @@ class QuickCreationController(QObject):
         log.debug(
             f"[QC] _refresh_ghost -> anchors={self.anchors} "
             f"params={self._current_params()}",
-            module="QuickCreate", func="_refresh_ghost"
+            module="QuickCreate",
+            func="_refresh_ghost",
         )
 
         if None in self.anchors.values():
@@ -191,6 +202,14 @@ class QuickCreationController(QObject):
     def _open_dialog(self):
         dlg = ComponentInputDialog(parent=self.board_view.window(), quick=True)
         dlg.setWindowModality(Qt.NonModal)
+        if self.last_params:
+            prm = dict(self.last_params)
+            prm["test_side"] = self.flags.get_flag("side", "top")
+            dlg.set_quick_params(prm)
+        else:
+            dlg.side_combo.setCurrentText(
+                self.flags.get_flag("side", "top").capitalize()
+            )
         dlg.quick_params_changed.connect(self._live_params)
         dlg.component_data_ready.connect(self._final_params)
         dlg.rejected.connect(self.deactivate)
@@ -205,8 +224,9 @@ class QuickCreationController(QObject):
         ComponentPlacer so _current_params() returns something useful.
         """
         self.params = prm
-        self.placer.quick_params = prm      # <-- NEW – keep in sync
-        self._refresh_ghost()               # rebuild ghost immediately
+        self.placer.quick_params = prm  # <-- NEW – keep in sync
+        self.last_params = prm
+        self._refresh_ghost()  # rebuild ghost immediately
 
     def _final_params(self, _classic_data: dict):
         """
@@ -214,11 +234,13 @@ class QuickCreationController(QObject):
         Ignore classic data – pull the full quick-params directly so the grid
         dimensions & pad sizes are preserved.
         """
-        qp = self.dialog.get_quick_params()          # full set
-        log.debug(f"[QC] final_params -> {qp}",
-                  module="QuickCreate", func="_final_params")
+        qp = self.dialog.get_quick_params()  # full set
+        log.debug(
+            f"[QC] final_params -> {qp}", module="QuickCreate", func="_final_params"
+        )
 
-        self.placer.quick_params  = qp
+        self.placer.quick_params = qp
+        self.last_params = qp
         self.placer.quick_anchors = self.anchors
         self.placer.update_quick_footprint(self.anchors, qp)
         self.placer.place_quick()
