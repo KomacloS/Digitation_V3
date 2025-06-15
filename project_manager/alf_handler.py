@@ -5,8 +5,6 @@ from collections import defaultdict
 from utils.file_ops import safe_write, rotate_backups
 from logs.log_handler import LogHandler
 
-print(">>> LOADED patched alf_handler FROM", __file__)
-
 def save_alf_file(project_folder, object_library, logger=None,
                   fixed_ts: str | None = None):
     """

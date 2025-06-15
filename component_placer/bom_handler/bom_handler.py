@@ -16,8 +16,6 @@ except ImportError:
 
 from PyQt5.QtWidgets import QMessageBox
 
-print(">>> LOADED", __name__, "FROM", __file__)
-
 class BOMHandler:
     """
     Handles the Bill-of-Materials (BOM) for the PCB digitization project.

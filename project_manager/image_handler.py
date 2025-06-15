@@ -8,6 +8,8 @@ from logs.log_handler import LogHandler
 import hashlib
 import os
 
+log = LogHandler()
+
 if TYPE_CHECKING:
     from project_manager.project_manager import ProjectManager  # Only for type hints
 
@@ -49,7 +51,7 @@ def is_same_file(file_path, pixmap):
         return file_hash == memory_hash
 
     except Exception as e:
-        print(f"Error in is_same_file: {e}")
+        log.error(f"Error in is_same_file: {e}")
         return False
 
 
