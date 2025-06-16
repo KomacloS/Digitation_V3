@@ -103,11 +103,6 @@ class GhostComponent:
             dx, dy = pad["x_coord_mm"] - cx, pad["y_coord_mm"] - cy
             rx = dx * math.cos(rad) - dy * math.sin(rad)
             ry = dx * math.sin(rad) + dy * math.cos(rad)
-
-            # always mirror on bottom side so pads match the inverted X axis
-            if side == "bottom":
-                rx = -rx
-
             # optional user flip (changes colour)
             if self.flipped:
                 rx = -rx
