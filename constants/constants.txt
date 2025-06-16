@@ -4,7 +4,6 @@
     "log_backup_count": 5,
     "current_project_path": null,
     "project_loaded": false,
-    "pixels_per_mm": 30.0,
     "zoom_center_mode": "marker",
     "z_value_image": 0,
     "z_value_pads": 1,

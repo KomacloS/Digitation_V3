@@ -408,7 +408,7 @@ def align_selected_pads(object_library, selected_pads, component_placer):
     current_side = board_view.flags.get_flag("side", "top").lower()
     board_width_mm = None
     if current_side == "bottom":
-        board_width_mm = board_view.converter.image_width / board_view.converter.pixels_per_mm
+        board_width_mm = board_view.converter.image_width * board_view.converter.mm_per_pixels_bot
 
     pads_data = []
     for pad in valid_pad_items:

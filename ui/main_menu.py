@@ -53,7 +53,6 @@ class MainWindow(QMainWindow):
         self.constants = Constants()
         self.current_project_path = self.constants.get("current_project_path", None)
         self.project_loaded = self.constants.get("project_loaded", False)
-        self.pixels_per_mm = self.constants.get("pixels_per_mm", 30.0)
 
         # ─── Status Bar ────────────────────────────────────────────────────
         self.status_bar = QStatusBar()
@@ -417,9 +416,6 @@ class MainWindow(QMainWindow):
         autosave_action.triggered.connect(self.set_auto_save_threshold)
         properties_menu.addAction(autosave_action)
 
-        set_pixels_ratio_action = QAction("Set Pixels Per MM (Legacy)", self)
-        set_pixels_ratio_action.triggered.connect(self.set_pixels_per_mm)
-        properties_menu.addAction(set_pixels_ratio_action)
 
         # -- NEW: Add two separate menu actions for top & bottom mm-per-pixels
         set_mm_per_pixels_top_action = QAction("Set mm_per_pixels_top", self)
@@ -500,6 +496,7 @@ class MainWindow(QMainWindow):
         self.constants.set("origin_x_mm", x0)
         self.constants.set("origin_y_mm", y0)
         self.constants.save()
+        self.project_manager.save_project_settings()
         self.board_view.converter.set_origin_mm(x0, y0)
 
         # -- shift pads if requested -----------------------------------------
@@ -914,43 +911,6 @@ class MainWindow(QMainWindow):
         except Exception as e:
             self.log.log("error", f"Error during Align Pads action: {e}")
 
-    def set_pixels_per_mm(self):
-        """
-        Prompts the user to set a new pixels-to-mm conversion ratio.
-        Updates the constants and refreshes related UI components in real time.
-        """
-        current_value = self.constants.get("pixels_per_mm", 30.0)
-        # Using QInputDialog.getDouble to allow decimal input.
-        new_value, ok = QInputDialog.getDouble(
-            self,
-            "Set Pixels Per MM",
-            "Enter new pixels per mm ratio:",
-            value=current_value,
-            min=0.00001,  # minimum acceptable ratio (adjust as needed)
-            max=10000000.0,
-            decimals=10,
-        )
-        if ok:
-            # Update constants
-            self.constants.set("pixels_per_mm", new_value)
-            self.constants.save()
-            self.pixels_per_mm = new_value
-
-            # Update BoardView’s local copy
-            self.board_view.pixels_per_mm = new_value
-
-            # Update the DisplayLibrary instance that uses the conversion ratio.
-            self.board_view.display_library.pixels_per_mm = new_value
-
-            # If your CoordinateConverter needs to know about the ratio, update it.
-            # (Assuming you add a setter method in your CoordinateConverter.)
-            if hasattr(self.board_view.converter, "set_pixels_per_mm"):
-                self.board_view.converter.set_pixels_per_mm(new_value)
-
-            self.log.log("info", f"Pixels per mm ratio updated to {new_value}.")
-
-            # Optionally trigger a refresh of the scene if necessary.
-            self.board_view.fit_in_view()
 
     def open_bom_editor(self):
         """
@@ -1058,6 +1018,7 @@ class MainWindow(QMainWindow):
             # Update the constants and save changes
             self.constants.set("mm_per_pixels_top", new_value)
             self.constants.save()
+            self.project_manager.save_project_settings()
             if hasattr(self.board_view.converter, "set_mm_per_pixels_top"):
                 self.board_view.converter.set_mm_per_pixels_top(new_value)
             # Refresh the scene so the new scale is visible
@@ -1099,6 +1060,7 @@ class MainWindow(QMainWindow):
                 return
             self.constants.set("mm_per_pixels_bot", new_value)
             self.constants.save()
+            self.project_manager.save_project_settings()
             if hasattr(self.board_view.converter, "set_mm_per_pixels_bot"):
                 self.board_view.converter.set_mm_per_pixels_bot(new_value)
             self.board_view.update_scene()

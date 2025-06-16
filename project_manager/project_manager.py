@@ -11,6 +11,7 @@ from project_manager.image_handler import ImageHandler, is_same_file
 from logs.log_handler import LogHandler
 from constants.constants import Constants  # Import your constants
 from project_manager.alf_handler import save_alf_file, load_project_alf
+from project_manager.project_settings import load_settings, save_settings
 from component_placer.bom_handler.bom_handler import BOMHandler
 from project_manager.backup_browser_dialog import BackupBrowserDialog
 
@@ -34,6 +35,14 @@ class ProjectManager(QObject):
         self.bom_handler = bom_handler
         self.log.info(f"ProjectManager: Using shared BOMHandler instance at {hex(id(self.bom_handler))}",
                       module="ProjectManager", func="__init__")
+
+    def save_project_settings(self, folder: str | None = None):
+        """Save mm/px and origin settings to the project folder if possible."""
+        folder = folder or self.main_window.current_project_path
+        if not folder or folder.strip().lower().endswith("[none]"):
+            return
+        consts = Constants()
+        save_settings(folder, consts, logger=self.log)
 
     def handle_bulk_operation_completed(self, operation: str):
         if not self.project_loaded:
@@ -103,6 +112,18 @@ class ProjectManager(QObject):
                     f"The following files are missing:\n{', '.join(missing)}"
                 )
                 return
+
+            # Load any project-specific settings before manipulating the view
+            consts = Constants()
+            load_settings(project_dir, consts, logger=self.log)
+
+            mm_top = consts.get("mm_per_pixels_top", 0.0333)
+            mm_bot = consts.get("mm_per_pixels_bot", 0.0333)
+            ox = consts.get("origin_x_mm", 0.0)
+            oy = consts.get("origin_y_mm", 0.0)
+            self.main_window.board_view.converter.set_mm_per_pixels_top(mm_top)
+            self.main_window.board_view.converter.set_mm_per_pixels_bot(mm_bot)
+            self.main_window.board_view.converter.set_origin_mm(ox, oy)
 
             self.log.log("info", "Clearing previous project objects.")
             self.object_library.clear()
@@ -255,6 +276,9 @@ class ProjectManager(QObject):
             self.object_library.undo_redo_manager.clear()
             self.auto_save_counter = 0
 
+            # Save project specific settings
+            self.save_project_settings(folder)
+
             QMessageBox.information(
                 self.main_window,
                 "Project Saved",
@@ -350,6 +374,9 @@ class ProjectManager(QObject):
         # ── 8. HARD‑save ALF (if prefixes exist) ──────────────────
         from project_manager.alf_handler import save_alf_file
         save_alf_file(new_proj_dir, self.object_library, logger=self.log)
+
+        # save project specific settings
+        self.save_project_settings(new_proj_dir)
 
         # ── 9. wrap‑up UI / state  ────────────────────────────────
         QMessageBox.information(
