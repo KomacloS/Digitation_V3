@@ -100,12 +100,19 @@ class GhostComponent:
 
         for pad in self.footprint["pads"]:
             # local coordinates → rotated / flipped → scene-px
-            dx, dy   = pad["x_coord_mm"] - cx, pad["y_coord_mm"] - cy
-            rx       = dx * math.cos(rad) - dy * math.sin(rad)
-            ry       = dx * math.sin(rad) + dy * math.cos(rad)
+            dx, dy = pad["x_coord_mm"] - cx, pad["y_coord_mm"] - cy
+            rx = dx * math.cos(rad) - dy * math.sin(rad)
+            ry = dx * math.sin(rad) + dy * math.cos(rad)
+
+            # fixed quick-preview on bottom: mirror X but keep colours
+            if side == "bottom" and self._draw_arrows:
+                rx = -rx
+
+            # optional user flip (changes colour)
             if self.flipped:
                 rx = -rx
-            px =  rx / mm_per_px
+
+            px = rx / mm_per_px
             py = -ry / mm_per_px
             centres_px.append(QPointF(px, py))
 
