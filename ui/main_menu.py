@@ -1,14 +1,28 @@
 # ui/main_menu.py
 
-from typing import List 
 import os
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QKeySequence, QFont, QColor, QDoubleValidator
+from PyQt5.QtGui import QFont, QDoubleValidator
 from PyQt5.QtWidgets import (
-    QMainWindow, QStatusBar, QLabel, QToolBar, QAction, QComboBox,
-    QFileDialog, QDockWidget, QTreeWidget, QTreeWidgetItem, QMessageBox,
-    QDialog, QMenu, QToolButton, QInputDialog, QTabWidget, QVBoxLayout, QWidget, QLabel, QTextBrowser,
-    QTableWidget, QTableWidgetItem, QHBoxLayout, QLineEdit,QStyle
+    QMainWindow,
+    QStatusBar,
+    QToolBar,
+    QAction,
+    QComboBox,
+    QFileDialog,
+    QDockWidget,
+    QTreeWidget,
+    QTreeWidgetItem,
+    QMessageBox,
+    QDialog,
+    QMenu,
+    QToolButton,
+    QInputDialog,
+    QWidget,
+    QLabel,
+    QHBoxLayout,
+    QLineEdit,
+    QStyle,
 )
 from logs.log_handler import LogHandler
 from constants.constants import Constants
@@ -20,7 +34,6 @@ from component_placer.ghost import GhostComponent
 from project_manager.project_manager import ProjectManager
 from ui.search_dialog import SearchDialog
 from objects.object_library import ObjectLibrary
-from display.display_library import SelectablePadItem
 from ui.selected_pins_info import generate_selected_pins_html
 from ui.ui_customization_dialog import UICustomizationDialog
 from ui.properties_dock import PropertiesDock
@@ -39,23 +52,23 @@ class MainWindow(QMainWindow):
         # ─── Constants & State ─────────────────────────────────────────────
         self.constants = Constants()
         self.current_project_path = self.constants.get("current_project_path", None)
-        self.project_loaded      = self.constants.get("project_loaded", False)
-        self.pixels_per_mm       = self.constants.get("pixels_per_mm", 30.0)
+        self.project_loaded = self.constants.get("project_loaded", False)
+        self.pixels_per_mm = self.constants.get("pixels_per_mm", 30.0)
 
         # ─── Status Bar ────────────────────────────────────────────────────
         self.status_bar = QStatusBar()
         self.setStatusBar(self.status_bar)
         self.project_name_label = QLabel("Project: [None]")
         self.status_bar.addPermanentWidget(self.project_name_label)
-        self.pad_info_label     = QLabel("No pad selected")
+        self.pad_info_label = QLabel("No pad selected")
         self.status_bar.addPermanentWidget(self.pad_info_label)
 
         # ─── Core Models ───────────────────────────────────────────────────
         self.object_library = ObjectLibrary()
-        self.bom_handler    = BOMHandler()
+        self.bom_handler = BOMHandler()
         # Link BOM ↔ undo/redo
-        self.bom_handler.undo_redo_manager  = self.object_library.undo_redo_manager
-        self.object_library.bom_handler     = self.bom_handler
+        self.bom_handler.undo_redo_manager = self.object_library.undo_redo_manager
+        self.object_library.bom_handler = self.bom_handler
 
         # ─── Project Manager ───────────────────────────────────────────────
         # Must exist before wiring up input_handler, etc.
@@ -65,7 +78,7 @@ class MainWindow(QMainWindow):
         self.component_placer = ComponentPlacer(
             board_view=None,
             object_library=self.object_library,
-            bom_handler=self.bom_handler
+            bom_handler=self.bom_handler,
         )
 
         self.board_view = BoardView(
@@ -73,7 +86,7 @@ class MainWindow(QMainWindow):
             pad_info_label=self.pad_info_label,
             component_placer=self.component_placer,
             object_library=self.object_library,
-            constants=self.constants
+            constants=self.constants,
         )
         self.component_placer.board_view = self.board_view
         self.setCentralWidget(self.board_view)
@@ -83,11 +96,11 @@ class MainWindow(QMainWindow):
 
         # ─── Quick Creation Controller ──────────────────────────────────
         self.quick_creation_controller = QuickCreationController(
-            board_view       = self.board_view,
-            input_handler    = self.input_handler,
-            component_placer = self.component_placer,
-            marker_manager   = self.board_view.marker_manager,
-            coord_converter  = self.board_view.converter
+            board_view=self.board_view,
+            input_handler=self.input_handler,
+            component_placer=self.component_placer,
+            marker_manager=self.board_view.marker_manager,
+            coord_converter=self.board_view.converter,
         )
 
         # ─── Link DisplayLibrary ─────────────────────────────────────────
@@ -95,7 +108,7 @@ class MainWindow(QMainWindow):
 
         # ─── Docks & UI setup ────────────────────────────────────────────
         self.layers_dock = QDockWidget("Layers", self)
-        self.layers_tab  = LayersTab(self.board_view, parent=self)
+        self.layers_tab = LayersTab(self.board_view, parent=self)
         self.layers_dock.setWidget(self.layers_tab)
         self.layers_dock.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.layers_dock)
@@ -111,28 +124,25 @@ class MainWindow(QMainWindow):
         # ─── Show window ────────────────────────────────────────────────
         self.show()
 
-
-
     # --------------------------------------------------------------------------
     #  Toolbar (zoom, search, switch-side …) – UX-upgraded
     # --------------------------------------------------------------------------
     def create_tool_bar(self):
         """
         Builds a tidy main toolbar and improves UX:
-            • Search-pad and Switch-side icons are 4 × larger (80 px)  
+            • Search-pad and Switch-side icons are 4 × larger (80 px)
             • All combo / label widgets have a fixed width so the bar
-            never jiggles when their text changes.  
+            never jiggles when their text changes.
             • Icon-only buttons keep the bar compact and clear.
         """
-        from PyQt5.QtCore    import QSize
-        from PyQt5.QtWidgets import QStyle, QToolButton
+        from PyQt5.QtCore import QSize
 
-        LARGE   = QSize(80, 80)      # 4 × bigger than default 20 px
-        SMALL   = QSize(20, 20)
+        LARGE = QSize(80, 80)  # 4 × bigger than default 20 px
+        SMALL = QSize(20, 20)
 
         tb = QToolBar(self.tr("Main Toolbar"))
         tb.setMovable(False)
-        tb.setIconSize(SMALL)        # default for *all* actions
+        tb.setIconSize(SMALL)  # default for *all* actions
         tb.setToolButtonStyle(Qt.ToolButtonIconOnly)
         self.addToolBar(tb)
 
@@ -145,7 +155,9 @@ class MainWindow(QMainWindow):
         self.zoom_center_mode_combo.currentIndexChanged.connect(
             self.update_zoom_center_mode
         )
-        init_idx = 0 if self.constants.get("zoom_center_mode", "mouse") == "mouse" else 1
+        init_idx = (
+            0 if self.constants.get("zoom_center_mode", "mouse") == "mouse" else 1
+        )
         self.zoom_center_mode_combo.setCurrentIndex(init_idx)
 
         tb.addSeparator()
@@ -174,23 +186,23 @@ class MainWindow(QMainWindow):
         search_pad_action = QAction(
             self.style().standardIcon(QStyle.SP_FileDialogContentsView),
             self.tr("Search pad …"),
-            self
+            self,
         )
         search_pad_action.setToolTip(self.tr("Open pad search dialog"))
         search_pad_action.triggered.connect(self.open_search_dialog)
         tb.addAction(search_pad_action)
 
         # make this action’s tool-button big:
-        btn = tb.widgetForAction(search_pad_action)       # QToolButton
+        btn = tb.widgetForAction(search_pad_action)  # QToolButton
         if isinstance(btn, QToolButton):
             btn.setIconSize(LARGE)
-            btn.setFixedSize(LARGE)                       # keeps layout stable
+            btn.setFixedSize(LARGE)  # keeps layout stable
 
         # ── Switch-side action  (big icon) ─────────────────────────────────────
         switch_side_action = QAction(
             self.style().standardIcon(QStyle.SP_BrowserReload),
             self.tr("Flip side"),
-            self
+            self,
         )
         switch_side_action.setToolTip(self.tr("Switch between top ↔ bottom"))
         switch_side_action.triggered.connect(self.on_switch_side)
@@ -205,7 +217,7 @@ class MainWindow(QMainWindow):
         quick_action = QAction(
             self.style().standardIcon(QStyle.SP_FileDialogNewFolder),
             self.tr("Quick Creation"),
-            self
+            self,
         )
         quick_action.setToolTip(self.tr("Activate Quick Creation mode (N)"))
         quick_action.triggered.connect(self.quick_creation_controller.activate)
@@ -220,9 +232,6 @@ class MainWindow(QMainWindow):
         tb.addSeparator()
         tb.addWidget(QWidget())  # empty stretch
 
-
-
-
     # --------------------------------------------------------------------------
     #  Enhanced "Load NOD" method
     # --------------------------------------------------------------------------
@@ -232,10 +241,7 @@ class MainWindow(QMainWindow):
         Opens a typical file dialog for .jpg/.jpeg/.png, then calls project_manager.load_image().
         """
         file_path, _ = QFileDialog.getOpenFileName(
-            self,
-            f"Load {side.capitalize()} Image",
-            "",
-            "Images (*.jpg *.jpeg *.png)"
+            self, f"Load {side.capitalize()} Image", "", "Images (*.jpg *.jpeg *.png)"
         )
         if file_path:
             self.project_manager.load_image(file_path=file_path, side=side)
@@ -291,15 +297,20 @@ class MainWindow(QMainWindow):
         # Also link the project_manager to the existing component_placer.
         self.component_placer.project_manager = self.project_manager
 
-        self.log.log("debug", "ComponentPlacer updated with ghost component and project_manager.")
+        self.log.log(
+            "debug", "ComponentPlacer updated with ghost component and project_manager."
+        )
 
         # Create the InputHandler with references to existing objects.
         self.input_handler = InputHandler(
             board_view=self.board_view,
             component_placer=self.component_placer,
-            ghost_component=self.ghost_component
+            ghost_component=self.ghost_component,
         )
-        self.log.log("debug", "Created InputHandler for BoardView, ComponentPlacer, GhostComponent.")
+        self.log.log(
+            "debug",
+            "Created InputHandler for BoardView, ComponentPlacer, GhostComponent.",
+        )
 
         # Install the input handler as an event filter for the board view.
         self.board_view.viewport().setMouseTracking(True)
@@ -308,7 +319,9 @@ class MainWindow(QMainWindow):
         self.board_view.setFocus()
         self.board_view.installEventFilter(self.input_handler)
 
-        self.input_handler.mouse_clicked.connect(self.board_view.marker_manager.place_marker_from_scene)
+        self.input_handler.mouse_clicked.connect(
+            self.board_view.marker_manager.place_marker_from_scene
+        )
         self.input_handler.wheel_moved.connect(self.board_view.wheelEvent)
         self.log.log("info", "All wiring completed successfully.")
 
@@ -330,7 +343,9 @@ class MainWindow(QMainWindow):
         save_as_action.triggered.connect(self.project_manager.save_project_as_dialog)
         file_menu.addAction(save_as_action)
         create_project_action = QAction("Create Project", self)
-        create_project_action.triggered.connect(self.project_manager.create_project_dialog)
+        create_project_action.triggered.connect(
+            self.project_manager.create_project_dialog
+        )
         file_menu.addAction(create_project_action)
 
         # ── NEW: Restore Backup … ───────────────────────────────────────────
@@ -361,10 +376,14 @@ class MainWindow(QMainWindow):
         # ------------------- PROJECT Menu ------------------
         project_menu = menubar.addMenu("Project")
         load_top_action = QAction("Load Top JPG", self)
-        load_top_action.triggered.connect(lambda: self.project_manager.image_handler.load_image(side='top'))
+        load_top_action.triggered.connect(
+            lambda: self.project_manager.image_handler.load_image(side="top")
+        )
         project_menu.addAction(load_top_action)
         load_bottom_action = QAction("Load Bottom JPG", self)
-        load_bottom_action.triggered.connect(lambda: self.project_manager.image_handler.load_image(side='bottom'))
+        load_bottom_action.triggered.connect(
+            lambda: self.project_manager.image_handler.load_image(side="bottom")
+        )
         project_menu.addAction(load_bottom_action)
         load_nod_action = QAction("Load NOD", self)
         load_nod_action.triggered.connect(self.project_manager.load_nod_advanced)
@@ -372,7 +391,7 @@ class MainWindow(QMainWindow):
 
         # ------------------- VIEW Menu ------------------
         view_menu = menubar.addMenu("View")
-        
+
         # Toggle action for Components dock (if you have one)
         components_toggle = self.components_dock.toggleViewAction()
         components_toggle.setText("Components")
@@ -382,7 +401,7 @@ class MainWindow(QMainWindow):
         properties_toggle = self.properties_dock.toggleViewAction()
         properties_toggle.setText("Properties")
         view_menu.addAction(properties_toggle)
-        
+
         # Toggle action for Layers dock
         layers_toggle = self.layers_dock.toggleViewAction()
         layers_toggle.setText("Layers")
@@ -416,6 +435,11 @@ class MainWindow(QMainWindow):
         set_anchor_step_action.triggered.connect(self.set_anchor_nudge_step)
         properties_menu.addAction(set_anchor_step_action)
 
+        # --- Quick Prefix Table ---
+        set_prefix_table_action = QAction("Set Quick Prefix Table", self)
+        set_prefix_table_action.triggered.connect(self.set_quick_prefix_table)
+        properties_menu.addAction(set_prefix_table_action)
+
         # --- Max Zoom ---
         set_max_zoom_action = QAction("Set Max Zoom", self)
         set_max_zoom_action.triggered.connect(self.set_max_zoom)
@@ -434,22 +458,22 @@ class MainWindow(QMainWindow):
     # ------------------------------------------------------------------
     def set_board_origin(self):
         """
-        Lets the user pick a new X₀ / Y₀ origin (mm).  
-        • May optionally shift every pad by ΔX, ΔY  
+        Lets the user pick a new X₀ / Y₀ origin (mm).
+        • May optionally shift every pad by ΔX, ΔY
         • Re-positions the marker so it stays visually correct.
         """
         ox_old = self.constants.get("origin_x_mm", 0.0)
         oy_old = self.constants.get("origin_y_mm", 0.0)
 
         # -- get two doubles -------------------------------------------------
-        x0, ok1 = QInputDialog.getDouble(self, "Board Origin",
-                                         "New X-origin (mm):", ox_old,
-                                         -1e6, 1e6, 3)
+        x0, ok1 = QInputDialog.getDouble(
+            self, "Board Origin", "New X-origin (mm):", ox_old, -1e6, 1e6, 3
+        )
         if not ok1:
             return
-        y0, ok2 = QInputDialog.getDouble(self, "Board Origin",
-                                         "New Y-origin (mm):", oy_old,
-                                         -1e6, 1e6, 3)
+        y0, ok2 = QInputDialog.getDouble(
+            self, "Board Origin", "New Y-origin (mm):", oy_old, -1e6, 1e6, 3
+        )
         if not ok2:
             return
 
@@ -463,12 +487,14 @@ class MainWindow(QMainWindow):
         shift_pads = False
         if abs(dx) > 1e-9 or abs(dy) > 1e-9:
             resp = QMessageBox.question(
-                self, "Shift Pads?",
+                self,
+                "Shift Pads?",
                 f"Origin moves by ΔX={dx:.3f} mm, ΔY={dy:.3f} mm.\n"
                 "Shift all existing pads by the same amount?",
-                QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.Yes,
             )
-            shift_pads = (resp == QMessageBox.Yes)
+            shift_pads = resp == QMessageBox.Yes
 
         # -- save new constants & tell converter -----------------------------
         self.constants.set("origin_x_mm", x0)
@@ -485,15 +511,16 @@ class MainWindow(QMainWindow):
             if shift_pads:
                 new_marker_mm = (old_marker_mm[0] + dx, old_marker_mm[1] + dy)
             else:
-                new_marker_mm = old_marker_mm            # same board coords
+                new_marker_mm = old_marker_mm  # same board coords
             self.board_view.marker_manager.place_marker(*new_marker_mm)
 
         # -- redraw -----------------------------------------------------------
         self.board_view.update_scene()
-        self.log.log("info",
-            f"Origin set to ({x0:.3f}, {y0:.3f}) mm ; pads shifted={shift_pads}.")
+        self.log.log(
+            "info",
+            f"Origin set to ({x0:.3f}, {y0:.3f}) mm ; pads shifted={shift_pads}.",
+        )
 
-        
     def _shift_all_pads(self, dx: float, dy: float):
         """Bulk-translate every BoardObject by dx,dy millimetres."""
         if abs(dx) < 1e-9 and abs(dy) < 1e-9:
@@ -510,8 +537,6 @@ class MainWindow(QMainWindow):
             updates.append(obj)
         self.object_library.bulk_update_objects(updates, {})
 
-
-
     # --------------------------------------------------------------------------
     #  "Components" Dock  – now with refresh button **and** live filter
     # --------------------------------------------------------------------------
@@ -522,7 +547,7 @@ class MainWindow(QMainWindow):
             •   a ⟳ refresh button (rescans the folder)
             •   a small filter field to quickly narrow down the list
         """
-        from PyQt5.QtWidgets import QHBoxLayout, QLineEdit, QToolButton, QStyle
+        from PyQt5.QtWidgets import QLineEdit
 
         # ---------- dock & tree -------------------------------------------------
         self.components_dock = QDockWidget(self.tr("Components"), self)
@@ -540,8 +565,8 @@ class MainWindow(QMainWindow):
         )
 
         # ---------- locate / create folder -------------------------------------
-        script_dir   = os.path.dirname(os.path.abspath(__file__))
-        root_dir     = os.path.dirname(script_dir)
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        root_dir = os.path.dirname(script_dir)
         self.libraries_dir = os.path.join(root_dir, "component_libraries")
         os.makedirs(self.libraries_dir, exist_ok=True)
 
@@ -550,7 +575,7 @@ class MainWindow(QMainWindow):
             pat = pattern.lower()
 
             def recurse(item):
-                txt_match   = pat in item.text(0).lower()
+                txt_match = pat in item.text(0).lower()
                 child_match = False
                 for i in range(item.childCount()):
                     if recurse(item.child(i)):
@@ -563,7 +588,7 @@ class MainWindow(QMainWindow):
 
         # ---------- custom title-bar (label | filter | refresh) ----------------
         title = QWidget()
-        hl    = QHBoxLayout(title)
+        hl = QHBoxLayout(title)
         hl.setContentsMargins(6, 0, 6, 0)
         hl.setSpacing(4)
 
@@ -587,8 +612,6 @@ class MainWindow(QMainWindow):
         # ---------- initial populate -------------------------------------------
         self.refresh_component_tree()
 
-
-
     def refresh_component_tree(self):
         """
         Clears and re-populates the component tree, so newly exported footprints show up immediately.
@@ -600,8 +623,6 @@ class MainWindow(QMainWindow):
         root_item = QTreeWidgetItem(self.component_tree, ["component_libraries"])
         root_item.setData(0, Qt.UserRole, self.libraries_dir)
         self.populate_component_tree(root_item, self.libraries_dir)
-
-
 
     def on_component_tree_item_double_clicked(self, item, column):
         path = item.data(0, Qt.UserRole)
@@ -617,19 +638,20 @@ class MainWindow(QMainWindow):
             self.component_placer.footprint = footprint
             # Set the nod_file property on the ComponentPlacer so its base name is used
             from objects.nod_file import BoardNodFile
+
             self.component_placer.nod_file = BoardNodFile(nod_path=path)
             self.component_placer.activate_placement()
         else:
-            QMessageBox.warning(self, "Error", f"Failed to parse .nod file from {path}.")
-
+            QMessageBox.warning(
+                self, "Error", f"Failed to parse .nod file from {path}."
+            )
 
     def on_component_placed(self, component_name: str):
         QMessageBox.information(
             self,
             "Component Placed",
-            f"The component '{component_name}' was placed successfully."
+            f"The component '{component_name}' was placed successfully.",
         )
-
 
     def populate_component_tree(self, parent_item, directory: str):
         try:
@@ -650,8 +672,6 @@ class MainWindow(QMainWindow):
                 parent_item.addChild(file_item)
         parent_item.setExpanded(True)
 
-
-
     # --------------------------------------------------------------------------
     #  Zoom updates and side-switch logic
     # --------------------------------------------------------------------------
@@ -664,7 +684,9 @@ class MainWindow(QMainWindow):
     def update_zoom_level_label(self):
         if not self.board_view or not self.board_view.zoom_manager:
             self.zoom_level_label.setText("Zoom: N/A")
-            self.log.log("debug", "ZoomManager not available. Zoom level label set to N/A.")
+            self.log.log(
+                "debug", "ZoomManager not available. Zoom level label set to N/A."
+            )
             return
 
         min_scale = self.board_view.zoom_manager.min_user_scale
@@ -673,7 +695,10 @@ class MainWindow(QMainWindow):
         zoom_percentage = current_scale * 100
 
         self.zoom_level_label.setText(f"Zoom: {zoom_percentage:.0f}%")
-        self.log.log("debug", f"Zoom Levels - Min: {min_scale}, Current: {current_scale}, Max: {max_scale}")
+        self.log.log(
+            "debug",
+            f"Zoom Levels - Min: {min_scale}, Current: {current_scale}, Max: {max_scale}",
+        )
 
     def on_switch_side(self):
         self.log.log("info", "Switch Side button clicked.")
@@ -688,64 +713,12 @@ class MainWindow(QMainWindow):
         search_dialog = SearchDialog(
             board_view=self.board_view,
             selected_pins_widget=self.properties_dock.selected_pins_info_tab,
-            parent=self
+            parent=self,
         )
         if search_dialog.exec_() == QDialog.Accepted:
             self.log.log("info", "Search Dialog completed successfully.")
         else:
             self.log.log("info", "Search Dialog was canceled.")
-
-
-
-    # --------------------------------------------------------------------------
-    #  Create the Properties Dock (for selected pins info)
-    # --------------------------------------------------------------------------
-    def create_properties_dock(self):
-        """
-        Creates a bottom dock widget with a tab for 'Selected Pins'
-        that displays info (as HTML) about the currently selected pads.
-        When no pads are selected, it shows the last clicked coordinates and side.
-        """
-        from PyQt5.QtWidgets import QTextBrowser  # Ensure QTextBrowser is imported
-
-        self.properties_dock = QDockWidget("Properties", self)
-        self.properties_dock.setAllowedAreas(Qt.BottomDockWidgetArea)
-        self.properties_tabs = QTabWidget()
-        self.properties_dock.setWidget(self.properties_tabs)
-
-        # Create a single tab named "Selected Pins" with a QTextBrowser.
-        self.selected_pins_tab = QWidget()
-        layout = QVBoxLayout()
-        
-        self.selected_pins_info_tab = QTextBrowser()
-        self.selected_pins_info_tab.setMinimumHeight(20)  # Set reduced height
-        self.selected_pins_info_tab.setMaximumHeight(50)  # Prevent it from being too large
-        layout.addWidget(self.selected_pins_info_tab)
-        
-        self.selected_pins_tab.setLayout(layout)
-        self.properties_tabs.addTab(self.selected_pins_tab, "Selected Pins")
-        
-        # Add dock widget to the bottom area
-        self.addDockWidget(Qt.BottomDockWidgetArea, self.properties_dock)
-
-        # Reduce the initial size of the dock
-        self.properties_dock.setFixedHeight(80)  # Adjust to make the tab half the previous size
-
-    def update_selected_pins_info(self, selected_pads):
-        """
-        Updates the 'Selected Pins' tab in the Properties dock with information
-        about the currently selected pads. This function uses the BoardView’s
-        last clicked coordinate and current side.
-        """
-        from ui.selected_pins_info import generate_selected_pins_html
-        html = generate_selected_pins_html(
-            selected_pads,
-            self.board_view.last_clicked_mm,
-            self.board_view.flags.get_flag("side", "top")
-        )
-        # Forward to the dock:
-        self.properties_dock.update_selected_pins_info(html)
-
 
     def create_font_controls(self):
         """
@@ -757,7 +730,7 @@ class MainWindow(QMainWindow):
         decrease_font_action = QAction("A-", self)
         increase_font_action.triggered.connect(self.on_increase_pins_font_size)
         decrease_font_action.triggered.connect(self.on_decrease_pins_font_size)
-        
+
         # Find or create the View menu
         view_menu = self.menuBar().findChild(QMenu, "View")
         if view_menu is None:
@@ -772,7 +745,9 @@ class MainWindow(QMainWindow):
         self.constants.set("pins_font_size", fs)
         self.constants.save()
         # Refresh display using the stored selection (or empty list if none)
-        self.update_selected_pins_info(self.current_selected_pads if hasattr(self, 'current_selected_pads') else [])
+        self.update_selected_pins_info(
+            self.current_selected_pads if hasattr(self, "current_selected_pads") else []
+        )
 
     def on_decrease_pins_font_size(self):
         fs = self.constants.get("pins_font_size", 14)
@@ -781,8 +756,9 @@ class MainWindow(QMainWindow):
         self.constants.set("pins_font_size", fs)
         self.constants.save()
         # Refresh display using the stored selection (or empty list if none)
-        self.update_selected_pins_info(self.current_selected_pads if hasattr(self, 'current_selected_pads') else [])
-
+        self.update_selected_pins_info(
+            self.current_selected_pads if hasattr(self, "current_selected_pads") else []
+        )
 
     def closeEvent(self, event):
         """
@@ -797,7 +773,7 @@ class MainWindow(QMainWindow):
                 "Unsaved Changes",
                 "You have unsaved changes. Would you like to save before quitting?",
                 QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
-                QMessageBox.Yes
+                QMessageBox.Yes,
             )
 
             if response == QMessageBox.Yes:
@@ -814,7 +790,6 @@ class MainWindow(QMainWindow):
         else:
             # Undo stack is empty => no unsaved changes
             event.accept()
-
 
     def open_ui_customization_dialog(self):
         dialog = UICustomizationDialog(self.constants, parent=self)
@@ -843,8 +818,6 @@ class MainWindow(QMainWindow):
         statusbar_font_size = self.constants.get("statusbar_font_size", 10)
         tab_font_size = self.constants.get("tab_font_size", 10)
 
-        from PyQt5.QtGui import QFont
-
         # Toolbar font
         toolbar_font = QFont()
         toolbar_font.setPointSize(toolbar_font_size)
@@ -863,9 +836,11 @@ class MainWindow(QMainWindow):
         tab_font.setPointSize(tab_font_size)
         self.properties_dock.properties_tabs.setFont(tab_font)
 
-        self.log.log("info",
-                    f"Applied fonts => Toolbar: {toolbar_font_size}, "
-                    f"Statusbar: {statusbar_font_size}, Tabs: {tab_font_size}.")
+        self.log.log(
+            "info",
+            f"Applied fonts => Toolbar: {toolbar_font_size}, "
+            f"Statusbar: {statusbar_font_size}, Tabs: {tab_font_size}.",
+        )
         self.updateGeometry()
 
     def create_properties_dock(self):
@@ -873,11 +848,19 @@ class MainWindow(QMainWindow):
         Just instantiate your custom PropertiesDock and add it to the bottom area.
         """
         self.properties_dock = PropertiesDock(
-            constants=self.constants,
-            log=self.log,
-            parent=self
+            constants=self.constants, log=self.log, parent=self
         )
         self.addDockWidget(Qt.BottomDockWidgetArea, self.properties_dock)
+
+    def update_selected_pins_info(self, selected_pads):
+        """Forward selected pads info to the Properties dock."""
+        html = generate_selected_pins_html(
+            selected_pads,
+            self.board_view.last_clicked_mm,
+            self.board_view.flags.get_flag("side", "top"),
+        )
+        self.properties_dock.update_selected_pins_info(html)
+        self.current_selected_pads = selected_pads
 
     def showEvent(self, event):
         super().showEvent(event)
@@ -891,7 +874,9 @@ class MainWindow(QMainWindow):
         saved_height = self.constants.get("properties_dock_height", 104)
         # Note that 'resizeDocks' wants a list of docks and a list of sizes:
         self.resizeDocks([self.properties_dock], [saved_height], Qt.Vertical)
-        self.log.debug(f"[restore_properties_dock_size] Applied saved height={saved_height}")
+        self.log.debug(
+            f"[restore_properties_dock_size] Applied saved height={saved_height}"
+        )
 
     def set_auto_save_threshold(self):
         # Retrieve the current value from constants; default to 20 if not set.
@@ -903,7 +888,7 @@ class MainWindow(QMainWindow):
             "Enter new auto-save threshold (number of bulk actions before auto-saving):",
             current_value,
             1,
-            100
+            100,
         )
         if ok:
             self.constants.set("auto_save_threshold", value)
@@ -918,10 +903,14 @@ class MainWindow(QMainWindow):
         """
         selected_pads = self.board_view._get_selected_pads()
         if not selected_pads:
-            QMessageBox.information(self, "Align Pads", "No pads selected for alignment.")
+            QMessageBox.information(
+                self, "Align Pads", "No pads selected for alignment."
+            )
             return
         try:
-            actions.align_selected_pads(self.object_library, selected_pads, self.component_placer)
+            actions.align_selected_pads(
+                self.object_library, selected_pads, self.component_placer
+            )
         except Exception as e:
             self.log.log("error", f"Error during Align Pads action: {e}")
 
@@ -939,7 +928,7 @@ class MainWindow(QMainWindow):
             value=current_value,
             min=0.00001,  # minimum acceptable ratio (adjust as needed)
             max=10000000.0,
-            decimals=10
+            decimals=10,
         )
         if ok:
             # Update constants
@@ -971,37 +960,66 @@ class MainWindow(QMainWindow):
         If the BOM editor dialog is accepted, the BOM is saved to disk.
         """
         # Determine official CSV path: if a project is loaded, use its BOM file; otherwise prompt for one.
-        if self.current_project_path and self.current_project_path.strip().lower() != "[none]":
+        if (
+            self.current_project_path
+            and self.current_project_path.strip().lower() != "[none]"
+        ):
             bom_path = os.path.join(self.current_project_path, "project_bom.csv")
         else:
             bom_path, _ = QFileDialog.getSaveFileName(
                 self, "Select BOM CSV File", "", "CSV Files (*.csv)"
             )
             if not bom_path:
-                self.log.log("info", "BOM editing canceled: No CSV file selected.", module="MainWindow", func="open_bom_editor")
+                self.log.log(
+                    "info",
+                    "BOM editing canceled: No CSV file selected.",
+                    module="MainWindow",
+                    func="open_bom_editor",
+                )
                 return
 
         # Retrieve the current board component names from the ObjectLibrary.
-        board_set = set([obj.component_name for obj in self.object_library.get_all_objects()])
+        board_set = set(
+            [obj.component_name for obj in self.object_library.get_all_objects()]
+        )
 
         # Open the BOMEditorDialog directly, regardless of mismatches.
         from component_placer.bom_handler.bom_editor_dialog import BOMEditorDialog
+
         dialog = BOMEditorDialog(
-            bom_handler=self.bom_handler,
-            board_component_names=board_set,
-            parent=self
+            bom_handler=self.bom_handler, board_component_names=board_set, parent=self
         )
         if dialog.exec_() == dialog.Accepted:
             # If accepted, save the updated BOM.
             if self.bom_handler.save_bom(bom_path):
-                self.log.log("info", f"BOM updated and saved to {bom_path}.", module="MainWindow", func="open_bom_editor")
-                QMessageBox.information(self, "BOM Updated", f"BOM saved successfully to:\n{bom_path}")
+                self.log.log(
+                    "info",
+                    f"BOM updated and saved to {bom_path}.",
+                    module="MainWindow",
+                    func="open_bom_editor",
+                )
+                QMessageBox.information(
+                    self, "BOM Updated", f"BOM saved successfully to:\n{bom_path}"
+                )
             else:
-                self.log.log("warning", "Failed to save updated BOM after editing.", module="MainWindow", func="open_bom_editor")
-                QMessageBox.warning(self, "BOM Update Failed", "BOM editing completed but saving failed.")
+                self.log.log(
+                    "warning",
+                    "Failed to save updated BOM after editing.",
+                    module="MainWindow",
+                    func="open_bom_editor",
+                )
+                QMessageBox.warning(
+                    self,
+                    "BOM Update Failed",
+                    "BOM editing completed but saving failed.",
+                )
         else:
-            self.log.log("info", "User canceled BOM editing. BOM remains unchanged.", module="MainWindow", func="open_bom_editor")
-
+            self.log.log(
+                "info",
+                "User canceled BOM editing. BOM remains unchanged.",
+                module="MainWindow",
+                func="open_bom_editor",
+            )
 
     def set_mm_per_pixels_top(self):
         """
@@ -1009,14 +1027,14 @@ class MainWindow(QMainWindow):
         in text mode with a QDoubleValidator set to ScientificNotation.
         """
         current_value = self.constants.get("mm_per_pixels_top", 0.0333)
-        
+
         # Create a QInputDialog in text input mode
         dialog = QInputDialog(self)
         dialog.setInputMode(QInputDialog.TextInput)
         dialog.setWindowTitle("Set mm_per_pixels_top")
         dialog.setLabelText("Enter new mm_per_pixels_top (mm per pixel):")
         dialog.setTextValue(str(current_value))
-        
+
         # Retrieve the embedded QLineEdit to set a validator and enable context menu
         line_edit = dialog.findChild(QLineEdit)
         if line_edit:
@@ -1026,14 +1044,16 @@ class MainWindow(QMainWindow):
             line_edit.setValidator(validator)
             # Enable right-click context menu (for paste, etc.)
             line_edit.setContextMenuPolicy(Qt.DefaultContextMenu)
-        
+
         # Execute the dialog and process input
         if dialog.exec_() == QDialog.Accepted:
             new_value_str = dialog.textValue().strip()
             try:
                 new_value = float(new_value_str)
             except ValueError:
-                QMessageBox.warning(self, "Invalid Input", f"'{new_value_str}' is not a valid float.")
+                QMessageBox.warning(
+                    self, "Invalid Input", f"'{new_value_str}' is not a valid float."
+                )
                 return
             # Update the constants and save changes
             self.constants.set("mm_per_pixels_top", new_value)
@@ -1042,8 +1062,9 @@ class MainWindow(QMainWindow):
                 self.board_view.converter.set_mm_per_pixels_top(new_value)
             # Refresh the scene so the new scale is visible
             self.board_view.update_scene()
-            self.log.log("info", f"mm_per_pixels_top updated to {new_value:.10g} (user input).")
-
+            self.log.log(
+                "info", f"mm_per_pixels_top updated to {new_value:.10g} (user input)."
+            )
 
     def set_mm_per_pixels_bot(self):
         """
@@ -1051,34 +1072,39 @@ class MainWindow(QMainWindow):
         in text mode with a QDoubleValidator set to ScientificNotation.
         """
         current_value = self.constants.get("mm_per_pixels_bot", 0.0333)
-        
+
         dialog = QInputDialog(self)
         dialog.setInputMode(QInputDialog.TextInput)
         dialog.setWindowTitle("Set mm_per_pixels_bot")
         dialog.setLabelText("Enter new mm_per_pixels_bot (mm per pixel):")
         dialog.setTextValue(str(current_value))
-        
+
         line_edit = dialog.findChild(QLineEdit)
         if line_edit:
             from PyQt5.QtGui import QDoubleValidator
+
             validator = QDoubleValidator(1e-9, 1e6, 10, line_edit)
             validator.setNotation(QDoubleValidator.ScientificNotation)
             line_edit.setValidator(validator)
             line_edit.setContextMenuPolicy(Qt.DefaultContextMenu)
-        
+
         if dialog.exec_() == QDialog.Accepted:
             new_value_str = dialog.textValue().strip()
             try:
                 new_value = float(new_value_str)
             except ValueError:
-                QMessageBox.warning(self, "Invalid Input", f"'{new_value_str}' is not a valid float.")
+                QMessageBox.warning(
+                    self, "Invalid Input", f"'{new_value_str}' is not a valid float."
+                )
                 return
             self.constants.set("mm_per_pixels_bot", new_value)
             self.constants.save()
             if hasattr(self.board_view.converter, "set_mm_per_pixels_bot"):
                 self.board_view.converter.set_mm_per_pixels_bot(new_value)
             self.board_view.update_scene()
-            self.log.log("info", f"mm_per_pixels_bot updated to {new_value:.10g} (user input).")
+            self.log.log(
+                "info", f"mm_per_pixels_bot updated to {new_value:.10g} (user input)."
+            )
 
     def set_anchor_nudge_step(self):
         """Prompt user for new anchor nudge step in mm."""
@@ -1116,6 +1142,58 @@ class MainWindow(QMainWindow):
                 self.board_view.zoom_manager.max_user_scale = value
                 self.board_view.zoom_manager.update_zoom_limits()
             self.log.log("info", f"Max zoom updated to {value}")
+
+    def set_quick_prefix_table(self):
+        """Prompt user to edit the comma-separated quick prefix table."""
+        current_table = self.constants.get(
+            "quick_prefix_table",
+            [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F",
+                "G",
+                "H",
+                "J",
+                "K",
+                "L",
+                "M",
+                "N",
+                "P",
+                "R",
+                "T",
+                "U",
+                "V",
+                "W",
+                "Y",
+                "AA",
+                "AB",
+                "AC",
+                "AD",
+                "AE",
+                "AF",
+                "AG",
+                "AH",
+            ],
+        )
+        current_text = ",".join(current_table)
+        new_text, ok = QInputDialog.getText(
+            self,
+            "Quick Prefix Table",
+            "Comma-separated prefixes:",
+            text=current_text,
+        )
+        if ok:
+            table = [p.strip() for p in new_text.split(",") if p.strip()]
+            if table:
+                self.constants.set("quick_prefix_table", table)
+                self.constants.save()
+                self.log.log(
+                    "info",
+                    f"Quick prefix table updated: {table}",
+                )
 
     def update_working_side_label(self):
         """Refreshes the fixed-width label that shows the current board side."""

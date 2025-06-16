@@ -149,6 +149,11 @@ class ComponentInputDialog(QDialog):
         self.numbering_combo.addItems(
             ["Circular / IC-snake", "By long rows", "By long columns"]  # 0  # 1  # 2
         )
+        self.create_prefix_checkbox = QCheckBox("Create Prefix")
+        self.create_prefix_checkbox.setEnabled(False)
+        self.numbering_combo.currentIndexChanged.connect(
+            lambda idx: self.create_prefix_checkbox.setEnabled(idx in (1, 2))
+        )
 
         # other combo boxes
         self.side_combo = QComboBox()
@@ -185,6 +190,7 @@ class ComponentInputDialog(QDialog):
         self.form_layout.addRow("Pins in X:", self.x_pins_spin)
         self.form_layout.addRow("Pins in Y:", self.y_pins_spin)
         self.form_layout.addRow("Pin Numbering:", self.numbering_combo)
+        self.form_layout.addRow("", self.create_prefix_checkbox)
         self.form_layout.addRow("Pad Side:", self.side_combo)
         self.form_layout.addRow("Testability:", self.testability_combo)
         self.form_layout.addRow("Technology:", self.tech_combo)
@@ -203,6 +209,7 @@ class ComponentInputDialog(QDialog):
             self.x_pins_spin,
             self.y_pins_spin,
             self.numbering_combo,
+            self.create_prefix_checkbox,
             self.side_combo,
             self.testability_combo,
             self.tech_combo,
@@ -421,6 +428,7 @@ class ComponentInputDialog(QDialog):
             "width": self.width_spin.value(),
             "height": self.height_spin.value(),
             "hole": self.hole_spin.value(),
+            "create_prefix": self.create_prefix_checkbox.isChecked(),
         }
 
     def set_quick_params(self, params: dict) -> None:
@@ -444,6 +452,7 @@ class ComponentInputDialog(QDialog):
         self.width_spin.setValue(float(params.get("width", 1.0)))
         self.height_spin.setValue(float(params.get("height", 0.5)))
         self.hole_spin.setValue(float(params.get("hole", 0.0)))
+        self.create_prefix_checkbox.setChecked(bool(params.get("create_prefix", False)))
 
         # Ensure auto-prefix/numbering reflected in the name field
         self.update_component_name()
