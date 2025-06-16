@@ -973,10 +973,12 @@ class ComponentPlacer(QObject):
             if create_prefix and scheme in (1, 2):
                 if scheme == 1:
                     prefix_idx = row_vis.index(r)
+                    number_idx = col_vis.index(c) + 1
                 else:
                     prefix_idx = col_vis.index(c)
+                    number_idx = row_vis.index(r) + 1
                 letter = prefix_table[prefix_idx % len(prefix_table)]
-                pad["prefix"] = letter
+                pad["prefix"] = f"{letter}{number_idx}"
             ordered.append(pad)
 
         fp["pads"] = ordered
