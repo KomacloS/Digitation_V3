@@ -10,11 +10,10 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QComboBox,
     QCheckBox,
-    QSpinBox,
-    QDoubleSpinBox,
     QDialogButtonBox,
     QMessageBox,
 )
+from PyQt5.QtGui import QDoubleValidator, QIntValidator
 from PyQt5.QtCore import Qt, QSettings, pyqtSlot, pyqtSignal
 from logs.log_handler import LogHandler
 from component_placer.bom_handler.bom_handler import BOMHandler
@@ -139,10 +138,12 @@ class ComponentInputDialog(QDialog):
         self.auto_numbering_checkbox.toggled.connect(self.update_component_name)
 
         # ── 2. QUICK-CREATION FIELDS ──────────────────────────────────────
-        self.x_pins_spin = QSpinBox()
-        self.x_pins_spin.setRange(1, 100)
-        self.y_pins_spin = QSpinBox()
-        self.y_pins_spin.setRange(1, 100)
+        self.x_pins_edit = QLineEdit()
+        self.x_pins_edit.setValidator(QIntValidator(1, 1000, self.x_pins_edit))
+        self.x_pins_edit.setText("1")
+        self.y_pins_edit = QLineEdit()
+        self.y_pins_edit.setValidator(QIntValidator(1, 1000, self.y_pins_edit))
+        self.y_pins_edit.setText("1")
 
         # numbering pattern selector
         self.numbering_combo = QComboBox()
@@ -175,48 +176,47 @@ class ComponentInputDialog(QDialog):
             ]
         )
 
-        self.width_spin = QDoubleSpinBox()
-        self.width_spin.setDecimals(3)
-        self.width_spin.setRange(0.10, 10.0)
-        self.width_spin.setValue(1.0)
-        self.height_spin = QDoubleSpinBox()
-        self.height_spin.setDecimals(3)
-        self.height_spin.setRange(0.10, 10.0)
-        self.hole_spin = QDoubleSpinBox()
-        self.hole_spin.setDecimals(3)
-        self.hole_spin.setRange(0.00, 10.0)
+        self.width_edit = QLineEdit()
+        self.width_edit.setValidator(QDoubleValidator(0.0, 10.0, 8, self.width_edit))
+        self.width_edit.setText("1.0")
+        self.height_edit = QLineEdit()
+        self.height_edit.setValidator(QDoubleValidator(0.0, 10.0, 8, self.height_edit))
+        self.height_edit.setText("0.5")
+        self.hole_edit = QLineEdit()
+        self.hole_edit.setValidator(QDoubleValidator(0.0, 10.0, 8, self.hole_edit))
+        self.hole_edit.setText("0.0")
 
         # add to form
-        self.form_layout.addRow("Pins in X:", self.x_pins_spin)
-        self.form_layout.addRow("Pins in Y:", self.y_pins_spin)
+        self.form_layout.addRow("Pins in X:", self.x_pins_edit)
+        self.form_layout.addRow("Pins in Y:", self.y_pins_edit)
         self.form_layout.addRow("Pin Numbering:", self.numbering_combo)
         self.form_layout.addRow("", self.create_prefix_checkbox)
         self.form_layout.addRow("Pad Side:", self.side_combo)
         self.form_layout.addRow("Testability:", self.testability_combo)
         self.form_layout.addRow("Technology:", self.tech_combo)
         self.form_layout.addRow("Pad Shape:", self.shape_combo)
-        self.form_layout.addRow("Pad Width (mm):", self.width_spin)
-        self.form_layout.addRow("Pad Height (mm):", self.height_spin)
-        self.form_layout.addRow("Hole Ø (mm):", self.hole_spin)
+        self.form_layout.addRow("Pad Width (mm):", self.width_edit)
+        self.form_layout.addRow("Pad Height (mm):", self.height_edit)
+        self.form_layout.addRow("Hole Ø (mm):", self.hole_edit)
 
         # enable/disable width/height/hole depending on shape
-        self._dim_widgets = [self.width_spin, self.height_spin, self.hole_spin]
+        self._dim_widgets = [self.width_edit, self.height_edit, self.hole_edit]
         self.shape_combo.currentTextChanged.connect(self._shape_toggle_dims)
         self._shape_toggle_dims(self.shape_combo.currentText())  # initial
 
         # store quick widgets for hide/show
         self._quick_widgets = [
-            self.x_pins_spin,
-            self.y_pins_spin,
+            self.x_pins_edit,
+            self.y_pins_edit,
             self.numbering_combo,
             self.create_prefix_checkbox,
             self.side_combo,
             self.testability_combo,
             self.tech_combo,
             self.shape_combo,
-            self.width_spin,
-            self.height_spin,
-            self.hole_spin,
+            self.width_edit,
+            self.height_edit,
+            self.hole_edit,
         ]
 
         # ── 3. DIALOG BUTTONS ─────────────────────────────────────────────
@@ -237,20 +237,20 @@ class ComponentInputDialog(QDialog):
 
         st = shape_text.lower()
         if st == "round":
-            self.width_spin.setEnabled(True)
+            self.width_edit.setEnabled(True)
         elif st == "square/rectangle":
-            self.width_spin.setEnabled(True)
-            self.height_spin.setEnabled(True)
+            self.width_edit.setEnabled(True)
+            self.height_edit.setEnabled(True)
         elif st == "square/rectangle with hole":
-            self.width_spin.setEnabled(True)
-            self.height_spin.setEnabled(True)
-            self.hole_spin.setEnabled(True)
+            self.width_edit.setEnabled(True)
+            self.height_edit.setEnabled(True)
+            self.hole_edit.setEnabled(True)
         elif st == "ellipse":
-            self.width_spin.setEnabled(True)
-            self.height_spin.setEnabled(True)
+            self.width_edit.setEnabled(True)
+            self.height_edit.setEnabled(True)
         elif st == "hole":
-            self.width_spin.setEnabled(True)
-            self.hole_spin.setEnabled(True)
+            self.width_edit.setEnabled(True)
+            self.hole_edit.setEnabled(True)
 
     # ── Logging helpers ─────────────────────────────────────────────────────
     def log_prefix_status(self, checked):
@@ -405,29 +405,22 @@ class ComponentInputDialog(QDialog):
         Spin-boxes are forced to interpret their editors first so typed but
         unfocused values are not lost.
         """
-        # Flush any un-committed editor text
-        for sb in (
-            self.x_pins_spin,
-            self.y_pins_spin,
-            self.width_spin,
-            self.height_spin,
-            self.hole_spin,
-        ):
-            sb.interpretText()
+
+        # Flush any un-committed editor text (LineEdits need no special handling)
 
         return {
             "component_name": self.name_edit.text().strip(),
             "function": self.function_combo.currentText(),
-            "x_pins": self.x_pins_spin.value(),
-            "y_pins": self.y_pins_spin.value(),
+            "x_pins": int(self.x_pins_edit.text() or 0),
+            "y_pins": int(self.y_pins_edit.text() or 0),
             "number_scheme": self.numbering_combo.currentIndex(),  # 0-circular / 1-rows / 2-cols
             "test_side": self.side_combo.currentText().lower(),
             "testability": self.testability_combo.currentText(),
             "technology": self.tech_combo.currentText(),
             "shape": self.shape_combo.currentText(),
-            "width": self.width_spin.value(),
-            "height": self.height_spin.value(),
-            "hole": self.hole_spin.value(),
+            "width": float(self.width_edit.text() or 0.0),
+            "height": float(self.height_edit.text() or 0.0),
+            "hole": float(self.hole_edit.text() or 0.0),
             "create_prefix": self.create_prefix_checkbox.isChecked(),
         }
 
@@ -439,8 +432,8 @@ class ComponentInputDialog(QDialog):
             self.function_combo.itemText(i) for i in range(self.function_combo.count())
         ]:
             self.function_combo.setCurrentText(func)
-        self.x_pins_spin.setValue(int(params.get("x_pins", 1)))
-        self.y_pins_spin.setValue(int(params.get("y_pins", 1)))
+        self.x_pins_edit.setText(str(int(params.get("x_pins", 1))))
+        self.y_pins_edit.setText(str(int(params.get("y_pins", 1))))
         self.numbering_combo.setCurrentIndex(int(params.get("number_scheme", 0)))
         side = params.get("test_side", "top").capitalize()
         if side not in {"Top", "Bottom", "Both"}:
@@ -449,9 +442,9 @@ class ComponentInputDialog(QDialog):
         self.testability_combo.setCurrentText(params.get("testability", "Forced"))
         self.tech_combo.setCurrentText(params.get("technology", "SMD"))
         self.shape_combo.setCurrentText(params.get("shape", "Round"))
-        self.width_spin.setValue(float(params.get("width", 1.0)))
-        self.height_spin.setValue(float(params.get("height", 0.5)))
-        self.hole_spin.setValue(float(params.get("hole", 0.0)))
+        self.width_edit.setText(str(float(params.get("width", 1.0))))
+        self.height_edit.setText(str(float(params.get("height", 0.5))))
+        self.hole_edit.setText(str(float(params.get("hole", 0.0))))
         self.create_prefix_checkbox.setChecked(bool(params.get("create_prefix", False)))
 
         # Ensure auto-prefix/numbering reflected in the name field
