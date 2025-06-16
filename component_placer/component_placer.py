@@ -167,7 +167,7 @@ class ComponentPlacer(QObject):
             x_mm, y_mm = self.board_view.converter.pixels_to_mm(scene_x, scene_y)
             self._finalize_footprint_placement(x_mm, y_mm, comp_name)
 
-    def activate_placement(self):
+    def activate_placement(self, reset_orientation: bool = True):
         if not self.footprint:
             QMessageBox.warning(None, "No Footprint", "No footprint loaded to place.")
             return
@@ -181,7 +181,9 @@ class ComponentPlacer(QObject):
             )
             return
 
-        self.footprint_rotation = 0.0
+        if reset_orientation:
+            self.footprint_rotation = 0.0
+            self.is_flipped = False
 
         self.is_active = True
         self.ghost_component.show_ghost(
@@ -209,11 +211,14 @@ class ComponentPlacer(QObject):
             f"After activation: ghost_component.is_active = {self.ghost_component.is_active}",
         )
 
-    def deactivate_placement(self):
+    def deactivate_placement(self, reset_orientation: bool = True):
         self.is_active = False
         # self.footprint = None  # <--- Remove or comment out this line
         if self.ghost_component:
             self.ghost_component.remove_ghost()
+        if reset_orientation:
+            self.footprint_rotation = 0.0
+            self.is_flipped = False
         self.log.log("info", "ComponentPlacer: Placement mode deactivated.")
         self.board_view.setFocus()
 
@@ -463,12 +468,12 @@ class ComponentPlacer(QObject):
         else:
             self.log.log("warning", "Project nod file not available; skipping save.")
         """
-        self.deactivate_placement()
+        self.deactivate_placement(reset_orientation=False)
         self.component_placed.emit(comp_name)
         self.log.log("info", f"Placed component '{comp_name}'.")
         if not is_move:
             # Optionally auto-reactivate so user can place another copy
-            self.activate_placement()
+            self.activate_placement(reset_orientation=False)
 
     def _convert_objects_to_footprint(self, board_objects: List[BoardObject]) -> dict:
         if not board_objects:
@@ -687,28 +692,62 @@ class ComponentPlacer(QObject):
         # 1)  Prepare pads in **numeric** order
         # ------------------------------------------------------------------
         pads_sorted = sorted(fp["pads"], key=lambda p: int(str(p["pin"])))
-        comp_name = self.quick_params.get("component_name", "QC-COMP")
+        input_name = self.quick_params.get("component_name", "QC-COMP")
+
+        comp_name_res, merge_choice, highest_pin, missing_pins = (
+            self._handle_duplicate_name_or_offset_pins(input_name)
+        )
+        if comp_name_res is None:
+            log.warning(
+                "[QC] placement canceled due to duplicate name dialog.",
+                module="QuickCreate",
+                func="place_quick",
+            )
+            self.cancel_quick()
+            return
+
+        comp_name = comp_name_res
+        merge_counter = 1
+
+        def calc_new_pin(original_pin: int) -> int:
+            if merge_choice is None:
+                return original_pin
+            if merge_choice:
+                if missing_pins:
+                    return missing_pins.pop(0)
+                nonlocal merge_counter
+                new_val = highest_pin + merge_counter
+                merge_counter += 1
+                return new_val
+            return original_pin + highest_pin
 
         # ------------------------------------------------------------------
         # 2)  Build BoardObject list
         # ------------------------------------------------------------------
-        new_objs = [
-            BoardObject(
+        new_objs = []
+        for pad in pads_sorted:
+            try:
+                orig_pin = int(str(pad["pin"]))
+            except Exception:
+                orig_pin = 0
+
+            new_pin = calc_new_pin(orig_pin)
+
+            obj = BoardObject(
                 component_name=comp_name,
-                pin=str(p["pin"]),
-                x_coord_mm=p["x_coord_mm"],
-                y_coord_mm=p["y_coord_mm"],
-                width_mm=p["width_mm"],
-                height_mm=p["height_mm"],
-                hole_mm=p["hole_mm"],
-                shape_type=p["shape_type"],
-                test_position=p["test_position"],
-                testability=p.get("testability", "Forced"),
-                technology=p["technology"],
-                angle_deg=p["angle_deg"],
+                pin=str(new_pin),
+                x_coord_mm=pad["x_coord_mm"],
+                y_coord_mm=pad["y_coord_mm"],
+                width_mm=pad["width_mm"],
+                height_mm=pad["height_mm"],
+                hole_mm=pad["hole_mm"],
+                shape_type=pad["shape_type"],
+                test_position=pad["test_position"],
+                testability=pad.get("testability", "Forced"),
+                technology=pad["technology"],
+                angle_deg=pad["angle_deg"],
             )
-            for p in pads_sorted
-        ]
+            new_objs.append(obj)
 
         # ------------------------------------------------------------------
         # 3) ── DEBUG REPORT ── anchors + per-pad coordinates
