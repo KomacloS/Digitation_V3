@@ -1,37 +1,49 @@
-#ui/board_view
+# ui/board_view
 
 import os
-from typing import List
 from PyQt5.QtWidgets import (
-    QGraphicsView, QGraphicsScene, QMessageBox, QGraphicsPixmapItem,
-    QGraphicsItemGroup, QMenu, QAction, QShortcut, QGraphicsRectItem, QInputDialog, QFileDialog 
+    QGraphicsView,
+    QGraphicsScene,
+    QMessageBox,
+    QGraphicsItemGroup,
+    QMenu,
+    QAction,
+    QShortcut,
+    QGraphicsRectItem,
+    QInputDialog,
+    QFileDialog,
 )
 from PyQt5.QtCore import Qt, QPointF, pyqtSignal, QEvent, QTimer
-from PyQt5.QtGui import QPixmap, QCursor, QKeySequence, QPen
+from PyQt5.QtGui import QCursor, QKeySequence, QPen
 from logs.log_handler import LogHandler
 from utils.flag_manager import FlagManager
 from ui.marker_manager import MarkerManager
 from ui.zoom_manager import ZoomManager
 from constants.constants import Constants
 from display.display_library import DisplayLibrary, SelectablePadItem
-from objects.object_library import ObjectLibrary
 from display.coord_converter import CoordinateConverter
-from component_placer.ghost import GhostComponent
 from inputs.input_handler import InputHandler
 import edit_pads.actions as actions
-from objects.alf_file import export_alf_file 
+from objects.alf_file import export_alf_file
 from objects.nod_file import get_pad_code, mm_to_mils
 from . import shortcuts, mouse_events, image_manager
 
 # ui/board_view/board_view.py
+
 
 class BoardView(QGraphicsView):
     clicked = pyqtSignal(QPointF)
     pads_selected = pyqtSignal(list)
     mouse_clicked = pyqtSignal(float, float, str)
 
-    def __init__(self, parent=None, pad_info_label=None, component_placer=None,
-                 object_library=None, constants=None):
+    def __init__(
+        self,
+        parent=None,
+        pad_info_label=None,
+        component_placer=None,
+        object_library=None,
+        constants=None,
+    ):
         super().__init__(parent)
         self.log = LogHandler(output="both")
         self.flags = FlagManager()
@@ -40,7 +52,7 @@ class BoardView(QGraphicsView):
         self.converter = CoordinateConverter()
         ox = constants.get("origin_x_mm", 0.0)
         oy = constants.get("origin_y_mm", 0.0)
-        self.converter.set_origin_mm(ox, oy)   # apply saved offset
+        self.converter.set_origin_mm(ox, oy)  # apply saved offset
 
         # UI references
         self.pad_info_label = pad_info_label
@@ -65,7 +77,9 @@ class BoardView(QGraphicsView):
         self.flags.set_flag("side", "top")
 
         # Debug log
-        self.log.log("debug", "BoardView initialized.", module="BoardView", func="__init__")
+        self.log.log(
+            "debug", "BoardView initialized.", module="BoardView", func="__init__"
+        )
 
         # Scene setup
         self.scene = QGraphicsScene(self)
@@ -104,7 +118,7 @@ class BoardView(QGraphicsView):
             scene=self.scene,
             object_library=self.object_library,
             converter=self.converter,
-            current_side="top"
+            current_side="top",
         )
 
         # Focus + shortcuts
@@ -122,7 +136,9 @@ class BoardView(QGraphicsView):
         self.input_handler = InputHandler(
             board_view=self,
             component_placer=self.component_placer,
-            ghost_component=(self.component_placer.ghost_component if self.component_placer else None)
+            ghost_component=(
+                self.component_placer.ghost_component if self.component_placer else None
+            ),
         )
         self.installEventFilter(self.input_handler)
         self.viewport().installEventFilter(self.input_handler)
@@ -136,8 +152,6 @@ class BoardView(QGraphicsView):
         self.activateWindow()
         self.raise_()
 
-
-
     # --------------------------------------------------------------------------
     #  SELECTION CHANGED HANDLER
     # --------------------------------------------------------------------------
@@ -147,7 +161,7 @@ class BoardView(QGraphicsView):
         To reduce lag when many items are selected, we throttle the update to the main window.
         """
         # Use a single-shot timer to debounce selection updates.
-        if hasattr(self, '_selection_update_timer'):
+        if hasattr(self, "_selection_update_timer"):
             self._selection_update_timer.stop()
         else:
             self._selection_update_timer = QTimer(self)
@@ -156,11 +170,16 @@ class BoardView(QGraphicsView):
         self._selection_update_timer.start(50)  # 50 ms delay
 
     def keyPressEvent(self, event):
-        if hasattr(self, 'input_handler'):
+        if hasattr(self, "input_handler"):
             handled = self.input_handler.handle_key_press(event)
-            cp_active = self.component_placer.is_active if self.component_placer else None
-            ghost_active = (self.component_placer.ghost_component.is_active
-                            if self.component_placer and self.component_placer.ghost_component else None)
+            cp_active = (
+                self.component_placer.is_active if self.component_placer else None
+            )
+            ghost_active = (
+                self.component_placer.ghost_component.is_active
+                if self.component_placer and self.component_placer.ghost_component
+                else None
+            )
             self.log.debug(
                 f"After keyPressEvent: BoardView.hasFocus() = {self.hasFocus()}, "
                 f"Viewport.hasFocus() = {self.viewport().hasFocus()}, "
@@ -169,7 +188,6 @@ class BoardView(QGraphicsView):
             if handled:
                 return
         super().keyPressEvent(event)
-
 
     def _update_selected_info(self):
         selected_items = self._get_selected_pads()
@@ -180,12 +198,18 @@ class BoardView(QGraphicsView):
 
     def eventFilter(self, obj, event):
         if event.type() in (QEvent.KeyPress, QEvent.KeyRelease):
-            self.log.debug(f"BoardView.eventFilter: Received event {event.type()} on {obj} with key {event.key()}")
+            self.log.debug(
+                f"BoardView.eventFilter: Received event {event.type()} on {obj} with key {event.key()}"
+            )
         return super().eventFilter(obj, event)
 
     def _get_selected_pads(self):
         """Returns currently selected pads."""
-        return [item for item in self.scene.selectedItems() if isinstance(item, SelectablePadItem)]
+        return [
+            item
+            for item in self.scene.selectedItems()
+            if isinstance(item, SelectablePadItem)
+        ]
 
     def connect_signals(self):
         """
@@ -193,7 +217,12 @@ class BoardView(QGraphicsView):
         Currently, DisplayLibrary handles updates internally,
         so there's nothing extra to connect in BoardView.
         """
-        self.log.log("debug", "BoardView: No additional signal connections required.", module="BoardView", func="connect_signals")
+        self.log.log(
+            "debug",
+            "BoardView: No additional signal connections required.",
+            module="BoardView",
+            func="connect_signals",
+        )
 
     def mousePressEvent(self, event):
         if mouse_events.handle_mouse_press(self, event):
@@ -220,9 +249,11 @@ class BoardView(QGraphicsView):
 
     def _get_currently_selected_pad_items(self) -> list:
         """Helper to get all selected pad items in the scene"""
-        return [item for item in self.scene.selectedItems() 
-                if isinstance(item, SelectablePadItem)]
-
+        return [
+            item
+            for item in self.scene.selectedItems()
+            if isinstance(item, SelectablePadItem)
+        ]
 
     def switch_side(self):
         """
@@ -239,8 +270,10 @@ class BoardView(QGraphicsView):
         if marker_coords:
             x_mm, y_mm = marker_coords
             self.marker_pos[current_side] = (x_mm, y_mm)  # Save marker position in mm
-            self.log.log("debug",
-                        f"[switch_side] Saved marker for '{current_side}': ({x_mm:.2f}, {y_mm:.2f}) mm")
+            self.log.log(
+                "debug",
+                f"[switch_side] Saved marker for '{current_side}': ({x_mm:.2f}, {y_mm:.2f}) mm",
+            )
 
         # 2) Toggle the side in flags
         self.flags.set_flag("side", new_side)
@@ -266,7 +299,9 @@ class BoardView(QGraphicsView):
                     self.top_pixmap_item.setVisible(False)
 
         # Set the current_pixmap_item regardless of its visibility state.
-        self.current_pixmap_item = self.top_pixmap_item if new_side == "top" else self.bottom_pixmap_item
+        self.current_pixmap_item = (
+            self.top_pixmap_item if new_side == "top" else self.bottom_pixmap_item
+        )
 
         # 4) Update display side in the DisplayLibrary
         self.display_library.current_side = new_side.lower()
@@ -276,14 +311,25 @@ class BoardView(QGraphicsView):
         # 5) Restore the marker in the correct pixel position
         if marker_coords:
             x_mm, y_mm = marker_coords  # MM coordinates remain unchanged
-            scene_x, scene_y = self.converter.mm_to_pixels(x_mm, y_mm)  # Convert mm → pixels for the new side
-            self.marker_manager.place_marker(x_mm, y_mm)  # Place marker at new pixel position
-            self.log.log("debug",
-                        f"[switch_side] Marker correctly flipped for '{new_side}': ({x_mm:.2f}, {y_mm:.2f}) mm")
-            self.log.log("debug",
-                        f"[switch_side] Marker repositioned in scene: ({scene_x:.2f}, {scene_y:.2f}) pixels for side '{new_side}'")
+            scene_x, scene_y = self.converter.mm_to_pixels(
+                x_mm, y_mm
+            )  # Convert mm → pixels for the new side
+            self.marker_manager.place_marker(
+                x_mm, y_mm
+            )  # Place marker at new pixel position
+            self.log.log(
+                "debug",
+                f"[switch_side] Marker correctly flipped for '{new_side}': ({x_mm:.2f}, {y_mm:.2f}) mm",
+            )
+            self.log.log(
+                "debug",
+                f"[switch_side] Marker repositioned in scene: ({scene_x:.2f}, {scene_y:.2f}) pixels for side '{new_side}'",
+            )
             self.center_on(scene_x, scene_y)
-            self.log.log("info", f"[switch_side] Centered view on marker at ({scene_x:.2f}, {scene_y:.2f}) pixels.")
+            self.log.log(
+                "info",
+                f"[switch_side] Centered view on marker at ({scene_x:.2f}, {scene_y:.2f}) pixels.",
+            )
 
         # 6) Respect the image_hidden_by_filter flag:
         # If the PCB image is supposed to be hidden, ensure the current image remains hidden and add a contour.
@@ -291,20 +337,38 @@ class BoardView(QGraphicsView):
             if self.current_pixmap_item:
                 self.current_pixmap_item.setVisible(False)
             # Add board contour if not already present.
-            if not hasattr(self, "board_contour_item") or self.board_contour_item is None:
+            if (
+                not hasattr(self, "board_contour_item")
+                or self.board_contour_item is None
+            ):
                 self.add_board_contour()
         else:
             # If the image is visible, remove any board contour.
-            if hasattr(self, "board_contour_item") and self.board_contour_item is not None:
+            if (
+                hasattr(self, "board_contour_item")
+                and self.board_contour_item is not None
+            ):
                 self.scene.removeItem(self.board_contour_item)
                 self.board_contour_item = None
 
         # 7) Update the scene to ensure marker and other items are properly refreshed.
         self.scene.update()
 
-
-
-
+        # 8) If a ghost component is active, refresh it so its scale matches
+        # the new side's px↔mm ratio.
+        if (
+            self.component_placer
+            and self.component_placer.ghost_component
+            and self.component_placer.ghost_component.is_active
+        ):
+            ghost = self.component_placer.ghost_component
+            follow_mouse = not getattr(ghost, "_draw_arrows", False)
+            ghost.show_ghost(
+                ghost.footprint,
+                ghost.rotation_deg,
+                flipped=ghost.flipped,
+                follow_mouse=follow_mouse,
+            )
 
     def fit_in_view(self):
         if not self.current_pixmap_item:
@@ -332,7 +396,7 @@ class BoardView(QGraphicsView):
 
         self.log.log(
             "debug",
-            f"Fitted image to view. Base scale={self.base_scale:.4f}, user scale={user_scale}."
+            f"Fitted image to view. Base scale={self.base_scale:.4f}, user scale={user_scale}.",
         )
 
     def fit_in_view_and_reset_zoom(self):
@@ -348,14 +412,16 @@ class BoardView(QGraphicsView):
             self.log.log("warning", "No current pixmap item => skipping fit.")
             return
 
-        self.log.log("debug", "fit_in_view_and_reset_zoom => resetting transform for best fit.")
-        
+        self.log.log(
+            "debug", "fit_in_view_and_reset_zoom => resetting transform for best fit."
+        )
+
         # 1) Perform typical fit
         self.fitInView(self.current_pixmap_item, Qt.KeepAspectRatio)
 
         # 2) The user_scale is effectively 1.0. The transform is handled by QGraphicsView internally
         #    because we just did fitInView. We can also set user_scale=1.0 in the ZoomManager if wanted.
-        if hasattr(self, 'zoom_manager'):
+        if hasattr(self, "zoom_manager"):
             self.zoom_manager.user_scale = 1.0  # Not strictly required
 
         self.log.log("debug", "Window resized => re-fit done. user_scale reset to 1.0.")
@@ -365,10 +431,9 @@ class BoardView(QGraphicsView):
         if not self.user_has_zoomed_yet and self.current_pixmap_item:
             # If user hasn't zoomed, re-fit after a short delay
             self.resize_timer.start(100)
-            self.log.log("debug", "Window resized => re-fit in 100ms (no user zoom yet).")
-
-
-
+            self.log.log(
+                "debug", "Window resized => re-fit in 100ms (no user zoom yet)."
+            )
 
     def scene_to_board_coords(self, x: float, y: float) -> tuple:
         current_side = self.flags.get_flag("side", "top")
@@ -376,7 +441,7 @@ class BoardView(QGraphicsView):
             x_mm, y_mm = self.converter.pixels_to_mm(x, y)
             self.log.log(
                 "debug",
-                f"scene_to_board_coords: side='{current_side}', scene=({x:.1f}, {y:.1f}) -> board=({x_mm:.2f}, {y_mm:.2f})"
+                f"scene_to_board_coords: side='{current_side}', scene=({x:.1f}, {y:.1f}) -> board=({x_mm:.2f}, {y_mm:.2f})",
             )
             return x_mm, y_mm
         except Exception as e:
@@ -396,7 +461,10 @@ class BoardView(QGraphicsView):
             self.log.log("warning", "show_context_menu called with no pad items.")
             return
 
-        self.log.log("debug", f"Context menu opened for {len(selected_pads)} selected pads at {global_pos}")
+        self.log.log(
+            "debug",
+            f"Context menu opened for {len(selected_pads)} selected pads at {global_pos}",
+        )
 
         menu = QMenu(self)
 
@@ -409,17 +477,33 @@ class BoardView(QGraphicsView):
         cut_action = QAction("Cut", self)
         move_action = QAction("Move", self)
 
-        copy_action.triggered.connect(lambda: actions.copy_pads(self.object_library, selected_pads))
-        paste_action.triggered.connect(lambda: actions.paste_pads(self.object_library, self.component_placer))
-        delete_action.triggered.connect(lambda: actions.delete_pads(self.object_library, selected_pads))
-        edit_action.triggered.connect(lambda: actions.edit_pads(self.object_library, selected_pads))
+        copy_action.triggered.connect(
+            lambda: actions.copy_pads(self.object_library, selected_pads)
+        )
+        paste_action.triggered.connect(
+            lambda: actions.paste_pads(self.object_library, self.component_placer)
+        )
+        delete_action.triggered.connect(
+            lambda: actions.delete_pads(self.object_library, selected_pads)
+        )
+        edit_action.triggered.connect(
+            lambda: actions.edit_pads(self.object_library, selected_pads)
+        )
         list_action.triggered.connect(lambda: actions.list_pads(selected_pads))
-        cut_action.triggered.connect(lambda: actions.cut_pads(self.object_library, selected_pads))
-        move_action.triggered.connect(lambda: actions.move_pads(self.object_library, selected_pads, self.component_placer))
+        cut_action.triggered.connect(
+            lambda: actions.cut_pads(self.object_library, selected_pads)
+        )
+        move_action.triggered.connect(
+            lambda: actions.move_pads(
+                self.object_library, selected_pads, self.component_placer
+            )
+        )
 
         # NEW: "Export Footprint"
         export_footprint_action = QAction("Export Footprint", self)
-        export_footprint_action.triggered.connect(lambda: self.export_footprint(selected_pads))
+        export_footprint_action.triggered.connect(
+            lambda: self.export_footprint(selected_pads)
+        )
 
         # Add actions to the menu
         menu.addAction(copy_action)
@@ -435,7 +519,10 @@ class BoardView(QGraphicsView):
 
         if not global_pos:
             global_pos = QCursor.pos()
-            self.log.log("warning", f"Invalid global_pos provided; using cursor position {global_pos}")
+            self.log.log(
+                "warning",
+                f"Invalid global_pos provided; using cursor position {global_pos}",
+            )
 
         try:
             self.log.log("debug", f"Executing context menu at {global_pos}")
@@ -452,11 +539,15 @@ class BoardView(QGraphicsView):
         Finally, it refreshes the Components tree so the new files appear immediately.
         """
         if not pad_items:
-            QMessageBox.information(self, "Export Footprint", "No pads selected to export.")
+            QMessageBox.information(
+                self, "Export Footprint", "No pads selected to export."
+            )
             return
 
         # 1) Prompt user for footprint name
-        footprint_name, ok = QInputDialog.getText(self, "Export Footprint", "Enter footprint name:")
+        footprint_name, ok = QInputDialog.getText(
+            self, "Export Footprint", "Enter footprint name:"
+        )
         if not ok or not footprint_name.strip():
             return
         footprint_name = footprint_name.strip()
@@ -466,19 +557,14 @@ class BoardView(QGraphicsView):
         default_dir = getattr(mw, "libraries_dir", "")  # fallback to empty if not found
 
         target_dir = QFileDialog.getExistingDirectory(
-            self,
-            "Select Export Directory",
-            default_dir
+            self, "Select Export Directory", default_dir
         )
         if not target_dir:
             return
 
         # 3) Prepare the .nod file lines
         nod_path = os.path.join(target_dir, f"{footprint_name}.nod")
-        lines = [
-            "* SIGNAL COMPONENT PIN X Y PAD POS TECN TEST CHANNEL USER",
-            ""
-        ]
+        lines = ["* SIGNAL COMPONENT PIN X Y PAD POS TECN TEST CHANNEL USER", ""]
 
         # We'll track relationships for ALF
         alf_relationships = []
@@ -495,7 +581,9 @@ class BoardView(QGraphicsView):
             height_mils = mm_to_mils(obj.height_mm)
             hole_mils = mm_to_mils(obj.hole_mm)
 
-            pad_code = get_pad_code(obj.shape_type, width_mils, height_mils, hole_mils, obj.angle_deg)
+            pad_code = get_pad_code(
+                obj.shape_type, width_mils, height_mils, hole_mils, obj.angle_deg
+            )
 
             # Determine position
             pos_map = {"top": "T", "bottom": "B", "both": "O"}
@@ -507,13 +595,18 @@ class BoardView(QGraphicsView):
             tecn = tecn_map.get(obj.technology, "S")
 
             # Testability map
-            test_map = {"Forced": "F", "Testable": "T", "Not Testable": "N", "Terminal": "E"}
+            test_map = {
+                "Forced": "F",
+                "Testable": "T",
+                "Not Testable": "N",
+                "Terminal": "E",
+            }
             test_ = test_map.get(obj.testability, "N")
 
             # Build one .nod line
             nod_line = (
-                f"\"{signal}\" "
-                f"\"{component_name}\" "
+                f'"{signal}" '
+                f'"{component_name}" '
                 f"{pin} "
                 f"{x_mm:.3f} "
                 f"{y_mm:.3f} "
@@ -528,11 +621,13 @@ class BoardView(QGraphicsView):
             # If there's a prefix, we'll record an ALF relationship
             prefix_val = getattr(obj, "prefix", None)
             if prefix_val and prefix_val.strip():
-                alf_relationships.append({
-                    "component_name": footprint_name,
-                    "prefix": prefix_val.strip(),
-                    "pin": str(pin)
-                })
+                alf_relationships.append(
+                    {
+                        "component_name": footprint_name,
+                        "prefix": prefix_val.strip(),
+                        "pin": str(pin),
+                    }
+                )
 
         # 5) Write the .nod file
         try:
@@ -540,7 +635,9 @@ class BoardView(QGraphicsView):
                 for line in lines:
                     f.write(line + "\n")
         except Exception as e:
-            QMessageBox.critical(self, "Export Footprint", f"Failed to write NOD file:\n{e}")
+            QMessageBox.critical(
+                self, "Export Footprint", f"Failed to write NOD file:\n{e}"
+            )
             return
 
         # 6) If any prefix is found, export an .alf file with your existing helper
@@ -548,22 +645,25 @@ class BoardView(QGraphicsView):
             alf_path = os.path.join(target_dir, f"{footprint_name}.alf")
             success = export_alf_file(alf_relationships, alf_path)
             if not success:
-                QMessageBox.critical(self, "Export Footprint", "Failed to write ALF file.")
+                QMessageBox.critical(
+                    self, "Export Footprint", "Failed to write ALF file."
+                )
                 return
 
         # 7) Notify and refresh
         QMessageBox.information(
             self,
             "Export Footprint",
-            f"Footprint '{footprint_name}' exported to:\n{target_dir}"
+            f"Footprint '{footprint_name}' exported to:\n{target_dir}",
         )
 
         if hasattr(mw, "refresh_component_tree"):
             mw.refresh_component_tree()
         else:
-            self.log.log("warning", "No 'refresh_component_tree' method found in MainWindow. Footprint tree not updated.")
-
-
+            self.log.log(
+                "warning",
+                "No 'refresh_component_tree' method found in MainWindow. Footprint tree not updated.",
+            )
 
     # --------------------------------------------------------------------------
     # Methods that call actions via the alias 'actions'
@@ -627,7 +727,6 @@ class BoardView(QGraphicsView):
         except Exception as e:
             self.log.log("error", f"Error in move_selected_pads: {e}")
 
-
     def open_pad_editor_dialog(self, pad_items):
         """
         Opens the PadEditorDialog for the currently selected pad items.
@@ -640,13 +739,15 @@ class BoardView(QGraphicsView):
         selected_pads = [p.board_object for p in pad_items]
 
         from edit_pads.pad_editor_dialog import PadEditorDialog
-        dialog = PadEditorDialog(selected_pads, object_library=self.object_library, parent=self)
-        
+
+        dialog = PadEditorDialog(
+            selected_pads, object_library=self.object_library, parent=self
+        )
+
         # Optionally connect the dialog's signal so we can refresh if needed
         dialog.pads_updated.connect(self._refresh_scene_after_edit)
-        
-        dialog.exec_()  # Modal dialog
 
+        dialog.exec_()  # Modal dialog
 
     def setup_undo_redo_shortcuts(self):
         # Create shortcuts for undo and redo
@@ -686,7 +787,7 @@ class BoardView(QGraphicsView):
     def add_board_contour(self):
         """
         Create and add a rectangle outlining the board area.
-        Assumes the board's dimensions are given by the current pixmap's boundingRect() 
+        Assumes the board's dimensions are given by the current pixmap's boundingRect()
         or by the sceneRect if no image is present.
         """
         # Determine the contour rectangle. Here, we use the scene's rectangle.
@@ -701,13 +802,14 @@ class BoardView(QGraphicsView):
         self.scene.addItem(self.board_contour_item)
         self.log.log("info", f"Board contour added: {board_rect}")
 
-
     def update_scene(self):
         """
         Forces a full refresh of the scene by clearing and re-rendering all objects,
         then invalidating the scene and updating the viewport.
         """
-        self.log.log("debug", "update_scene: Forcing a full refresh of the scene and viewport.")
+        self.log.log(
+            "debug", "update_scene: Forcing a full refresh of the scene and viewport."
+        )
 
         # If we have a DisplayLibrary, let it handle the clearing and re-rendering:
         if hasattr(self, "display_library"):
@@ -727,5 +829,6 @@ class BoardView(QGraphicsView):
     # --------------------------------------------------------------
     def flip_ghost_horizontal(self):
         from edit_pads import actions
+
         if self.component_placer:
             actions.flip_ghost_horizontal(self.component_placer)
