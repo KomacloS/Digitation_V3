@@ -40,6 +40,33 @@ class ProjectManager(QObject):
             func="__init__",
         )
 
+    def ensure_backup_dir(self, project_dir: str) -> None:
+        """Ensure that the backup directory is accessible or prompt for a new one."""
+        consts = Constants()
+        backup_root = str(consts.get("central_backup_dir") or "").strip()
+        accessible = bool(backup_root) and os.path.isdir(backup_root) and os.access(backup_root, os.W_OK)
+
+        if not accessible:
+            QMessageBox.warning(
+                self.main_window,
+                "Backup Folder Unavailable",
+                "The configured backup folder cannot be accessed.\nPlease select a folder for backups.",
+            )
+            new_dir = QFileDialog.getExistingDirectory(
+                self.main_window,
+                "Select Backup Folder",
+                project_dir,
+                QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks,
+            )
+            if new_dir:
+                backup_root = new_dir
+            else:
+                backup_root = os.path.join(project_dir, "backups")
+            consts.set("central_backup_dir", backup_root)
+            consts.save()
+
+        os.makedirs(os.path.join(backup_root, os.path.basename(project_dir)), exist_ok=True)
+
     def save_project_settings(self, folder: str | None = None):
         """Save mm/px and origin settings to the project folder if possible."""
         folder = folder or self.main_window.current_project_path
@@ -122,6 +149,8 @@ class ProjectManager(QObject):
                     f"The following files are missing:\n{', '.join(missing)}",
                 )
                 return
+
+            self.ensure_backup_dir(project_dir)
 
             # Load any project-specific settings before manipulating the view
             consts = Constants()
@@ -462,6 +491,8 @@ class ProjectManager(QObject):
         self.auto_save_counter = 0
         self.project_loaded = True
 
+        self.ensure_backup_dir(new_proj_dir)
+
     def load_nod_advanced(self):
         existing = self.object_library.get_all_objects()
         if existing:
@@ -651,9 +682,16 @@ class ProjectManager(QObject):
             QMessageBox.information(
                 self.main_window,
                 "No Backups",
-                "No backup files were found for this project.",
+                "Backup folder not found. Please select it.",
             )
-            return
+            b_dir = QFileDialog.getExistingDirectory(
+                self.main_window,
+                "Select Backup Folder",
+                proj_dir,
+                QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks,
+            )
+            if not b_dir:
+                return
 
         dlg = BackupBrowserDialog(proj_dir, b_dir, parent=self.main_window)
         if dlg.exec_() == dlg.Accepted:

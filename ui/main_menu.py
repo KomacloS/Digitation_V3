@@ -126,10 +126,17 @@ class MainWindow(QMainWindow):
 
         # ─── Startup dialog to open or create a project ──────────────────
         start_dlg = StartDialog(self)
-        start_dlg.open_button.clicked.connect(self.project_manager.open_project_dialog)
-        start_dlg.create_button.clicked.connect(
-            self.project_manager.create_project_dialog
-        )
+
+        def _open():
+            start_dlg.accept()
+            self.project_manager.open_project_dialog()
+
+        def _create():
+            start_dlg.accept()
+            self.project_manager.create_project_dialog()
+
+        start_dlg.open_button.clicked.connect(_open)
+        start_dlg.create_button.clicked.connect(_create)
         start_dlg.exec_()
 
     # --------------------------------------------------------------------------
