@@ -26,13 +26,16 @@ class CoordinateConverter:
         self.image_width = image_size[0]
         self.image_height = image_size[1]
         self.log = LogHandler()
-        self.origin_x_mm = 0.0
-        self.origin_y_mm = 0.0
+        self.origin_top = (0.0, 0.0)
+        self.origin_bottom = (0.0, 0.0)
 
-    def set_origin_mm(self, x0: float, y0: float):
-        """Store a board-origin (mm) that will be added to every conversion."""
-        self.origin_x_mm = x0
-        self.origin_y_mm = y0
+    def set_origin_mm(self, x0: float, y0: float, side: str = "top"):
+        """Store a board-origin (mm) for the given side."""
+        side = side.lower()
+        if side == "top":
+            self.origin_top = (x0, y0)
+        else:
+            self.origin_bottom = (x0, y0)
 
     def set_image_size(self, image_size):
         """
@@ -59,20 +62,21 @@ class CoordinateConverter:
     def pixels_to_mm(self, x_px: float, y_px: float) -> tuple[float, float]:
         """
         Scene-pixel  →  board-mm, honouring current side and any non-zero origin.
-        The stored origin (origin_x_mm, origin_y_mm) is *added* so the values
+        The stored origin for the active side is added so the values
         returned are already expressed in the user-defined coordinate system.
         """
         side = self.flags.get_flag("side", "top").lower()
 
         if side == "top":
-            x_mm =  x_px * self.mm_per_pixels_top
-            y_mm = (self.image_height - y_px) * self.mm_per_pixels_top   # flip Y only
-        else:                                       # ---- bottom side ----
-            x_mm = (self.image_width  - x_px) * self.mm_per_pixels_bot   # flip X
-            y_mm = (self.image_height - y_px) * self.mm_per_pixels_bot   # flip Y
+            x_mm = x_px * self.mm_per_pixels_top
+            y_mm = (self.image_height - y_px) * self.mm_per_pixels_top
+            ox, oy = self.origin_top
+        else:  # bottom side
+            x_mm = (self.image_width - x_px) * self.mm_per_pixels_bot
+            y_mm = (self.image_height - y_px) * self.mm_per_pixels_bot
+            ox, oy = self.origin_bottom
 
-        # shift into user coordinate system
-        return x_mm + self.origin_x_mm, y_mm + self.origin_y_mm
+        return x_mm + ox, y_mm + oy
 
 
     def mm_to_pixels(self, x_mm: float, y_mm: float) -> tuple[float, float]:
@@ -82,17 +86,21 @@ class CoordinateConverter:
         so we first translate them back to the internal (image-anchored) system
         by subtracting the stored origin.
         """
-        # remove user origin offset
-        x_loc = x_mm - self.origin_x_mm
-        y_loc = y_mm - self.origin_y_mm
-
         side = self.flags.get_flag("side", "top").lower()
 
         if side == "top":
-            x_px =  x_loc / self.mm_per_pixels_top
+            ox, oy = self.origin_top
+        else:
+            ox, oy = self.origin_bottom
+
+        x_loc = x_mm - ox
+        y_loc = y_mm - oy
+
+        if side == "top":
+            x_px = x_loc / self.mm_per_pixels_top
             y_px = self.image_height - (y_loc / self.mm_per_pixels_top)
-        else:                                       # ---- bottom side ----
-            x_px = self.image_width  - (x_loc / self.mm_per_pixels_bot)
+        else:
+            x_px = self.image_width - (x_loc / self.mm_per_pixels_bot)
             y_px = self.image_height - (y_loc / self.mm_per_pixels_bot)
 
         return x_px, y_px

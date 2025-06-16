@@ -473,23 +473,35 @@ class MainWindow(QMainWindow):
         • May optionally shift every pad by ΔX, ΔY
         • Re-positions the marker so it stays visually correct.
         """
-        ox_old = self.constants.get("origin_x_mm", 0.0)
-        oy_old = self.constants.get("origin_y_mm", 0.0)
+        bx_old = self.constants.get("BottomImageXCoord", 0.0)
+        by_old = self.constants.get("BottomImageYCoord", 0.0)
+        tx_old = self.constants.get("TopImageXCoord", 0.0)
+        ty_old = self.constants.get("TopImageYCoord", 0.0)
 
         # -- get two doubles -------------------------------------------------
-        x0, ok1 = QInputDialog.getDouble(
-            self, "Board Origin", "New X-origin (mm):", ox_old, -1e6, 1e6, 3
+        tx, ok1 = QInputDialog.getDouble(
+            self, "Board Origin", "Top Image X (mm):", tx_old, -1e6, 1e6, 3
         )
         if not ok1:
             return
-        y0, ok2 = QInputDialog.getDouble(
-            self, "Board Origin", "New Y-origin (mm):", oy_old, -1e6, 1e6, 3
+        ty, ok2 = QInputDialog.getDouble(
+            self, "Board Origin", "Top Image Y (mm):", ty_old, -1e6, 1e6, 3
         )
         if not ok2:
             return
+        bx, ok3 = QInputDialog.getDouble(
+            self, "Board Origin", "Bottom Image X (mm):", bx_old, -1e6, 1e6, 3
+        )
+        if not ok3:
+            return
+        by, ok4 = QInputDialog.getDouble(
+            self, "Board Origin", "Bottom Image Y (mm):", by_old, -1e6, 1e6, 3
+        )
+        if not ok4:
+            return
 
-        dx = x0 - ox_old
-        dy = y0 - oy_old
+        dx = tx - tx_old
+        dy = ty - ty_old
 
         # -- current marker position *before* anything changes ---------------
         old_marker_mm = self.board_view.marker_manager.get_marker_board_coords()
@@ -508,11 +520,14 @@ class MainWindow(QMainWindow):
             shift_pads = resp == QMessageBox.Yes
 
         # -- save new constants & tell converter -----------------------------
-        self.constants.set("origin_x_mm", x0)
-        self.constants.set("origin_y_mm", y0)
+        self.constants.set("TopImageXCoord", tx)
+        self.constants.set("TopImageYCoord", ty)
+        self.constants.set("BottomImageXCoord", bx)
+        self.constants.set("BottomImageYCoord", by)
         self.constants.save()
         self.project_manager.save_project_settings()
-        self.board_view.converter.set_origin_mm(x0, y0)
+        self.board_view.converter.set_origin_mm(tx, ty, side="top")
+        self.board_view.converter.set_origin_mm(bx, by, side="bottom")
 
         # -- shift pads if requested -----------------------------------------
         if shift_pads and (abs(dx) > 1e-9 or abs(dy) > 1e-9):
@@ -530,7 +545,7 @@ class MainWindow(QMainWindow):
         self.board_view.update_scene()
         self.log.log(
             "info",
-            f"Origin set to ({x0:.3f}, {y0:.3f}) mm ; pads shifted={shift_pads}.",
+            f"Origin updated. Top=({tx:.3f}, {ty:.3f}) mm, Bottom=({bx:.3f}, {by:.3f}) mm ; pads shifted={shift_pads}.",
         )
 
     def _shift_all_pads(self, dx: float, dy: float):
