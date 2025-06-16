@@ -33,6 +33,7 @@ class QuickCreationController(QObject):
         self.placer = component_placer
         self.marker_manager = marker_manager
         self.coord_converter = coord_converter
+        self.constants = getattr(board_view, "constants", None)
 
         # --- state ----------------------------------------------------------
         self.active = False
@@ -48,16 +49,19 @@ class QuickCreationController(QObject):
         # install event-filter AFTER anchors are defined
         self.board_view.installEventFilter(self)
 
-        # arrow keys (0.02 mm nudges)
-        step = 0.02
+        # arrow keys (nudge step from constants)
         self.input_handler.arrow_left.connect(
-            lambda: self._nudge_selected(self._flip_dx(-step), 0.0)
+            lambda: self._nudge_selected(self._flip_dx(-self._get_step()), 0.0)
         )
         self.input_handler.arrow_right.connect(
-            lambda: self._nudge_selected(self._flip_dx(step), 0.0)
+            lambda: self._nudge_selected(self._flip_dx(self._get_step()), 0.0)
         )
-        self.input_handler.arrow_up.connect(lambda: self._nudge_selected(0.0, step))
-        self.input_handler.arrow_down.connect(lambda: self._nudge_selected(0.0, -step))
+        self.input_handler.arrow_up.connect(
+            lambda: self._nudge_selected(0.0, self._get_step())
+        )
+        self.input_handler.arrow_down.connect(
+            lambda: self._nudge_selected(0.0, -self._get_step())
+        )
 
         # track anchor selection
         scene = (
@@ -75,6 +79,14 @@ class QuickCreationController(QObject):
 
     def _current_params(self):
         return getattr(self.placer, "quick_params", {}) or {}
+
+    def _get_step(self) -> float:
+        if self.constants:
+            try:
+                return float(self.constants.get("anchor_nudge_step_mm", 0.2))
+            except Exception:
+                return 0.2
+        return 0.2
 
     # ───────────────────────────────────────── selection bookkeeping ──────
     def _on_anchor_selection_changed(self):
@@ -159,7 +171,7 @@ class QuickCreationController(QObject):
                 self._open_dialog()
                 return True
             if self.state in (2, 3) and self.selected_anchor:
-                step = 0.1
+                step = self._get_step()
                 dx = -step if key == Qt.Key_Left else step if key == Qt.Key_Right else 0
                 dy = step if key == Qt.Key_Up else -step if key == Qt.Key_Down else 0
                 if dx or dy:
@@ -215,6 +227,8 @@ class QuickCreationController(QObject):
         dlg.rejected.connect(self.deactivate)
         dlg.show()
         self.dialog = dlg
+        # Immediately refresh ghost using current dialog parameters
+        self._live_params(dlg.get_quick_params())
 
     # ─────────────── dialog slots ───────────────────────────────────
     def _live_params(self, prm: dict):

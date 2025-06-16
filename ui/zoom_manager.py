@@ -24,7 +24,7 @@ class ZoomManager(QObject):
         # user_scale = how much user has zoomed from the initial fit
         self.user_scale = 1.0
         self.min_user_scale = 1.0
-        self.max_user_scale = 10.0
+        self.max_user_scale = float(self.constants.get("max_zoom", 10.0))
 
     def zoom_in(self, factor: float = 1.15):
         self._apply_zoom(factor)
