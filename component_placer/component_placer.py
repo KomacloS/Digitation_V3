@@ -280,11 +280,6 @@ class ComponentPlacer(QObject):
             if self.is_flipped:  # mirror X if flip active
                 rx = -rx
 
-            # mirror pins horizontally when placing on bottom side so the
-            # numbering matches the ghost orientation
-            if side == "bottom":
-                rx = -rx
-
             pos_x = x_mm + rx
             pos_y = y_mm + ry
 
