@@ -6,8 +6,10 @@ from constants.constants import Constants
 PROJECT_KEYS = [
     "mm_per_pixels_top",
     "mm_per_pixels_bot",
-    "origin_x_mm",
-    "origin_y_mm",
+    "BottomImageXCoord",
+    "BottomImageYCoord",
+    "TopImageXCoord",
+    "TopImageYCoord",
 ]
 
 

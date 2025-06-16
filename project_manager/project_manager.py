@@ -158,11 +158,14 @@ class ProjectManager(QObject):
 
             mm_top = consts.get("mm_per_pixels_top", 0.0333)
             mm_bot = consts.get("mm_per_pixels_bot", 0.0333)
-            ox = consts.get("origin_x_mm", 0.0)
-            oy = consts.get("origin_y_mm", 0.0)
+            bx = consts.get("BottomImageXCoord", 0.0)
+            by = consts.get("BottomImageYCoord", 0.0)
+            tx = consts.get("TopImageXCoord", 0.0)
+            ty = consts.get("TopImageYCoord", 0.0)
             self.main_window.board_view.converter.set_mm_per_pixels_top(mm_top)
             self.main_window.board_view.converter.set_mm_per_pixels_bot(mm_bot)
-            self.main_window.board_view.converter.set_origin_mm(ox, oy)
+            self.main_window.board_view.converter.set_origin_mm(tx, ty, side="top")
+            self.main_window.board_view.converter.set_origin_mm(bx, by, side="bottom")
 
             self.log.log("info", "Clearing previous project objects.")
             self.object_library.clear()
@@ -266,7 +269,10 @@ class ProjectManager(QObject):
                 settings["mm_per_pixels_bot"]
             )
             self.main_window.board_view.converter.set_origin_mm(
-                settings["origin_x_mm"], settings["origin_y_mm"]
+                settings["TopImageXCoord"], settings["TopImageYCoord"], side="top"
+            )
+            self.main_window.board_view.converter.set_origin_mm(
+                settings["BottomImageXCoord"], settings["BottomImageYCoord"], side="bottom"
             )
             self.save_project_settings()
 

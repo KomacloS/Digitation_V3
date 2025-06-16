@@ -50,9 +50,12 @@ class BoardView(QGraphicsView):
 
         # --- Keep the side-aware converter (new approach) ---
         self.converter = CoordinateConverter()
-        ox = constants.get("origin_x_mm", 0.0)
-        oy = constants.get("origin_y_mm", 0.0)
-        self.converter.set_origin_mm(ox, oy)  # apply saved offset
+        bx = constants.get("BottomImageXCoord", 0.0)
+        by = constants.get("BottomImageYCoord", 0.0)
+        tx = constants.get("TopImageXCoord", 0.0)
+        ty = constants.get("TopImageYCoord", 0.0)
+        self.converter.set_origin_mm(tx, ty, side="top")
+        self.converter.set_origin_mm(bx, by, side="bottom")
 
         # UI references
         self.pad_info_label = pad_info_label

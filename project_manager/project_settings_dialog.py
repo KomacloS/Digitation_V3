@@ -29,17 +29,29 @@ class ProjectSettingsDialog(QDialog):
         self.mm_bot_spin.setValue(self.constants.get("mm_per_pixels_bot", 0.0333))
         form.addRow(QLabel("mm_per_pixels_bot"), self.mm_bot_spin)
 
-        self.origin_x_spin = QDoubleSpinBox()
-        self.origin_x_spin.setDecimals(3)
-        self.origin_x_spin.setRange(-1e6, 1e6)
-        self.origin_x_spin.setValue(self.constants.get("origin_x_mm", 0.0))
-        form.addRow(QLabel("origin_x_mm"), self.origin_x_spin)
+        self.bottom_x_spin = QDoubleSpinBox()
+        self.bottom_x_spin.setDecimals(3)
+        self.bottom_x_spin.setRange(-1e6, 1e6)
+        self.bottom_x_spin.setValue(self.constants.get("BottomImageXCoord", 0.0))
+        form.addRow(QLabel("BottomImageXCoord"), self.bottom_x_spin)
 
-        self.origin_y_spin = QDoubleSpinBox()
-        self.origin_y_spin.setDecimals(3)
-        self.origin_y_spin.setRange(-1e6, 1e6)
-        self.origin_y_spin.setValue(self.constants.get("origin_y_mm", 0.0))
-        form.addRow(QLabel("origin_y_mm"), self.origin_y_spin)
+        self.bottom_y_spin = QDoubleSpinBox()
+        self.bottom_y_spin.setDecimals(3)
+        self.bottom_y_spin.setRange(-1e6, 1e6)
+        self.bottom_y_spin.setValue(self.constants.get("BottomImageYCoord", 0.0))
+        form.addRow(QLabel("BottomImageYCoord"), self.bottom_y_spin)
+
+        self.top_x_spin = QDoubleSpinBox()
+        self.top_x_spin.setDecimals(3)
+        self.top_x_spin.setRange(-1e6, 1e6)
+        self.top_x_spin.setValue(self.constants.get("TopImageXCoord", 0.0))
+        form.addRow(QLabel("TopImageXCoord"), self.top_x_spin)
+
+        self.top_y_spin = QDoubleSpinBox()
+        self.top_y_spin.setDecimals(3)
+        self.top_y_spin.setRange(-1e6, 1e6)
+        self.top_y_spin.setValue(self.constants.get("TopImageYCoord", 0.0))
+        form.addRow(QLabel("TopImageYCoord"), self.top_y_spin)
 
         layout.addLayout(form)
 
@@ -57,6 +69,8 @@ class ProjectSettingsDialog(QDialog):
         return {
             "mm_per_pixels_top": self.mm_top_spin.value(),
             "mm_per_pixels_bot": self.mm_bot_spin.value(),
-            "origin_x_mm": self.origin_x_spin.value(),
-            "origin_y_mm": self.origin_y_spin.value(),
+            "BottomImageXCoord": self.bottom_x_spin.value(),
+            "BottomImageYCoord": self.bottom_y_spin.value(),
+            "TopImageXCoord": self.top_x_spin.value(),
+            "TopImageYCoord": self.top_y_spin.value(),
         }
