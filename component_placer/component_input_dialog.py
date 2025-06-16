@@ -445,6 +445,9 @@ class ComponentInputDialog(QDialog):
         self.height_spin.setValue(float(params.get("height", 0.5)))
         self.hole_spin.setValue(float(params.get("hole", 0.0)))
 
+        # Ensure auto-prefix/numbering reflected in the name field
+        self.update_component_name()
+
     def _toggle_quick_fields(self, show: bool):
         """
         Hide or show all Quick-Creation widgets (and their labels).

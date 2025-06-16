@@ -411,6 +411,16 @@ class MainWindow(QMainWindow):
         set_mm_per_pixels_bot_action.triggered.connect(self.set_mm_per_pixels_bot)
         properties_menu.addAction(set_mm_per_pixels_bot_action)
 
+        # --- Anchor Nudge Step ---
+        set_anchor_step_action = QAction("Set Anchor Nudge Step", self)
+        set_anchor_step_action.triggered.connect(self.set_anchor_nudge_step)
+        properties_menu.addAction(set_anchor_step_action)
+
+        # --- Max Zoom ---
+        set_max_zoom_action = QAction("Set Max Zoom", self)
+        set_max_zoom_action.triggered.connect(self.set_max_zoom)
+        properties_menu.addAction(set_max_zoom_action)
+
         # --- Board Origin ---
         set_origin_action = QAction("Set Board Origin (mm)", self)
         set_origin_action.triggered.connect(self.set_board_origin)
@@ -1069,6 +1079,43 @@ class MainWindow(QMainWindow):
                 self.board_view.converter.set_mm_per_pixels_bot(new_value)
             self.board_view.update_scene()
             self.log.log("info", f"mm_per_pixels_bot updated to {new_value:.10g} (user input).")
+
+    def set_anchor_nudge_step(self):
+        """Prompt user for new anchor nudge step in mm."""
+        current_value = float(self.constants.get("anchor_nudge_step_mm", 0.2))
+        value, ok = QInputDialog.getDouble(
+            self,
+            "Anchor Nudge Step",
+            "Enter anchor move step (mm):",
+            value=current_value,
+            min=0.001,
+            max=10.0,
+            decimals=3,
+        )
+        if ok:
+            self.constants.set("anchor_nudge_step_mm", value)
+            self.constants.save()
+            self.log.log("info", f"Anchor nudge step updated to {value} mm")
+
+    def set_max_zoom(self):
+        """Prompt user to set maximum zoom level."""
+        current_value = float(self.constants.get("max_zoom", 10.0))
+        value, ok = QInputDialog.getDouble(
+            self,
+            "Max Zoom",
+            "Enter maximum zoom factor:",
+            value=current_value,
+            min=1.0,
+            max=100.0,
+            decimals=1,
+        )
+        if ok:
+            self.constants.set("max_zoom", value)
+            self.constants.save()
+            if hasattr(self.board_view, "zoom_manager"):
+                self.board_view.zoom_manager.max_user_scale = value
+                self.board_view.zoom_manager.update_zoom_limits()
+            self.log.log("info", f"Max zoom updated to {value}")
 
     def update_working_side_label(self):
         """Refreshes the fixed-width label that shows the current board side."""

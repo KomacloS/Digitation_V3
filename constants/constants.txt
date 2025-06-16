@@ -22,5 +22,7 @@
     "origin_x_mm": 243.904,
     "origin_y_mm": 42.616,
     "central_backup_dir": "Z:/Project Management/Seica/other/Digitation_backups",
-    "max_backups": 5
+    "max_backups": 5,
+    "anchor_nudge_step_mm": 0.2,
+    "max_zoom": 10.0
 }
