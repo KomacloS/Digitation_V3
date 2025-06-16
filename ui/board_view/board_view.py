@@ -569,6 +569,17 @@ class BoardView(QGraphicsView):
         # We'll track relationships for ALF
         alf_relationships = []
 
+        # Compute centre X for any bottom-side pads so we can mirror them
+        bottom_objs = [
+            p.board_object
+            for p in pad_items
+            if getattr(p.board_object, "test_position", "").lower() == "bottom"
+        ]
+        center_x_bottom = None
+        if bottom_objs:
+            xs = [obj.x_coord_mm for obj in bottom_objs]
+            center_x_bottom = (min(xs) + max(xs)) / 2.0
+
         # 4) Build .nod lines (and see if any prefix is present)
         for pad_item in pad_items:
             obj = pad_item.board_object
@@ -576,6 +587,10 @@ class BoardView(QGraphicsView):
             component_name = footprint_name  # override with user's chosen name
             pin = obj.pin
             x_mm = obj.x_coord_mm
+            if center_x_bottom is not None and (
+                getattr(obj, "test_position", "").lower() == "bottom"
+            ):
+                x_mm = 2 * center_x_bottom - x_mm
             y_mm = obj.y_coord_mm
             width_mils = mm_to_mils(obj.width_mm)
             height_mils = mm_to_mils(obj.height_mm)
