@@ -5,7 +5,6 @@ from PyQt5.QtCore import QObject, pyqtSignal, QSettings
 from PyQt5.QtWidgets import (
     QFileDialog, QMessageBox, QInputDialog
 )
-from project_manager.project_settings_dialog import ProjectSettingsDialog
 from objects.nod_file import BoardNodFile
 from project_manager.nod_handler import NODHandler
 from project_manager.image_handler import ImageHandler, is_same_file
@@ -194,19 +193,6 @@ class ProjectManager(QObject):
         self.log.log("debug", "[create_project_dialog] Loading bottom image.")
         self.image_handler.load_image(side='bottom')
         self.log.log("debug", "[create_project_dialog] Bottom image loaded.")
-
-        # ── Ask for project settings immediately ─────────────────────
-        dlg = ProjectSettingsDialog(self.main_window.constants, parent=self.main_window)
-        if dlg.exec_() == dlg.Accepted:
-            settings = dlg.get_settings()
-            consts = self.main_window.constants
-            for k, v in settings.items():
-                consts.set(k, v)
-            consts.save()
-            self.main_window.board_view.converter.set_mm_per_pixels_top(settings["mm_per_pixels_top"])
-            self.main_window.board_view.converter.set_mm_per_pixels_bot(settings["mm_per_pixels_bot"])
-            self.main_window.board_view.converter.set_origin_mm(settings["origin_x_mm"], settings["origin_y_mm"])
-            self.save_project_settings()
 
         QSettings("MyCompany", "PCB Digitization Tool").setValue("last_numbers", "{}")
         self.log.log("debug", "Auto numbering reset for new project (last_numbers cleared).")
