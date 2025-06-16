@@ -824,6 +824,11 @@ class BoardView(QGraphicsView):
         self.scene.invalidate(self.scene.sceneRect())
         self.viewport().update()
 
+    def _refresh_scene_after_edit(self):
+        """Lightweight refresh after pad edits."""
+        self.scene.invalidate(self.scene.sceneRect())
+        self.viewport().update()
+
     # --------------------------------------------------------------
     #  Ctrl+H : delegate to actions.flip_ghost_horizontal
     # --------------------------------------------------------------
