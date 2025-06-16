@@ -104,8 +104,10 @@ class GhostComponent:
             rx = dx * math.cos(rad) - dy * math.sin(rad)
             ry = dx * math.sin(rad) + dy * math.cos(rad)
 
-            # always mirror on bottom side so pads match the inverted X axis
-            if side == "bottom":
+            # For bottom-side quick creation, mirror X only when the ghost
+            # is fixed (arrows visible). Regular follow-mouse ghosts should
+            # retain the same orientation as placed pads.
+            if side == "bottom" and self._draw_arrows:
                 rx = -rx
 
             # optional user flip (changes colour)
