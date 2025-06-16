@@ -12,6 +12,7 @@ from edit_pads import actions
 from math import radians, sin, cos
 import os
 from component_placer.component_input_dialog import ComponentInputDialog
+from constants.constants import Constants
 
 
 class Clipboard:
@@ -50,6 +51,7 @@ class ComponentPlacer(QObject):
         self.log.log("info", "ComponentPlacer initialized.")
         self.board_view = board_view
         self.object_library = object_library
+        self.constants = Constants()
         self.nod_file = None
         self.footprint = None
         self.footprint_rotation = 0.0
@@ -427,7 +429,8 @@ class ComponentPlacer(QObject):
 
                 new_pin = calc_new_pin(original_pin)
                 new_pin_str = str(new_pin)
-                new_prefix = alf_mapping.get(new_pin, "")
+                pad_prefix = pad.get("prefix", "")
+                new_prefix = pad_prefix or alf_mapping.get(new_pin, "")
 
                 board_obj = BoardObject(
                     component_name=comp_name,
@@ -927,9 +930,57 @@ class ComponentPlacer(QObject):
             idx = [(r, c) for c in col_vis for r in row_vis]
 
         # Renumber and rebuild pad list
-        ordered = [pad_grid[r][c] for (r, c) in idx]
-        for i, p in enumerate(ordered, start=1):
-            p["pin"] = i
+        create_prefix = bool(params.get("create_prefix"))
+        prefix_table = self.constants.get(
+            "quick_prefix_table",
+            [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F",
+                "G",
+                "H",
+                "J",
+                "K",
+                "L",
+                "M",
+                "N",
+                "P",
+                "R",
+                "T",
+                "U",
+                "V",
+                "W",
+                "Y",
+                "AA",
+                "AB",
+                "AC",
+                "AD",
+                "AE",
+                "AF",
+                "AG",
+                "AH",
+            ],
+        )
+
+        ordered = []
+        for r, c in idx:
+            pad = pad_grid[r][c]
+            if create_prefix and scheme in (1, 2):
+                if scheme == 1:
+                    prefix_idx = row_vis.index(r)
+                    number = col_vis.index(c) + 1
+                else:
+                    prefix_idx = col_vis.index(c)
+                    number = row_vis.index(r) + 1
+                letter = prefix_table[prefix_idx % len(prefix_table)]
+                pad["prefix"] = letter
+                pad["pin"] = number
+            else:
+                pad["pin"] = len(ordered) + 1
+            ordered.append(pad)
 
         fp["pads"] = ordered
         return fp
