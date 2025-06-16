@@ -91,7 +91,7 @@ class DisplayLibrary(QObject):
     Manages the rendering of BoardObjects in the scene, with partial updates.
     """
 
-    def __init__(self, scene, object_library, converter, pixels_per_mm=30.0, current_side="top"):
+    def __init__(self, scene, object_library, converter, current_side="top"):
         super().__init__()
         self.scene = scene
         self.object_library = object_library
