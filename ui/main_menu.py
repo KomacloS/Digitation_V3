@@ -41,6 +41,7 @@ import edit_pads.actions as actions
 from ui.layers_tab import LayersTab
 from component_placer.bom_handler.bom_handler import BOMHandler
 from component_placer.quick_creation_controller import QuickCreationController
+from ui.start_dialog import StartDialog
 
 
 class MainWindow(QMainWindow):
@@ -122,6 +123,14 @@ class MainWindow(QMainWindow):
 
         # ─── Show window ────────────────────────────────────────────────
         self.show()
+
+        # ─── Startup dialog to open or create a project ──────────────────
+        start_dlg = StartDialog(self)
+        start_dlg.open_button.clicked.connect(self.project_manager.open_project_dialog)
+        start_dlg.create_button.clicked.connect(
+            self.project_manager.create_project_dialog
+        )
+        start_dlg.exec_()
 
     # --------------------------------------------------------------------------
     #  Toolbar (zoom, search, switch-side …) – UX-upgraded
@@ -415,7 +424,6 @@ class MainWindow(QMainWindow):
         autosave_action = QAction("Set Auto-Save Threshold", self)
         autosave_action.triggered.connect(self.set_auto_save_threshold)
         properties_menu.addAction(autosave_action)
-
 
         # -- NEW: Add two separate menu actions for top & bottom mm-per-pixels
         set_mm_per_pixels_top_action = QAction("Set mm_per_pixels_top", self)
@@ -910,7 +918,6 @@ class MainWindow(QMainWindow):
             )
         except Exception as e:
             self.log.log("error", f"Error during Align Pads action: {e}")
-
 
     def open_bom_editor(self):
         """
