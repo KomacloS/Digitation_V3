@@ -360,41 +360,13 @@ class DisplayLibrary(QObject):
             self.remove_rendered_object(ch)
 
     def update_rendered_objects_for_updates(self, updates: List[BoardObject]):
-        """
-        Updates geometry/colour/position for each changed object.
-        """
+        """Refresh just the changed pads without a full scene redraw."""
         for obj in updates:
-            # 1) handle objects that became invisible
-            if not obj.visible:
-                self.remove_rendered_object(obj.channel)
-                continue
+            # remove any existing graphics for this channel (primary or secondary)
+            self.remove_rendered_object(obj.channel)
 
-            # 2) already rendered ⇒ update in-place
-            if obj.channel in self.displayed_objects:
-                item = self.displayed_objects[obj.channel]
-
-                # -------- geometry --------
-                new_path = self._build_pad_path(
-                    obj.width_mm, obj.height_mm, obj.hole_mm, obj.shape_type
-                )
-                if new_path:
-                    item.setPath(new_path)
-                x_scene, y_scene = self.converter.mm_to_pixels(
-                    obj.x_coord_mm, obj.y_coord_mm
-                )
-                item.setPos(x_scene, y_scene)
-                item.setRotation(obj.angle_deg)
-
-                # -------- colour / testability --------
-                new_colour = self.get_pad_color(
-                    self.testability_to_code(obj.testability)
-                )
-                item.setBrush(QBrush(new_colour))     # ←  **NEW**
-
-                item.update()
-
-            # 3) not yet rendered ⇒ render fresh
-            else:
+            # if still visible after the edit, re-render it using current logic
+            if obj.visible:
                 self.render_object(obj)
 
     # --------------------------------------------------------------------------

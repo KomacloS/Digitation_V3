@@ -104,8 +104,8 @@ class GhostComponent:
             rx = dx * math.cos(rad) - dy * math.sin(rad)
             ry = dx * math.sin(rad) + dy * math.cos(rad)
 
-            # fixed quick-preview on bottom: mirror X but keep colours
-            if side == "bottom" and self._draw_arrows:
+            # always mirror on bottom side so pads match the inverted X axis
+            if side == "bottom":
                 rx = -rx
 
             # optional user flip (changes colour)
