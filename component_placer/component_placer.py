@@ -749,6 +749,7 @@ class ComponentPlacer(QObject):
                 testability=pad.get("testability", "Forced"),
                 technology=pad["technology"],
                 angle_deg=pad["angle_deg"],
+                prefix=pad.get("prefix"),
             )
             new_objs.append(obj)
 
