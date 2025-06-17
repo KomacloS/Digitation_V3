@@ -867,3 +867,27 @@ class BoardView(QGraphicsView):
 
         if self.component_placer:
             actions.flip_ghost_horizontal(self.component_placer)
+
+    # ------------------------------------------------------------------
+    #  Alt + Double Click Handler
+    # ------------------------------------------------------------------
+    def mouseDoubleClickEvent(self, event):
+        """Select all pads and open the Pad Editor when Alt+double-click."""
+        if event.modifiers() & Qt.AltModifier:
+            all_pad_items = [
+                item
+                for key, item in self.display_library.displayed_objects.items()
+                if isinstance(item, SelectablePadItem)
+                and not str(key).endswith("_secondary")
+            ]
+
+            if all_pad_items:
+                self.scene.clearSelection()
+                for pad in all_pad_items:
+                    pad.setSelected(True)
+
+                actions.edit_pads(self.object_library, all_pad_items)
+                event.accept()
+                return
+
+        super().mouseDoubleClickEvent(event)
