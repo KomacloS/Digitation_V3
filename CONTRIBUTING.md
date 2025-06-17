@@ -16,8 +16,8 @@ Thank you for considering contributing to **Digitation V3**!
 
 3. Make your changes, ensuring:
 
-   * `ruff` reports **no errors** (`ruff codes`)
-   * `black` reformats code (`black codes`)
+   * `ruff` reports **no errors** (`ruff .`)
+   * `black` reformats code (`black .`)
    * `pytest` passes (`pytest`)
 
 4. Commit using **conventional commits** (e.g. `feat: add ghost overlay option`).
