@@ -16,7 +16,7 @@ cd digitation_v3
 python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 python -m pip install -e .
-python codes/main.py
+python main.py
 ```
 
 ## Features
