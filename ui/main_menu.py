@@ -32,7 +32,7 @@ from component_placer.component_placer import ComponentPlacer
 from inputs.input_handler import InputHandler
 from component_placer.ghost import GhostComponent
 from project_manager.project_manager import ProjectManager
-from ui.search_dialog import SearchDialog
+from ui_tk import SearchDialogTk
 from objects.object_library import ObjectLibrary
 from ui.selected_pins_info import generate_selected_pins_html
 from ui.ui_customization_dialog import UICustomizationDialog
@@ -726,12 +726,12 @@ class MainWindow(QMainWindow):
     def open_search_dialog(self):
         self.log.log("info", "Opening Search Dialog.")
         # Pass the QTextBrowser widget from the PropertiesDock that displays selected pins info.
-        search_dialog = SearchDialog(
+        dialog = SearchDialogTk(
             board_view=self.board_view,
             selected_pins_widget=self.properties_dock.selected_pins_info_tab,
-            parent=self,
+            parent=None,
         )
-        if search_dialog.exec_() == QDialog.Accepted:
+        if dialog.show():
             self.log.log("info", "Search Dialog completed successfully.")
         else:
             self.log.log("info", "Search Dialog was canceled.")
