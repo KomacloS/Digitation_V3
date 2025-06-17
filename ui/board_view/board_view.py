@@ -281,6 +281,18 @@ class BoardView(QGraphicsView):
         # 2) Toggle the side in flags
         self.flags.set_flag("side", new_side)
 
+        # Ensure converter uses the correct image dimensions for the new side
+        if new_side == "top" and self.top_image_size:
+            self.converter.set_image_size(self.top_image_size)
+            self.log.debug(
+                f"[switch_side] Image size set to {self.top_image_size} for top"
+            )
+        elif new_side == "bottom" and self.bottom_image_size:
+            self.converter.set_image_size(self.bottom_image_size)
+            self.log.debug(
+                f"[switch_side] Image size set to {self.bottom_image_size} for bottom"
+            )
+
         # 3) Update image visibility based on image_hidden_by_filter.
         # If the image should remain hidden, hide both images.
         if getattr(self, "image_hidden_by_filter", False):
