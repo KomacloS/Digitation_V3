@@ -478,27 +478,16 @@ class MainWindow(QMainWindow):
         tx_old = self.constants.get("TopImageXCoord", 0.0)
         ty_old = self.constants.get("TopImageYCoord", 0.0)
 
-        # -- get two doubles -------------------------------------------------
-        tx, ok1 = QInputDialog.getDouble(
-            self, "Board Origin", "Top Image X (mm):", tx_old, -1e6, 1e6, 3
-        )
-        if not ok1:
+        from ui.board_origin_dialog import BoardOriginDialog
+
+        dlg = BoardOriginDialog(self.constants, parent=self)
+        if dlg.exec_() != dlg.Accepted:
             return
-        ty, ok2 = QInputDialog.getDouble(
-            self, "Board Origin", "Top Image Y (mm):", ty_old, -1e6, 1e6, 3
-        )
-        if not ok2:
-            return
-        bx, ok3 = QInputDialog.getDouble(
-            self, "Board Origin", "Bottom Image X (mm):", bx_old, -1e6, 1e6, 3
-        )
-        if not ok3:
-            return
-        by, ok4 = QInputDialog.getDouble(
-            self, "Board Origin", "Bottom Image Y (mm):", by_old, -1e6, 1e6, 3
-        )
-        if not ok4:
-            return
+        values = dlg.get_values()
+        tx = values["TopImageXCoord"]
+        ty = values["TopImageYCoord"]
+        bx = values["BottomImageXCoord"]
+        by = values["BottomImageYCoord"]
 
         dx = tx - tx_old
         dy = ty - ty_old
