@@ -162,6 +162,13 @@ class ProjectManager(QObject):
             by = consts.get("BottomImageYCoord", 0.0)
             tx = consts.get("TopImageXCoord", 0.0)
             ty = consts.get("TopImageYCoord", 0.0)
+
+            # Log loaded conversion values for easier debugging
+            self.log.log(
+                "debug",
+                f"Project settings: mm_top={mm_top}, mm_bot={mm_bot}, "
+                f"TopOrigin=({tx}, {ty}), BottomOrigin=({bx}, {by})",
+            )
             self.main_window.board_view.converter.set_mm_per_pixels_top(mm_top)
             self.main_window.board_view.converter.set_mm_per_pixels_bot(mm_bot)
             self.main_window.board_view.converter.set_origin_mm(tx, ty, side="top")

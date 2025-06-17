@@ -36,6 +36,11 @@ class CoordinateConverter:
             self.origin_top = (x0, y0)
         else:
             self.origin_bottom = (x0, y0)
+        if self.log:
+            self.log.log(
+                "debug",
+                f"CoordinateConverter: origin for {side} set to ({x0}, {y0})",
+            )
 
     def set_image_size(self, image_size):
         """

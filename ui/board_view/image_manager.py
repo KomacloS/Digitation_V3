@@ -14,6 +14,9 @@ def load_image(board_view, file_path: str, side: str):
     if side.lower() == "top":
         board_view.converter.set_image_size((pixmap.width(), pixmap.height()))
         board_view.flags.set_flag("side", "top")
+        board_view.log.debug(
+            f"Loaded top image {pixmap.width()}x{pixmap.height()} pixels"
+        )
         if board_view.top_pixmap_item:
             board_view.top_pixmap_item.setPixmap(pixmap)
         else:
@@ -26,6 +29,9 @@ def load_image(board_view, file_path: str, side: str):
     elif side.lower() == "bottom":
         board_view.converter.set_image_size((pixmap.width(), pixmap.height()))
         board_view.flags.set_flag("side", "bottom")
+        board_view.log.debug(
+            f"Loaded bottom image {pixmap.width()}x{pixmap.height()} pixels"
+        )
         if board_view.bottom_pixmap_item:
             board_view.bottom_pixmap_item.setPixmap(pixmap)
         else:
