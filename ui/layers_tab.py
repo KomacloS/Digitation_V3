@@ -54,8 +54,14 @@ class LayersTab(QWidget):
         self.chk_show_pads.setChecked(True)
         self.chk_show_pads.stateChanged.connect(self.toggle_pads_visibility)
 
+        # Checkbox to cut digitation areas from the PCB image
+        self.chk_cut_dig = QCheckBox("Cut Digitation Area")
+        self.chk_cut_dig.setChecked(False)
+        self.chk_cut_dig.stateChanged.connect(self.toggle_cut_digitation)
+
         vis_layout.addWidget(self.chk_show_image)
         vis_layout.addWidget(self.chk_show_pads)
+        vis_layout.addWidget(self.chk_cut_dig)
         layout.addWidget(visibility_group)
 
         # ---- Pad Filter Group ----
@@ -206,6 +212,11 @@ class LayersTab(QWidget):
             except Exception as e:
                 self.log.log("error", f"Error toggling pad visibility: {e}")
         self.log.log("debug", f"Pads visibility set to {visible}.")
+
+    def toggle_cut_digitation(self, state):
+        enable = state == Qt.Checked
+        self.log.log("debug", f"Cut digitation toggled: {enable}")
+        self.board_view.show_digitation_holes(enable)
 
     # ----- Pad Filter Methods -----
 
