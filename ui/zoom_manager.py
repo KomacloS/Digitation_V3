@@ -6,9 +6,10 @@ from PyQt5.QtWidgets import QGraphicsView
 from logs.log_handler import LogHandler
 from constants.constants import Constants
 
+
 class ZoomManager(QObject):
     """
-    A simpler ZoomManager that performs single-step ("jump") zooms 
+    A simpler ZoomManager that performs single-step ("jump") zooms
     around the chosen anchor. Doesn't reset the transform or call fitInView
     after each zoom, so the anchor remains stable.
     """
@@ -64,9 +65,13 @@ class ZoomManager(QObject):
 
         # Always recalc the current mouse scene position using QCursor.pos()
         mouse_global = QCursor.pos()
-        mouse_scene = self.board_view.mapToScene(self.board_view.mapFromGlobal(mouse_global))
-        self.log.log("info",
-                     f"Zoom mode: CURSOR. Current cursor scene position: ({mouse_scene.x():.2f}, {mouse_scene.y():.2f}).")
+        mouse_scene = self.board_view.mapToScene(
+            self.board_view.mapFromGlobal(mouse_global)
+        )
+        self.log.log(
+            "debug",
+            f"Zoom mode: CURSOR. Current cursor scene position: ({mouse_scene.x():.2f}, {mouse_scene.y():.2f}).",
+        )
 
         # Apply scaling.
         self.board_view.scale(actual_factor, actual_factor)
@@ -74,21 +79,29 @@ class ZoomManager(QObject):
         # Re-center the view according to zoom mode.
         if zoom_mode in ("cursor", "mouse"):
             self.board_view.centerOn(mouse_scene)
-            self.log.log("info",
-                         f"View recentered on cursor scene position: ({mouse_scene.x():.2f}, {mouse_scene.y():.2f}).")
+            self.log.log(
+                "debug",
+                f"View recentered on cursor scene position: ({mouse_scene.x():.2f}, {mouse_scene.y():.2f}).",
+            )
         elif zoom_mode == "marker":
             marker_coords = self.board_view.marker_manager.get_marker_board_coords()
             if marker_coords:
                 x_px, y_px = self.board_view.converter.mm_to_pixels(*marker_coords)
                 self.board_view.centerOn(x_px, y_px)
-                self.log.log("info",
-                             f"View recentered on marker at scene: ({x_px:.2f}, {y_px:.2f}).")
+                self.log.log(
+                    "debug",
+                    f"View recentered on marker at scene: ({x_px:.2f}, {y_px:.2f}).",
+                )
             else:
-                self.log.log("warning", "Zoom mode 'marker' active but no marker available.")
+                self.log.log(
+                    "warning", "Zoom mode 'marker' active but no marker available."
+                )
 
-        self.log.log("info",
-                     f"Zoom applied: old scale={old_scale:.3f}, new scale={self.user_scale:.3f}, "
-                     f"factor applied={actual_factor:.3f}, mode={zoom_mode}.")
+        self.log.log(
+            "debug",
+            f"Zoom applied: old scale={old_scale:.3f}, new scale={self.user_scale:.3f}, "
+            f"factor applied={actual_factor:.3f}, mode={zoom_mode}.",
+        )
         self.scale_factor_changed.emit(self.user_scale)
 
     def update_zoom_limits(self):

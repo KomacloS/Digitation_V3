@@ -466,7 +466,7 @@ class BoardView(QGraphicsView):
     def center_on(self, x: float, y: float):
         point = QPointF(x, y)
         self.centerOn(point)
-        self.log.log("info", f"View centered on ({x:.2f}, {y:.2f}).")
+        self.log.log("debug", f"View centered on ({x:.2f}, {y:.2f}).")
 
     def show_context_menu(self, selected_pads, global_pos):
         """
@@ -830,7 +830,7 @@ class BoardView(QGraphicsView):
         self.board_contour_item = QGraphicsRectItem(board_rect)
         self.board_contour_item.setPen(contour_pen)
         self.scene.addItem(self.board_contour_item)
-        self.log.log("info", f"Board contour added: {board_rect}")
+        self.log.log("debug", f"Board contour added: {board_rect}")
 
     def update_scene(self):
         """

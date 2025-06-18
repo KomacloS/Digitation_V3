@@ -1,12 +1,12 @@
 # objects/object_library.py
 
-import copy
 from typing import List, Dict, Optional
 from PyQt5.QtCore import QObject, pyqtSignal, QMutex, QMutexLocker
 from objects.board_object import BoardObject
 from logs.log_handler import LogHandler
 from objects.undo_redo_manager import UndoRedoManager
 from utils.flag_manager import FlagManager
+
 
 class ObjectLibrary(QObject):
     object_added = pyqtSignal(BoardObject)
@@ -60,7 +60,7 @@ class ObjectLibrary(QObject):
         """
         self.log.log(
             "debug",
-            f"get_next_channel() called. Current _next_channel_id = {self._next_channel_id}"
+            f"get_next_channel() called. Current _next_channel_id = {self._next_channel_id}",
         )
         ch = self._next_channel_id
         self._next_channel_id += 1
@@ -79,10 +79,12 @@ class ObjectLibrary(QObject):
                 self.log.log(
                     "debug",
                     f"refresh_channel_counter: highest_channel={highest_channel}, "
-                    f"next_channel_id set to {self._next_channel_id}"
+                    f"next_channel_id set to {self._next_channel_id}",
                 )
             else:
-                self.log.log("debug", "refresh_channel_counter called, but no objects exist yet.")
+                self.log.log(
+                    "debug", "refresh_channel_counter called, but no objects exist yet."
+                )
 
     def add_object(self, board_object: BoardObject) -> bool:
         with QMutexLocker(self._mutex):
@@ -93,7 +95,7 @@ class ObjectLibrary(QObject):
                 assigned_channel = self.get_next_channel()
                 self.log.log(
                     "debug",
-                    f"add_object: Reassigning channel from {board_object.channel} to {assigned_channel}."
+                    f"add_object: Reassigning channel from {board_object.channel} to {assigned_channel}.",
                 )
                 board_object.channel = assigned_channel
 
@@ -101,14 +103,14 @@ class ObjectLibrary(QObject):
             self.objects[board_object.channel] = board_object
 
             self.log.log(
-                "info",
+                "debug",
                 f"Added object: {board_object.component_name}, "
                 f"Channel: {board_object.channel}, "
-                f"Test Position: {board_object.test_position}"
+                f"Test Position: {board_object.test_position}",
             )
             self.log.log(
                 "debug",
-                f"Emitting object_added signal for Channel {board_object.channel}"
+                f"Emitting object_added signal for Channel {board_object.channel}",
             )
             self.object_added.emit(board_object)
             return True
@@ -121,14 +123,14 @@ class ObjectLibrary(QObject):
                 return False
             removed_object = self.objects.pop(channel)
             self.log.log(
-                "info",
+                "debug",
                 f"Removed object: {removed_object.component_name}, "
                 f"Channel: {removed_object.channel}, "
-                f"Test Position: {removed_object.test_position}"
+                f"Test Position: {removed_object.test_position}",
             )
             self.log.log(
                 "debug",
-                f"Emitting object_removed signal for Channel {removed_object.channel}"
+                f"Emitting object_removed signal for Channel {removed_object.channel}",
             )
             self.object_removed.emit(removed_object)
             return True
@@ -139,31 +141,31 @@ class ObjectLibrary(QObject):
             if board_object.channel not in self.objects:
                 self.log.log(
                     "warning",
-                    f"Attempted to update non-existent object with channel {board_object.channel}."
+                    f"Attempted to update non-existent object with channel {board_object.channel}.",
                 )
                 return False
             self.objects[board_object.channel] = board_object
             self.log.log(
-                "info",
+                "debug",
                 f"Updated BoardObject: {board_object.component_name}, "
                 f"Channel: {board_object.channel}, "
-                f"Test Position: {board_object.test_position}"
+                f"Test Position: {board_object.test_position}",
             )
             self.log.log(
                 "debug",
-                f"Emitting object_updated signal for Channel {board_object.channel}"
+                f"Emitting object_updated signal for Channel {board_object.channel}",
             )
             if self.display_library:
                 self.display_library.update_rendered_objects_for_updates([board_object])
             return True
 
     def bulk_add(
-            self,
-            board_objects: List[BoardObject],
-            preserve_channels: bool = False,
-            skip_undo: bool = False,
-            skip_auto_save: bool = False,
-            skip_render: bool = False
+        self,
+        board_objects: List[BoardObject],
+        preserve_channels: bool = False,
+        skip_undo: bool = False,
+        skip_auto_save: bool = False,
+        skip_render: bool = False,
     ) -> None:
         with QMutexLocker(self._mutex):
 
@@ -190,13 +192,14 @@ class ObjectLibrary(QObject):
                 # self.object_added.emit(obj)
 
             # one shot partial render
-            if not skip_render and hasattr(self, "display_library") and self.display_library:
+            if (
+                not skip_render
+                and hasattr(self, "display_library")
+                and self.display_library
+            ):
                 self.display_library.add_rendered_objects(added_objects)
 
             self.log.log("info", f"bulk_add: Added {len(added_objects)} objects.")
-
-
-
 
     # Remove or leave a no-op save() method since auto-save is not desired.
     def save(self):
@@ -210,12 +213,13 @@ class ObjectLibrary(QObject):
         """Retrieves all BoardObject instances for a specific test position."""
         with QMutexLocker(self._mutex):
             filtered_objects = [
-                obj for obj in self.objects.values()
+                obj
+                for obj in self.objects.values()
                 if obj.test_position.lower() == test_position.lower()
             ]
         self.log.log(
             "debug",
-            f"ObjectLibrary: Retrieved {len(filtered_objects)} objects for test position '{test_position.lower()}'."
+            f"ObjectLibrary: Retrieved {len(filtered_objects)} objects for test position '{test_position.lower()}'.",
         )
         return filtered_objects
 
@@ -239,23 +243,27 @@ class ObjectLibrary(QObject):
         """Clears all BoardObjects from the library (alias for clear_all())."""
         self.clear_all()
 
-    def find_pad(self, component: str, pin: str, signal: str, channel: int) -> Optional[BoardObject]:
+    def find_pad(
+        self, component: str, pin: str, signal: str, channel: int
+    ) -> Optional[BoardObject]:
         """
         Finds and returns the BoardObject matching the specified criteria.
         """
         all_objs = self.get_all_objects()
         for obj in all_objs:
-            if (obj.component_name.lower() == component.lower() and
-                str(obj.pin) == pin and
-                getattr(obj, 'signal', "").lower() == signal.lower() and
-                obj.channel == channel):
+            if (
+                obj.component_name.lower() == component.lower()
+                and str(obj.pin) == pin
+                and getattr(obj, "signal", "").lower() == signal.lower()
+                and obj.channel == channel
+            ):
                 self.log.log("info", f"Pad found: {obj}")
                 return obj
 
         self.log.log(
             "warning",
             f"No pad found for Component='{component}', Pin='{pin}', "
-            f"Signal='{signal}', Channel={channel}"
+            f"Signal='{signal}', Channel={channel}",
         )
         return None
 
@@ -305,9 +313,8 @@ class ObjectLibrary(QObject):
             self.log.log(
                 "info",
                 f"modify_objects => Added={len(added)}, Updated={len(updated)}, "
-                f"Deleted={len(deleted)}"
+                f"Deleted={len(deleted)}",
             )
-
 
     def bulk_delete(self, channels_to_remove: List[int]) -> None:
         """
@@ -327,7 +334,9 @@ class ObjectLibrary(QObject):
             if self.display_library:
                 self.display_library.remove_rendered_objects(removed_channels)
 
-            self.log.log("info", f"bulk_delete: Deleted {len(removed_channels)} objects.")
+            self.log.log(
+                "info", f"bulk_delete: Deleted {len(removed_channels)} objects."
+            )
             # self.bulk_operation_completed.emit("Bulk Delete")  # <-- remove/comment out
 
     def bulk_update_objects(self, updates: List[BoardObject], changes: dict) -> None:
@@ -347,4 +356,6 @@ class ObjectLibrary(QObject):
             if self.display_library:
                 self.display_library.update_rendered_objects_for_updates(updates)
 
-            self.log.log("info", f"bulk_update_objects: Updated {len(updates)} objects.")
+            self.log.log(
+                "info", f"bulk_update_objects: Updated {len(updates)} objects."
+            )
