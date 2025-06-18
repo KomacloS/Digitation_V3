@@ -75,6 +75,7 @@ class BoardView(QGraphicsView):
         # Use the passed-in constants
         self.constants = constants if constants else Constants()
         self.z_value_image = self.constants.get("z_value_image", 0)
+        self.z_value_cutouts = self.constants.get("z_value_cutouts", 0.5)
 
         # Explicitly set side to "top" on init if desired (like old code did)
         self.flags.set_flag("side", "top")
@@ -92,8 +93,11 @@ class BoardView(QGraphicsView):
         # Groups for items
         self.display_group = QGraphicsItemGroup()
         self.marker_group = QGraphicsItemGroup()
+        self.cutout_group = QGraphicsItemGroup()
         self.scene.addItem(self.display_group)
         self.scene.addItem(self.marker_group)
+        self.scene.addItem(self.cutout_group)
+        self.cutout_items = []
 
         self.setCacheMode(QGraphicsView.CacheBackground)
         self.scene.selectionChanged.connect(self.on_scene_selection_changed)
@@ -891,3 +895,53 @@ class BoardView(QGraphicsView):
                 return
 
         super().mouseDoubleClickEvent(event)
+
+    # ------------------------------------------------------------------
+    #  Digitation Holes Handling
+    # ------------------------------------------------------------------
+    def calculate_component_rects(self):
+        """Return bounding rectangles for each component in mm."""
+        comp_rects = {}
+        for obj in self.object_library.get_all_objects():
+            comp = obj.component_name
+            half_w = obj.width_mm / 2.0
+            half_h = obj.height_mm / 2.0
+            x1 = obj.x_coord_mm - half_w
+            x2 = obj.x_coord_mm + half_w
+            y1 = obj.y_coord_mm - half_h
+            y2 = obj.y_coord_mm + half_h
+            if comp not in comp_rects:
+                comp_rects[comp] = [x1, y1, x2, y2]
+            else:
+                r = comp_rects[comp]
+                r[0] = min(r[0], x1)
+                r[1] = min(r[1], y1)
+                r[2] = max(r[2], x2)
+                r[3] = max(r[3], y2)
+        return comp_rects
+
+    def show_digitation_holes(self, enable: bool):
+        """Overlay rectangles to simulate holes where digitation was made."""
+        for item in list(self.cutout_items):
+            self.cutout_group.removeFromGroup(item)
+            self.scene.removeItem(item)
+        self.cutout_items.clear()
+
+        if not enable:
+            return
+
+        from PyQt5.QtCore import QRectF
+        from PyQt5.QtGui import QBrush
+
+        rects = self.calculate_component_rects()
+        for rect in rects.values():
+            x1, y1, x2, y2 = rect
+            x1_px, y1_px = self.converter.mm_to_pixels(x1, y1)
+            x2_px, y2_px = self.converter.mm_to_pixels(x2, y2)
+            qrect = QRectF(x1_px, y1_px, x2_px - x1_px, y2_px - y1_px)
+            item = QGraphicsRectItem(qrect)
+            item.setBrush(QBrush(Qt.white))
+            item.setPen(Qt.NoPen)
+            item.setZValue(self.z_value_cutouts)
+            self.cutout_group.addToGroup(item)
+            self.cutout_items.append(item)

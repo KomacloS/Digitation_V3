@@ -7,6 +7,7 @@
     "project_loaded": false,
     "zoom_center_mode": "marker",
     "z_value_image": 0,
+    "z_value_cutouts": 0.5,
     "z_value_pads": 1,
     "z_value_marker": 2,
     "z_value_ghost": 3,
