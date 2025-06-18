@@ -923,9 +923,24 @@ class BoardView(QGraphicsView):
     #  Digitation Holes Handling
     # ------------------------------------------------------------------
     def calculate_component_rects(self):
-        """Return bounding rectangles for each component in mm."""
+        """Return bounding rectangles for visible components on the current side."""
         comp_rects = {}
+        current_side = self.display_library.current_side
         for obj in self.object_library.get_all_objects():
+            if not getattr(obj, "visible", True):
+                continue
+
+            tech = obj.technology.lower()
+            tp = obj.test_position.lower()
+            if tech == "through hole":
+                include = True
+            elif tech == "smd" and tp == current_side:
+                include = True
+            else:
+                include = False
+            if not include:
+                continue
+
             comp = obj.component_name
             half_w = obj.width_mm / 2.0
             half_h = obj.height_mm / 2.0
