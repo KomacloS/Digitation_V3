@@ -203,6 +203,7 @@ class LayersTab(QWidget):
 
     def toggle_pads_visibility(self, state):
         visible = state == Qt.Checked
+        self.board_view.pads_hidden_by_filter = not visible
         # Iterate over all pad items stored in DisplayLibrary.
         for item in self.display_library.displayed_objects.values():
             # Check that the item is a pad item (it is created as a SelectablePadItem).

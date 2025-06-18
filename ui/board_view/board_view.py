@@ -165,6 +165,11 @@ class BoardView(QGraphicsView):
         self.activateWindow()
         self.raise_()
 
+        # Track layer visibility states
+        self.image_hidden_by_filter = False
+        self.pads_hidden_by_filter = False
+        self.digitation_holes_enabled = False
+
     # --------------------------------------------------------------------------
     #  SELECTION CHANGED HANDLER
     # --------------------------------------------------------------------------
@@ -333,6 +338,14 @@ class BoardView(QGraphicsView):
         self.display_library.update_display_side()
         self.log.log("info", f"Switched board side to '{new_side}'")
 
+        # Reapply pad visibility state after re-rendering
+        if getattr(self, "pads_hidden_by_filter", False):
+            for item in self.display_library.displayed_objects.values():
+                try:
+                    item.setVisible(False)
+                except Exception:
+                    pass
+
         # 5) Restore the marker in the correct pixel position
         if marker_coords:
             x_mm, y_mm = marker_coords  # MM coordinates remain unchanged
@@ -375,6 +388,10 @@ class BoardView(QGraphicsView):
             ):
                 self.scene.removeItem(self.board_contour_item)
                 self.board_contour_item = None
+
+        # Reapply digitation holes if the option is enabled
+        if getattr(self, "digitation_holes_enabled", False):
+            self.show_digitation_holes(True)
 
         # 7) Update the scene to ensure marker and other items are properly refreshed.
         self.scene.update()
@@ -928,6 +945,7 @@ class BoardView(QGraphicsView):
 
     def show_digitation_holes(self, enable: bool):
         """Overlay rectangles to simulate holes where digitation was made."""
+        self.digitation_holes_enabled = enable
         self.log.debug(
             f"show_digitation_holes called with enable={enable}",
             module="BoardView",
