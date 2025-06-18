@@ -931,7 +931,7 @@ class BoardView(QGraphicsView):
             return
 
         from PyQt5.QtCore import QRectF
-        from PyQt5.QtGui import QBrush
+        from PyQt5.QtGui import QBrush, QPen
 
         rects = self.calculate_component_rects()
         for rect in rects.values():
@@ -941,7 +941,7 @@ class BoardView(QGraphicsView):
             qrect = QRectF(x1_px, y1_px, x2_px - x1_px, y2_px - y1_px)
             item = QGraphicsRectItem(qrect)
             item.setBrush(QBrush(Qt.white))
-            item.setPen(Qt.NoPen)
+            item.setPen(QPen(Qt.NoPen))
             item.setZValue(self.z_value_cutouts)
             self.cutout_group.addToGroup(item)
             self.cutout_items.append(item)
