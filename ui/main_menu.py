@@ -289,13 +289,13 @@ class MainWindow(QMainWindow):
     def update_project_name(self, folder_name: str):
         if folder_name:
             self.project_name_label.setText(f"Project: {folder_name}")
-            self.log.log("info", f"Project name label set to: '{folder_name}'")
+            self.log.log("debug", f"Project name label set to: '{folder_name}'")
             # enable Restore‑Backup once a project is open
             if hasattr(self, "restore_backup_action"):
                 self.restore_backup_action.setEnabled(True)
         else:
             self.project_name_label.setText("Project: [None]")
-            self.log.log("info", "Project name label set to: '[None]'")
+            self.log.log("debug", "Project name label set to: '[None]'")
             if hasattr(self, "restore_backup_action"):
                 self.restore_backup_action.setEnabled(False)
 
@@ -338,7 +338,7 @@ class MainWindow(QMainWindow):
             self.board_view.marker_manager.place_marker_from_scene
         )
         self.input_handler.wheel_moved.connect(self.board_view.wheelEvent)
-        self.log.log("info", "All wiring completed successfully.")
+        self.log.log("debug", "All wiring completed successfully.")
 
     # --------------------------------------------------------------------------
     #  Menus: "File" (Open, Save, SaveAs, Create Project), "Project" (Load Top, etc.)
@@ -473,10 +473,6 @@ class MainWindow(QMainWindow):
         • May optionally shift every pad by ΔX, ΔY
         • Re-positions the marker so it stays visually correct.
         """
-        bx_old = self.constants.get("BottomImageXCoord", 0.0)
-        by_old = self.constants.get("BottomImageYCoord", 0.0)
-        tx_old = self.constants.get("TopImageXCoord", 0.0)
-        ty_old = self.constants.get("TopImageYCoord", 0.0)
 
         from ui.board_origin_dialog import BoardOriginDialog
 
@@ -489,8 +485,10 @@ class MainWindow(QMainWindow):
         bx = values["BottomImageXCoord"]
         by = values["BottomImageYCoord"]
 
-        dx = tx - tx_old
-        dy = ty - ty_old
+        old_tx = self.constants.get("TopImageXCoord", 0.0)
+        old_ty = self.constants.get("TopImageYCoord", 0.0)
+        dx = tx - old_tx
+        dy = ty - old_ty
 
         # -- current marker position *before* anything changes ---------------
         old_marker_mm = self.board_view.marker_manager.get_marker_board_coords()
@@ -648,7 +646,7 @@ class MainWindow(QMainWindow):
             QMessageBox.information(self, "Info", f"'{path}' is not a .nod file.")
             return
 
-        self.log.log("info", f"Double-clicked .nod file: {path}")
+        self.log.log("debug", f"Double-clicked .nod file: {path}")
         footprint = get_footprint_for_placer(path)
         if footprint and "pads" in footprint:
             self.component_placer.footprint = footprint
@@ -695,7 +693,7 @@ class MainWindow(QMainWindow):
         mode = "mouse" if index == 0 else "marker"
         self.constants.set("zoom_center_mode", mode)
         self.constants.save()
-        self.log.log("info", f"Zoom center mode changed to {mode}.")
+        self.log.log("debug", f"Zoom center mode changed to {mode}.")
 
     def update_zoom_level_label(self):
         if not self.board_view or not self.board_view.zoom_manager:
@@ -717,14 +715,14 @@ class MainWindow(QMainWindow):
         )
 
     def on_switch_side(self):
-        self.log.log("info", "Switch Side button clicked.")
+        self.log.log("debug", "Switch Side button clicked.")
         self.board_view.switch_side()
         # After switching, update the working side label.
         current_side = self.board_view.flags.get_flag("side", "top").capitalize()
         self.working_side_label.setText(f"Working Side: {current_side}")
 
     def open_search_dialog(self):
-        self.log.log("info", "Opening Search Dialog.")
+        self.log.log("debug", "Opening Search Dialog.")
         # Pass the QTextBrowser widget from the PropertiesDock that displays selected pins info.
         search_dialog = SearchDialog(
             board_view=self.board_view,
@@ -732,9 +730,9 @@ class MainWindow(QMainWindow):
             parent=self,
         )
         if search_dialog.exec_() == QDialog.Accepted:
-            self.log.log("info", "Search Dialog completed successfully.")
+            self.log.log("debug", "Search Dialog completed successfully.")
         else:
-            self.log.log("info", "Search Dialog was canceled.")
+            self.log.log("debug", "Search Dialog was canceled.")
 
     def create_font_controls(self):
         """
@@ -1101,7 +1099,7 @@ class MainWindow(QMainWindow):
         if ok:
             self.constants.set("anchor_nudge_step_mm", value)
             self.constants.save()
-            self.log.log("info", f"Anchor nudge step updated to {value} mm")
+            self.log.log("debug", f"Anchor nudge step updated to {value} mm")
 
     def set_max_zoom(self):
         """Prompt user to set maximum zoom level."""
@@ -1121,7 +1119,7 @@ class MainWindow(QMainWindow):
             if hasattr(self.board_view, "zoom_manager"):
                 self.board_view.zoom_manager.max_user_scale = value
                 self.board_view.zoom_manager.update_zoom_limits()
-            self.log.log("info", f"Max zoom updated to {value}")
+            self.log.log("debug", f"Max zoom updated to {value}")
 
     def set_quick_prefix_table(self):
         """Prompt user to edit the comma-separated quick prefix table."""

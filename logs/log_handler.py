@@ -5,6 +5,7 @@ import os
 from logging.handlers import RotatingFileHandler
 from constants.constants import Constants
 
+
 class LogHandler:
     _instance = None
 
@@ -14,7 +15,7 @@ class LogHandler:
         return cls._instance
 
     def __init__(self, output="both"):
-        if hasattr(self, '_initialized') and self._initialized:
+        if hasattr(self, "_initialized") and self._initialized:
             return
         self._initialized = True
 
@@ -22,44 +23,45 @@ class LogHandler:
         log_file = constants.get("log_file", "logs/program.txt")
         max_size = constants.get("log_max_size", 5_000_000)
         backup_count = constants.get("log_backup_count", 5)
+        debug_mode = constants.get("debug_mode", False)
+
+        # Set up the logger early so we can log initialization problems
+        self.logger = logging.getLogger("ProgramLogger")
+        level = logging.DEBUG if debug_mode else logging.INFO
+        self.logger.setLevel(level)
+        self.logger.propagate = False
 
         # Ensure the logs directory exists
         log_dir = os.path.dirname(log_file)
         try:
             if not os.path.exists(log_dir):
                 os.makedirs(log_dir)
-                print(f"Log directory created: {log_dir}")
+                self.logger.debug("Log directory created: %s", log_dir)
         except Exception as e:
-            print(f"Failed to create log directory {log_dir}: {e}")
+            self.logger.error("Failed to create log directory %s: %s", log_dir, e)
 
-        # Set up the logger
-        self.logger = logging.getLogger("ProgramLogger")
-        self.logger.setLevel(logging.DEBUG)
-        self.logger.propagate = False
+        # Set up the logger handlers
 
         if not self.logger.hasHandlers():
             try:
                 if output in ["file", "both"]:
                     file_handler = RotatingFileHandler(
-                        log_file, maxBytes=max_size, backupCount=backup_count,
-                        encoding="utf-8"           # ← ensure UTF-8 file
+                        log_file,
+                        maxBytes=max_size,
+                        backupCount=backup_count,
+                        encoding="utf-8",
                     )
-                    # ASCII–only arrows so Windows consoles never choke
                     fmt = "%(asctime)s - %(levelname)s - %(message)s"
                     file_handler.setFormatter(logging.Formatter(fmt))
                     self.logger.addHandler(file_handler)
-                    print(f"Logging to file: {log_file}")
+                    self.logger.debug("Logging to file: %s", log_file)
             except Exception as e:
-                print(f"Failed to initialize file logging: {e}")
+                self.logger.error("Failed to initialize file logging: %s", e)
 
             if output in ["terminal", "both"]:
                 console_handler = logging.StreamHandler()
                 fmt = "%(asctime)s - %(levelname)s - %(message)s"
                 console_handler.setFormatter(logging.Formatter(fmt))
-                # CP-1252 console sometimes chokes on utf-8 → replace errors
-                console_handler.setStream(
-                    open(os.devnull, "w", encoding="cp1252",
-                         errors="replace"))
                 self.logger.addHandler(console_handler)
 
             if output == "none":
@@ -99,4 +101,3 @@ class LogHandler:
 
     def getEffectiveLevel(self):
         return self.logger.getEffectiveLevel()
-

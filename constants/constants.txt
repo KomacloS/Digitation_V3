@@ -2,6 +2,7 @@
     "log_file": "logs/program.txt",
     "log_max_size": 5000000,
     "log_backup_count": 5,
+    "debug_mode": false,
     "current_project_path": null,
     "project_loaded": false,
     "zoom_center_mode": "marker",

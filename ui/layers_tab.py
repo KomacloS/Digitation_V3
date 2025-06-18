@@ -1,16 +1,22 @@
 # ui/layers_tab.py
 
 from PyQt5.QtWidgets import (
-    QWidget, QVBoxLayout, QGroupBox, QHBoxLayout, QFormLayout,
-    QLineEdit, QComboBox, QPushButton, QCheckBox, QMessageBox
+    QWidget,
+    QVBoxLayout,
+    QGroupBox,
+    QHBoxLayout,
+    QFormLayout,
+    QLineEdit,
+    QComboBox,
+    QPushButton,
+    QCheckBox,
 )
 from PyQt5.QtCore import Qt
-from display.pad_shapes import build_pad_path  # if needed for conversion
-from constants.constants import Constants
-from logs.log_handler import LogHandler
+
 
 # Conversion factor for mm to mils (if you want to allow unit conversion later)
 MM_TO_MILS = 39.37
+
 
 class LayersTab(QWidget):
     """
@@ -18,6 +24,7 @@ class LayersTab(QWidget):
       - Toggle the PCB image (JPG) layer and the pads layer.
       - Filter the pads by various criteria. Only pads matching the filter remain visible.
     """
+
     def __init__(self, board_view, parent=None):
         """
         :param board_view: An instance of BoardView; used to access the image and DisplayLibrary.
@@ -69,7 +76,16 @@ class LayersTab(QWidget):
         self.tech_filter.addItems(["", "SMD", "Through Hole", "Mechanical"])
 
         self.shape_filter = QComboBox()
-        self.shape_filter.addItems(["", "Round", "Square/rectangle", "Square/rectangle with Hole", "Ellipse", "Hole"])
+        self.shape_filter.addItems(
+            [
+                "",
+                "Round",
+                "Square/rectangle",
+                "Square/rectangle with Hole",
+                "Ellipse",
+                "Hole",
+            ]
+        )
 
         self.width_filter = QLineEdit()
         self.height_filter = QLineEdit()
@@ -108,58 +124,79 @@ class LayersTab(QWidget):
         - If unchecked (visible=False), hide both top and bottom images and add a contour.
         This function does not switch sides.
         """
-        visible = (state == Qt.Checked)
+        visible = state == Qt.Checked
         # Update the flag on the board view.
         self.board_view.image_hidden_by_filter = not visible
 
         # Log the intended state along with the current side.
         current_side = self.board_view.flags.get_flag("side", "top")
-        self.log.log("debug", f"toggle_image_visibility: state={state} (visible={visible}), current_side={current_side}")
+        self.log.log(
+            "debug",
+            f"toggle_image_visibility: state={state} (visible={visible}), current_side={current_side}",
+        )
 
         if visible:
             # Ensure that only the current side's image is visible.
             if current_side == "top":
                 if self.board_view.top_pixmap_item:
-                    self.log.log("debug", "toggle_image_visibility: Showing top_pixmap_item.")
+                    self.log.log(
+                        "debug", "toggle_image_visibility: Showing top_pixmap_item."
+                    )
                     self.board_view.top_pixmap_item.setVisible(True)
                 if self.board_view.bottom_pixmap_item:
-                    self.log.log("debug", "toggle_image_visibility: Hiding bottom_pixmap_item.")
+                    self.log.log(
+                        "debug", "toggle_image_visibility: Hiding bottom_pixmap_item."
+                    )
                     self.board_view.bottom_pixmap_item.setVisible(False)
             else:  # current_side == "bottom"
                 if self.board_view.bottom_pixmap_item:
-                    self.log.log("debug", "toggle_image_visibility: Showing bottom_pixmap_item.")
+                    self.log.log(
+                        "debug", "toggle_image_visibility: Showing bottom_pixmap_item."
+                    )
                     self.board_view.bottom_pixmap_item.setVisible(True)
                 if self.board_view.top_pixmap_item:
-                    self.log.log("debug", "toggle_image_visibility: Hiding top_pixmap_item.")
+                    self.log.log(
+                        "debug", "toggle_image_visibility: Hiding top_pixmap_item."
+                    )
                     self.board_view.top_pixmap_item.setVisible(False)
             # Remove any existing board contour.
-            if hasattr(self.board_view, "board_contour_item") and self.board_view.board_contour_item:
-                self.log.log("debug", "toggle_image_visibility: Removing existing board contour.")
+            if (
+                hasattr(self.board_view, "board_contour_item")
+                and self.board_view.board_contour_item
+            ):
+                self.log.log(
+                    "debug", "toggle_image_visibility: Removing existing board contour."
+                )
                 self.board_view.scene.removeItem(self.board_view.board_contour_item)
                 self.board_view.board_contour_item = None
-            self.log.log("info", "PCB Image set to visible.")
+            self.log.log("debug", "PCB Image set to visible.")
         else:
             # Force both images to be hidden.
             if self.board_view.top_pixmap_item:
-                self.log.log("debug", "toggle_image_visibility: Hiding top_pixmap_item.")
+                self.log.log(
+                    "debug", "toggle_image_visibility: Hiding top_pixmap_item."
+                )
                 self.board_view.top_pixmap_item.setVisible(False)
             if self.board_view.bottom_pixmap_item:
-                self.log.log("debug", "toggle_image_visibility: Hiding bottom_pixmap_item.")
+                self.log.log(
+                    "debug", "toggle_image_visibility: Hiding bottom_pixmap_item."
+                )
                 self.board_view.bottom_pixmap_item.setVisible(False)
             # Add a board contour if not already present.
-            if not hasattr(self.board_view, "board_contour_item") or self.board_view.board_contour_item is None:
+            if (
+                not hasattr(self.board_view, "board_contour_item")
+                or self.board_view.board_contour_item is None
+            ):
                 self.log.log("debug", "toggle_image_visibility: Adding board contour.")
                 self.board_view.add_board_contour()
             else:
-                self.log.log("debug", "toggle_image_visibility: Board contour already exists.")
-            self.log.log("info", "PCB Image set to hidden; board contour displayed.")
-
-
-
-
+                self.log.log(
+                    "debug", "toggle_image_visibility: Board contour already exists."
+                )
+            self.log.log("debug", "PCB Image set to hidden; board contour displayed.")
 
     def toggle_pads_visibility(self, state):
-        visible = (state == Qt.Checked)
+        visible = state == Qt.Checked
         # Iterate over all pad items stored in DisplayLibrary.
         for item in self.display_library.displayed_objects.values():
             # Check that the item is a pad item (it is created as a SelectablePadItem).
@@ -168,7 +205,7 @@ class LayersTab(QWidget):
                 item.setVisible(visible)
             except Exception as e:
                 self.log.log("error", f"Error toggling pad visibility: {e}")
-        self.log.log("info", f"Pads visibility set to {visible}.")
+        self.log.log("debug", f"Pads visibility set to {visible}.")
 
     # ----- Pad Filter Methods -----
 
@@ -239,14 +276,14 @@ class LayersTab(QWidget):
             else:
                 pad_obj.visible = False
 
-        self.log.log("info", f"Filter applied: {count_matched} out of {count_total} pads are visible.")
+        self.log.log(
+            "debug",
+            f"Filter applied: {count_matched} out of {count_total} pads are visible.",
+        )
 
         # Clear and re-render the display so that only pads with visible == True are drawn.
         self.board_view.display_library.clear_all_rendered_objects()
         self.board_view.display_library.render_initial_objects()
-
-
-
 
     def reset_filter(self):
         """
@@ -269,12 +306,11 @@ class LayersTab(QWidget):
         for pad_obj in self.board_view.object_library.get_all_objects():
             pad_obj.visible = True
 
-        self.log.log("info", "Filter reset: all pads are now visible.")
+        self.log.log("debug", "Filter reset: all pads are now visible.")
 
         # Clear and re-render the display so that all pads are drawn.
         self.board_view.display_library.clear_all_rendered_objects()
         self.board_view.display_library.render_initial_objects()
-
 
     def reapply_filter(self):
         """
@@ -283,9 +319,16 @@ class LayersTab(QWidget):
         and the pad items have been re-rendered.
         """
         # Check if any filter field is set (you might check a few key fields).
-        if (self.pin_filter.text().strip() or self.channel_filter.text().strip() or
-            self.signal_filter.text().strip() or self.component_filter.text().strip() or
-            self.testpos_filter.currentText().strip() or self.tech_filter.currentText().strip() or
-            self.shape_filter.currentText().strip() or self.width_filter.text().strip() or
-            self.height_filter.text().strip() or self.hole_filter.text().strip()):
+        if (
+            self.pin_filter.text().strip()
+            or self.channel_filter.text().strip()
+            or self.signal_filter.text().strip()
+            or self.component_filter.text().strip()
+            or self.testpos_filter.currentText().strip()
+            or self.tech_filter.currentText().strip()
+            or self.shape_filter.currentText().strip()
+            or self.width_filter.text().strip()
+            or self.height_filter.text().strip()
+            or self.hole_filter.text().strip()
+        ):
             self.apply_filter()  # Reapply the filter if any field is not empty.
