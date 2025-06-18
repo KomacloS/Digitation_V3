@@ -2,18 +2,24 @@
 
 import json
 import os
-from logs.log_handler import LogHandler
+
+# Avoid circular import by delaying LogHandler import
+from typing import Optional, Any
 
 
 class Constants:
-    def __init__(self, file_path=None):
+    def __init__(self, file_path: Optional[str] = None, logger: Optional[Any] = None):
         if file_path is None:
             current_dir = os.path.dirname(os.path.abspath(__file__))
             file_path = os.path.join(current_dir, "constants.txt")
 
         self.file_path = file_path
-        self.data = {}
-        self.log = LogHandler()
+        self.data: dict[str, Any] = {}
+        if logger is None:
+            from logs.log_handler import LogHandler
+
+            logger = LogHandler()
+        self.log = logger
         try:
             with open(self.file_path, "r") as file:
                 self.data = json.load(file)
