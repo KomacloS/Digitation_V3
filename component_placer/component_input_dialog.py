@@ -67,6 +67,8 @@ class ComponentInputDialog(QDialog):
                 w.currentIndexChanged.connect(self._emit_live)
             elif hasattr(w, "toggled"):
                 w.toggled.connect(self._emit_live)
+            elif hasattr(w, "textChanged"):
+                w.textChanged.connect(self._emit_live)
 
     def _load_function_reference(self):
         """
