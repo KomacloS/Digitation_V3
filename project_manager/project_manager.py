@@ -1,8 +1,14 @@
 # project_manager/project_manager.py
 import time
 import os
-from PyQt5.QtCore import QObject, pyqtSignal, QSettings
-from PyQt5.QtWidgets import QFileDialog, QMessageBox, QInputDialog
+from PyQt5.QtCore import QObject, pyqtSignal, QSettings, Qt
+from PyQt5.QtWidgets import (
+    QFileDialog,
+    QMessageBox,
+    QInputDialog,
+    QProgressDialog,
+    QApplication,
+)
 from project_manager.project_settings_dialog import ProjectSettingsDialog
 from objects.nod_file import BoardNodFile
 from project_manager.nod_handler import NODHandler
@@ -12,6 +18,7 @@ from project_manager.alf_handler import save_alf_file
 from project_manager.project_settings import load_settings, save_settings
 from component_placer.bom_handler.bom_handler import BOMHandler
 from project_manager.backup_browser_dialog import BackupBrowserDialog
+from extract_visual_tasks import extract_visual_task_dict
 
 
 class ProjectManager(QObject):
@@ -240,26 +247,27 @@ class ProjectManager(QObject):
                 f"An error occurred while loading the project:\n{e}",
             )
 
-    def create_project_dialog(self):
+    def create_project_manual(self):
+        """Existing manual project creation workflow."""
         self.log.log(
-            "info", "[create_project_dialog] User requested 'Create Project' dialog."
+            "info", "[create_project_manual] User requested manual project creation."
         )
         self.main_window.current_project_path = None
         self.main_window.update_project_name("[None]")
         self.log.log(
-            "debug", "[create_project_dialog] current_project_path set to None."
+            "debug", "[create_project_manual] current_project_path set to None."
         )
         self.object_library.clear()
         self.log.log(
             "debug",
-            "[create_project_dialog] ObjectLibrary cleared => board is now blank.",
+            "[create_project_manual] ObjectLibrary cleared => board is now blank.",
         )
-        self.log.log("debug", "[create_project_dialog] Loading top image.")
+        self.log.log("debug", "[create_project_manual] Loading top image.")
         self.image_handler.load_image(side="top")
-        self.log.log("debug", "[create_project_dialog] Top image loaded.")
-        self.log.log("debug", "[create_project_dialog] Loading bottom image.")
+        self.log.log("debug", "[create_project_manual] Top image loaded.")
+        self.log.log("debug", "[create_project_manual] Loading bottom image.")
         self.image_handler.load_image(side="bottom")
-        self.log.log("debug", "[create_project_dialog] Bottom image loaded.")
+        self.log.log("debug", "[create_project_manual] Bottom image loaded.")
 
         # ── Ask for project settings immediately ─────────────────────
         dlg = ProjectSettingsDialog(self.main_window.constants, parent=self.main_window)
@@ -297,13 +305,13 @@ class ProjectManager(QObject):
 
         if reply == QMessageBox.Yes:
             self.log.log(
-                "debug", "[create_project_dialog] User chose YES => load_nod_advanced."
+                "debug", "[create_project_manual] User chose YES => load_nod_advanced."
             )
             self.load_nod_advanced()
         else:
             self.log.log(
                 "info",
-                "[create_project_dialog] User chose NO => staying blank (empty project).",
+                "[create_project_manual] User chose NO => staying blank (empty project).",
             )
             self.project_loaded = True
             self.auto_save_counter = 0
@@ -313,6 +321,109 @@ class ProjectManager(QObject):
         self.main_window.update_working_side_label()
 
         # Prompt user to select a location to save the new project
+        self.save_project_as_dialog()
+
+    def create_project_dialog(self):
+        """Prompt user for manual or automatic project creation."""
+        from ui.create_project_mode_dialog import CreateProjectModeDialog
+
+        dlg = CreateProjectModeDialog(self.main_window)
+
+        def _manual():
+            dlg.accept()
+            self.create_project_manual()
+
+        def _auto():
+            dlg.accept()
+            self.create_project_automatic()
+
+        dlg.manual_button.clicked.connect(_manual)
+        dlg.auto_button.clicked.connect(_auto)
+        dlg.exec_()
+
+    def create_project_automatic(self):
+        """Automatic creation using data from a VIVA MDB file."""
+        self.log.log("info", "[create_project_automatic] User selected automatic creation.")
+        self.main_window.current_project_path = None
+        self.main_window.update_project_name("[None]")
+        self.object_library.clear()
+
+        mdb_path, _ = QFileDialog.getOpenFileName(
+            self.main_window,
+            "Select VIVA MDB File",
+            "",
+            "MDB Files (*.mdb);;All Files (*)",
+        )
+        if not mdb_path:
+            self.log.log("info", "Automatic project creation canceled: no MDB selected.")
+            return
+
+        progress = QProgressDialog("Uploading data...", None, 0, 0, self.main_window)
+        progress.setWindowTitle("Uploading Data")
+        progress.setCancelButton(None)
+        progress.setWindowModality(Qt.WindowModal)
+        progress.show()
+        QApplication.processEvents()
+
+        try:
+            data = extract_visual_task_dict(mdb_path)
+        except Exception as exc:
+            progress.close()
+            QMessageBox.critical(self.main_window, "MDB Error", str(exc))
+            return
+
+        mdb_dir = os.path.dirname(mdb_path)
+        top_img = os.path.join(mdb_dir, data.get("ImageFile", ""))
+        bottom_img = os.path.join(mdb_dir, data.get("BottomImageFile", ""))
+
+        if os.path.exists(top_img):
+            self.image_handler.load_image(file_path=top_img, side="top")
+        if os.path.exists(bottom_img):
+            self.image_handler.load_image(file_path=bottom_img, side="bottom")
+
+        consts = self.main_window.constants
+        consts.set("mm_per_pixels_top", float(data.get("ImagePxMmX", 0.0)))
+        consts.set("mm_per_pixels_bot", float(data.get("BottomImagePxMmX", 0.0)))
+        consts.set("TopImageXCoord", float(data.get("ImageXCoord", 0.0)))
+        consts.set("TopImageYCoord", float(data.get("ImageYCoord", 0.0)))
+        consts.set("BottomImageXCoord", float(data.get("BottomImageXCoord", 0.0)))
+        consts.set("BottomImageYCoord", float(data.get("BottomImageYCoord", 0.0)))
+        consts.save()
+
+        self.main_window.board_view.converter.set_mm_per_pixels_top(consts.get("mm_per_pixels_top"))
+        self.main_window.board_view.converter.set_mm_per_pixels_bot(consts.get("mm_per_pixels_bot"))
+        self.main_window.board_view.converter.set_origin_mm(
+            consts.get("TopImageXCoord"), consts.get("TopImageYCoord"), side="top"
+        )
+        self.main_window.board_view.converter.set_origin_mm(
+            consts.get("BottomImageXCoord"), consts.get("BottomImageYCoord"), side="bottom"
+        )
+        self.save_project_settings()
+
+        progress.close()
+        QSettings("MyCompany", "PCB Digitization Tool").setValue("last_numbers", "{}")
+
+        reply = QMessageBox.question(
+            self.main_window,
+            "Load .nod?",
+            "Would you like to load an existing .nod file now?\n(Choose 'No' to start with a blank project.)",
+            QMessageBox.Yes | QMessageBox.No,
+        )
+
+        if reply == QMessageBox.Yes:
+            self.log.log(
+                "debug", "[create_project_automatic] User chose YES => load_nod_advanced."
+            )
+            self.load_nod_advanced()
+        else:
+            self.log.log(
+                "info", "[create_project_automatic] User chose NO => staying blank (empty project)."
+            )
+            self.project_loaded = True
+            self.auto_save_counter = 0
+            self.project_loaded_signal.emit()
+
+        self.main_window.update_working_side_label()
         self.save_project_as_dialog()
 
     def save_project_dialog(self):
