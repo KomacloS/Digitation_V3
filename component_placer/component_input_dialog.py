@@ -8,13 +8,12 @@ from PyQt5.QtWidgets import (
     QFormLayout,
     QHBoxLayout,
     QLineEdit,
-    QSpinBox,
     QComboBox,
     QCheckBox,
     QDialogButtonBox,
     QMessageBox,
 )
-from PyQt5.QtGui import QDoubleValidator
+from PyQt5.QtGui import QDoubleValidator, QIntValidator
 from PyQt5.QtCore import Qt, QSettings, pyqtSlot, pyqtSignal
 from logs.log_handler import LogHandler
 from component_placer.bom_handler.bom_handler import BOMHandler
@@ -141,13 +140,12 @@ class ComponentInputDialog(QDialog):
         self.auto_numbering_checkbox.toggled.connect(self.update_component_name)
 
         # ── 2. QUICK-CREATION FIELDS ──────────────────────────────────────
-        # Use spin boxes so the user can increment/decrement with arrows
-        self.x_pins_edit = QSpinBox()
-        self.x_pins_edit.setRange(1, 1000)
-        self.x_pins_edit.setValue(1)
-        self.y_pins_edit = QSpinBox()
-        self.y_pins_edit.setRange(1, 1000)
-        self.y_pins_edit.setValue(1)
+        self.x_pins_edit = QLineEdit()
+        self.x_pins_edit.setValidator(QIntValidator(1, 1000, self.x_pins_edit))
+        self.x_pins_edit.setText("1")
+        self.y_pins_edit = QLineEdit()
+        self.y_pins_edit.setValidator(QIntValidator(1, 1000, self.y_pins_edit))
+        self.y_pins_edit.setText("1")
 
         # numbering pattern selector
         self.numbering_combo = QComboBox()
@@ -412,25 +410,19 @@ class ComponentInputDialog(QDialog):
 
         # Flush any un-committed editor text (LineEdits need no special handling)
 
-        self.x_pins_edit.interpretText()
-        self.y_pins_edit.interpretText()
-
         return {
             "component_name": self.name_edit.text().strip(),
             "function": self.function_combo.currentText(),
-            "part_number": self.part_number_edit.text().strip(),
-            "value": self.value_edit.text().strip(),
-            "package": self.package_edit.text().strip(),
-            "x_pins": int(self.x_pins_edit.value()),
-            "y_pins": int(self.y_pins_edit.value()),
+            "x_pins": int(self.x_pins_edit.text() or 0),
+            "y_pins": int(self.y_pins_edit.text() or 0),
             "number_scheme": self.numbering_combo.currentIndex(),  # 0-circular / 1-rows / 2-cols
             "test_side": self.side_combo.currentText().lower(),
             "testability": self.testability_combo.currentText(),
             "technology": self.tech_combo.currentText(),
             "shape": self.shape_combo.currentText(),
-            "width": self._safe_float(self.width_edit.text()),
-            "height": self._safe_float(self.height_edit.text()),
-            "hole": self._safe_float(self.hole_edit.text()),
+            "width": float(self.width_edit.text() or 0.0),
+            "height": float(self.height_edit.text() or 0.0),
+            "hole": float(self.hole_edit.text() or 0.0),
             "create_prefix": self.create_prefix_checkbox.isChecked(),
         }
 
@@ -442,11 +434,8 @@ class ComponentInputDialog(QDialog):
             self.function_combo.itemText(i) for i in range(self.function_combo.count())
         ]:
             self.function_combo.setCurrentText(func)
-        self.part_number_edit.setText(params.get("part_number", ""))
-        self.value_edit.setText(params.get("value", ""))
-        self.package_edit.setText(params.get("package", ""))
-        self.x_pins_edit.setValue(int(params.get("x_pins", 1)))
-        self.y_pins_edit.setValue(int(params.get("y_pins", 1)))
+        self.x_pins_edit.setText(str(int(params.get("x_pins", 1))))
+        self.y_pins_edit.setText(str(int(params.get("y_pins", 1))))
         self.numbering_combo.setCurrentIndex(int(params.get("number_scheme", 0)))
         side = params.get("test_side", "top").capitalize()
         if side not in {"Top", "Bottom", "Both"}:
@@ -472,14 +461,6 @@ class ComponentInputDialog(QDialog):
             lbl = self.form_layout.labelForField(w)
             if lbl:
                 lbl.setVisible(show)
-
-    @staticmethod
-    def _safe_float(text: str) -> float:
-        """Return float(text) but fall back to 0.0 on ValueError."""
-        try:
-            return float(text)
-        except (TypeError, ValueError):
-            return 0.0
 
     def _emit_live(self, *args):
         """Emit quick_params_changed with the current params."""
