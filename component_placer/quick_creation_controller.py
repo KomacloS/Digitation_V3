@@ -217,6 +217,8 @@ class QuickCreationController(QObject):
         if self.last_params:
             prm = dict(self.last_params)
             prm["test_side"] = self.flags.get_flag("side", "top")
+            # Reset component name so auto-numbering works like normal placement
+            prm.pop("component_name", None)
             dlg.set_quick_params(prm)
         else:
             dlg.side_combo.setCurrentText(

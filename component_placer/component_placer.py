@@ -143,7 +143,7 @@ class ComponentPlacer(QObject):
         elif hasattr(self, "_move_channels") and self._move_channels:
             comp_name = self.footprint["pads"][0].get("component_name", "Unnamed")
             x_mm, y_mm = self.board_view.converter.pixels_to_mm(scene_x, scene_y)
-            self._finalize_footprint_placement(x_mm, y_mm, comp_name)
+            self._finalize_footprint_placement(x_mm, y_mm, {"component_name": comp_name})
         else:
             # Create the input dialog and pass the shared BOMHandler so the dialog can update the BOM directly.
             dialog = ComponentInputDialog(bom_handler=self.bom_handler)
@@ -167,7 +167,7 @@ class ComponentPlacer(QObject):
                 return
 
             x_mm, y_mm = self.board_view.converter.pixels_to_mm(scene_x, scene_y)
-            self._finalize_footprint_placement(x_mm, y_mm, comp_name)
+            self._finalize_footprint_placement(x_mm, y_mm, input_data)
 
     def activate_placement(self, reset_orientation: bool = True):
         if not self.footprint:
@@ -262,10 +262,10 @@ class ComponentPlacer(QObject):
         x_mm, y_mm = self.board_view.converter.pixels_to_mm(
             scene_pos.x(), scene_pos.y()
         )
-        self._finalize_footprint_placement(x_mm, y_mm, comp_name)
+        self._finalize_footprint_placement(x_mm, y_mm, input_data)
 
     def _finalize_footprint_placement(
-        self, x_mm: float, y_mm: float, initial_comp_name: str
+        self, x_mm: float, y_mm: float, input_data: dict
     ):
 
         def transform_pad(pad):
@@ -340,21 +340,33 @@ class ComponentPlacer(QObject):
         is_move = hasattr(self, "_move_channels") and self._move_channels
 
         if is_move:
-            # MOVE MODE: We update existing objects in-place, then do a partial re-render via bulk_update_objects(...)
             comp_name = self.footprint["pads"][0].get(
-                "component_name", initial_comp_name
+                "component_name", input_data.get("component_name", "Unnamed")
             )
         else:
-            # Normal (new) placement logic
-            comp_name_result, merge_choice, highest_pin, missing_pins = (
-                self._handle_duplicate_name_or_offset_pins(initial_comp_name)
-            )
-            if comp_name_result is None:
-                self.log.log(
-                    "warning", "Placement canceled due to duplicate name handling."
+            comp_name = input_data.get("component_name", "")
+            while True:
+                comp_name_result, merge_choice, highest_pin, missing_pins = (
+                    self._handle_duplicate_name_or_offset_pins(comp_name)
                 )
-                self.deactivate_placement()
-                return
+                if comp_name_result is None:
+                    dlg = ComponentInputDialog(bom_handler=self.bom_handler)
+                    dlg.name_edit.setText(comp_name)
+                    dlg.function_combo.setCurrentText(input_data.get("function", ""))
+                    dlg.part_number_edit.setText(input_data.get("part_number", ""))
+                    dlg.value_edit.setText(input_data.get("value", ""))
+                    dlg.package_edit.setText(input_data.get("package", ""))
+                    dlg.auto_prefix_checkbox.setChecked(input_data.get("auto_prefix", True))
+                    dlg.auto_numbering_checkbox.setChecked(
+                        input_data.get("auto_numbering", False)
+                    )
+                    if dlg.exec_() != dlg.Accepted:
+                        self.deactivate_placement()
+                        return
+                    input_data = dlg.get_data()
+                    comp_name = input_data.get("component_name", "")
+                    continue
+                break
             user_comp_name = comp_name_result
             comp_name = user_comp_name
             if self.nod_file and os.path.exists(self.nod_file.nod_path):
@@ -702,17 +714,27 @@ class ComponentPlacer(QObject):
         pads_sorted = sorted(fp["pads"], key=lambda p: int(str(p["pin"])))
         input_name = self.quick_params.get("component_name", "QC-COMP")
 
-        comp_name_res, merge_choice, highest_pin, missing_pins = (
-            self._handle_duplicate_name_or_offset_pins(input_name)
-        )
-        if comp_name_res is None:
-            log.warning(
-                "[QC] placement canceled due to duplicate name dialog.",
-                module="QuickCreate",
-                func="place_quick",
+        while True:
+            comp_name_res, merge_choice, highest_pin, missing_pins = (
+                self._handle_duplicate_name_or_offset_pins(input_name)
             )
-            self.cancel_quick()
-            return
+            if comp_name_res is None:
+                dlg = ComponentInputDialog(
+                    parent=self.board_view.window(), quick=True
+                )
+                dlg.set_quick_params(self.quick_params)
+                if dlg.exec_() != dlg.Accepted:
+                    log.warning(
+                        "[QC] placement canceled due to duplicate name dialog.",
+                        module="QuickCreate",
+                        func="place_quick",
+                    )
+                    self.cancel_quick()
+                    return
+                self.quick_params = dlg.get_quick_params()
+                input_name = self.quick_params.get("component_name", "QC-COMP")
+                continue
+            break
 
         comp_name = comp_name_res
         merge_counter = 1
@@ -796,11 +818,11 @@ class ComponentPlacer(QObject):
 
         if self.bom_handler:
             self.bom_handler.add_component(
-                self.quick_params["component_name"],
-                self.quick_params["function"],
-                "",
-                "",
-                "",
+                self.quick_params.get("component_name", ""),
+                self.quick_params.get("function", ""),
+                self.quick_params.get("value", ""),
+                self.quick_params.get("package", ""),
+                self.quick_params.get("part_number", ""),
             )
 
         if hasattr(self.board_view, "select_objects"):
