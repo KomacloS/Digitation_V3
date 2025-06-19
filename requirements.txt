@@ -1,3 +1,5 @@
 PyQt5>=5.15.10
 pandas>=2.0
 openpyxl>=3.1
+pyodbc>=4.0
+tabulate>=0.9
