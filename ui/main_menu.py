@@ -717,9 +717,8 @@ class MainWindow(QMainWindow):
     def on_switch_side(self):
         self.log.log("debug", "Switch Side button clicked.")
         self.board_view.switch_side()
-        # After switching, update the working side label.
-        current_side = self.board_view.flags.get_flag("side", "top").capitalize()
-        self.working_side_label.setText(f"Working Side: {current_side}")
+        # After switching, update the side label consistently.
+        self.update_working_side_label()
 
     def open_search_dialog(self):
         self.log.log("debug", "Opening Search Dialog.")
