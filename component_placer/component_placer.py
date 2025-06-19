@@ -143,9 +143,7 @@ class ComponentPlacer(QObject):
         elif hasattr(self, "_move_channels") and self._move_channels:
             comp_name = self.footprint["pads"][0].get("component_name", "Unnamed")
             x_mm, y_mm = self.board_view.converter.pixels_to_mm(scene_x, scene_y)
-            self._finalize_footprint_placement(
-                x_mm, y_mm, {"component_name": comp_name}
-            )
+            self._finalize_footprint_placement(x_mm, y_mm, comp_name)
         else:
             # Create the input dialog and pass the shared BOMHandler so the dialog can update the BOM directly.
             dialog = ComponentInputDialog(bom_handler=self.bom_handler)
@@ -154,17 +152,7 @@ class ComponentPlacer(QObject):
                 self.project_manager.project_loaded_signal.connect(
                     dialog.reset_auto_numbering
                 )
-
-            params = None
-            while True:
-                if params:
-                    dialog.set_data(params)
-
-                if dialog.exec_() != dialog.Accepted:
-                    self.log.log("warning", "Placement canceled via input dialog.")
-                    self.deactivate_placement()
-                    return
-
+            if dialog.exec_() == dialog.Accepted:
                 input_data = dialog.get_data()
                 comp_name = input_data.get("component_name", "").strip()
                 if not comp_name:
@@ -173,11 +161,13 @@ class ComponentPlacer(QObject):
                     )
                     self.deactivate_placement()
                     return
+            else:
+                self.log.log("warning", "Placement canceled via input dialog.")
+                self.deactivate_placement()
+                return
 
-                x_mm, y_mm = self.board_view.converter.pixels_to_mm(scene_x, scene_y)
-                if self._finalize_footprint_placement(x_mm, y_mm, input_data):
-                    break
-                params = input_data
+            x_mm, y_mm = self.board_view.converter.pixels_to_mm(scene_x, scene_y)
+            self._finalize_footprint_placement(x_mm, y_mm, comp_name)
 
     def activate_placement(self, reset_orientation: bool = True):
         if not self.footprint:
@@ -255,16 +245,7 @@ class ComponentPlacer(QObject):
                 dialog.reset_auto_numbering
             )
 
-        params = None
-        while True:
-            if params:
-                dialog.set_data(params)
-
-            if dialog.exec_() != dialog.Accepted:
-                self.log.log("warning", "Placement canceled via input dialog.")
-                self.deactivate_placement()
-                return
-
+        if dialog.exec_() == dialog.Accepted:
             input_data = dialog.get_data()
             comp_name = input_data.get("component_name", "").strip()
             if not comp_name:
@@ -273,17 +254,19 @@ class ComponentPlacer(QObject):
                 )
                 self.deactivate_placement()
                 return
+        else:
+            self.log.log("warning", "Placement canceled via input dialog.")
+            self.deactivate_placement()
+            return
 
-            x_mm, y_mm = self.board_view.converter.pixels_to_mm(
-                scene_pos.x(), scene_pos.y()
-            )
-            if self._finalize_footprint_placement(x_mm, y_mm, input_data):
-                break
-            params = input_data
+        x_mm, y_mm = self.board_view.converter.pixels_to_mm(
+            scene_pos.x(), scene_pos.y()
+        )
+        self._finalize_footprint_placement(x_mm, y_mm, comp_name)
 
     def _finalize_footprint_placement(
-        self, x_mm: float, y_mm: float, input_data: dict
-    ) -> bool:
+        self, x_mm: float, y_mm: float, initial_comp_name: str
+    ):
 
         def transform_pad(pad):
             rad_val = radians(self.footprint_rotation)
@@ -357,16 +340,21 @@ class ComponentPlacer(QObject):
         is_move = hasattr(self, "_move_channels") and self._move_channels
 
         if is_move:
+            # MOVE MODE: We update existing objects in-place, then do a partial re-render via bulk_update_objects(...)
             comp_name = self.footprint["pads"][0].get(
-                "component_name", input_data.get("component_name", "Unnamed")
+                "component_name", initial_comp_name
             )
         else:
-            comp_name = input_data.get("component_name", "")
+            # Normal (new) placement logic
             comp_name_result, merge_choice, highest_pin, missing_pins = (
-                self._handle_duplicate_name_or_offset_pins(comp_name)
+                self._handle_duplicate_name_or_offset_pins(initial_comp_name)
             )
             if comp_name_result is None:
-                return False
+                self.log.log(
+                    "warning", "Placement canceled due to duplicate name handling."
+                )
+                self.deactivate_placement()
+                return
             user_comp_name = comp_name_result
             comp_name = user_comp_name
             if self.nod_file and os.path.exists(self.nod_file.nod_path):
@@ -494,8 +482,6 @@ class ComponentPlacer(QObject):
         if not is_move:
             # Optionally auto-reactivate so user can place another copy
             self.activate_placement(reset_orientation=False)
-
-        return True
 
     def _convert_objects_to_footprint(self, board_objects: List[BoardObject]) -> dict:
         if not board_objects:
@@ -716,25 +702,17 @@ class ComponentPlacer(QObject):
         pads_sorted = sorted(fp["pads"], key=lambda p: int(str(p["pin"])))
         input_name = self.quick_params.get("component_name", "QC-COMP")
 
-        while True:
-            comp_name_res, merge_choice, highest_pin, missing_pins = (
-                self._handle_duplicate_name_or_offset_pins(input_name)
+        comp_name_res, merge_choice, highest_pin, missing_pins = (
+            self._handle_duplicate_name_or_offset_pins(input_name)
+        )
+        if comp_name_res is None:
+            log.warning(
+                "[QC] placement canceled due to duplicate name dialog.",
+                module="QuickCreate",
+                func="place_quick",
             )
-            if comp_name_res is None:
-                dlg = ComponentInputDialog(parent=self.board_view.window(), quick=True)
-                dlg.set_quick_params(self.quick_params)
-                if dlg.exec_() != dlg.Accepted:
-                    log.warning(
-                        "[QC] placement canceled due to duplicate name dialog.",
-                        module="QuickCreate",
-                        func="place_quick",
-                    )
-                    self.cancel_quick()
-                    return
-                self.quick_params = dlg.get_quick_params()
-                input_name = self.quick_params.get("component_name", "QC-COMP")
-                continue
-            break
+            self.cancel_quick()
+            return
 
         comp_name = comp_name_res
         merge_counter = 1
@@ -818,11 +796,11 @@ class ComponentPlacer(QObject):
 
         if self.bom_handler:
             self.bom_handler.add_component(
-                self.quick_params.get("component_name", ""),
-                self.quick_params.get("function", ""),
-                self.quick_params.get("value", ""),
-                self.quick_params.get("package", ""),
-                self.quick_params.get("part_number", ""),
+                self.quick_params["component_name"],
+                self.quick_params["function"],
+                "",
+                "",
+                "",
             )
 
         if hasattr(self.board_view, "select_objects"):
