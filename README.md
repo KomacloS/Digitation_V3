@@ -24,9 +24,15 @@ python main.py
 * 📸 **Pad digitisation GUI** – place pads, anchors, component footprints on high‑res board images  
 * 📊 **BOM / ALF verifier** – highlight mismatches between schematic and physical layout  
 * 🛠 **Quick placer & ghost overlay** – rapid placement with row/column logic and visual feedback  
-* 🔥 **Laser‑solder thermal simulator** – predict optimal power/time for through‑hole pads  
-* 🔌 **Protocol helpers** – SPI / MDIO scripting utilities and packet logger  
+* 🔌 **Protocol helpers** – SPI / MDIO scripting utilities and packet logger
 * 🧰 **Extensible plugin architecture** – add new component libraries or exporters easily
+
+## Creating Projects
+
+Choose **Create Project** from the menu and select either:
+
+* **Manual** – pick images and fill in settings yourself.
+* **Automatic** – select a VIVA `.mdb` file and the tool loads images and coordinates for you (an "Uploading data" dialog will appear).
 
 ## Roadmap
 
