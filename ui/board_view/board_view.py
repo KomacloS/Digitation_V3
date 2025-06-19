@@ -412,6 +412,7 @@ class BoardView(QGraphicsView):
                 follow_mouse=follow_mouse,
             )
 
+
     def fit_in_view(self):
         if not self.current_pixmap_item:
             self.log.log("warning", "No current pixmap item to fit.")
