@@ -42,6 +42,7 @@ class QuickCreationController(QObject):
         self.selected_anchor = None
         self.quick_anchors = self.anchors  # alias used by ComponentPlacer
         self.last_params = None
+        self._dup_result = None
 
         # --- connect signals -----------------------------------------------
         self.input_handler.mouse_clicked.connect(self._on_click)
@@ -212,11 +213,17 @@ class QuickCreationController(QObject):
 
     # ───────────────────────────────────────── dialog ---------------------
     def _open_dialog(self):
-        dlg = ComponentInputDialog(parent=self.board_view.window(), quick=True)
+        dlg = ComponentInputDialog(
+            parent=self.board_view.window(),
+            quick=True,
+            accept_callback=self._validate_quick_accept,
+        )
         dlg.setWindowModality(Qt.NonModal)
         if self.last_params:
             prm = dict(self.last_params)
             prm["test_side"] = self.flags.get_flag("side", "top")
+            # Reset component name so auto-numbering works like normal placement
+            prm.pop("component_name", None)
             dlg.set_quick_params(prm)
         else:
             dlg.side_combo.setCurrentText(
@@ -229,6 +236,17 @@ class QuickCreationController(QObject):
         self.dialog = dlg
         # Immediately refresh ghost using current dialog parameters
         self._live_params(dlg.get_quick_params())
+
+    def _validate_quick_accept(self, data: dict) -> bool:
+        """Check for duplicate names before the dialog closes."""
+        res = self.placer._handle_duplicate_name_or_offset_pins(
+            data.get("component_name", "")
+        )
+        if res[0] is None:
+            # User canceled the duplicate dialog; keep this one open
+            return False
+        self._dup_result = res
+        return True
 
     # ─────────────── dialog slots ───────────────────────────────────
     def _live_params(self, prm: dict):
@@ -257,7 +275,7 @@ class QuickCreationController(QObject):
         self.last_params = qp
         self.placer.quick_anchors = self.anchors
         self.placer.update_quick_footprint(self.anchors, qp)
-        self.placer.place_quick()
+        self.placer.place_quick(dup_result=self._dup_result)
 
         self.deactivate()
 
@@ -269,6 +287,7 @@ class QuickCreationController(QObject):
         self.anchors = {"A": None, "B": None}
         self.quick_anchors = self.anchors
         self.selected_anchor = None
+        self._dup_result = None
 
     def _hit_test(self, aid: str, x_scene: float, y_scene: float) -> bool:
         ax_mm, ay_mm = self.anchors.get(aid) or (None, None)
