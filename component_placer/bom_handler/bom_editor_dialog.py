@@ -30,6 +30,8 @@ class BOMEditorDialog(QDialog):
         self.bom_handler = bom_handler
         self.board_set = board_component_names  # a set of board component names
         self.setWindowTitle("BOM Editor - Mismatch Fix")
+        # Make the dialog larger by default
+        self.resize(800, 600)
         
         # Compute mismatch sets (missing: on board not in BOM, extra: in BOM not on board)
         self.missing_set, self.extra_set = self._compute_mismatch()
