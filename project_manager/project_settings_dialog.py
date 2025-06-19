@@ -6,9 +6,13 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QPushButton,
     QLabel,
+    QFileDialog,
+    QMessageBox,
 )
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QDoubleValidator
+
+from extract_visual_tasks import extract_visual_task_dict
 
 
 class ProjectSettingsDialog(QDialog):
@@ -64,6 +68,10 @@ class ProjectSettingsDialog(QDialog):
 
         layout.addLayout(form)
 
+        self.mdb_btn = QPushButton("Choose MDB…")
+        self.mdb_btn.clicked.connect(self.choose_mdb)
+        layout.addWidget(self.mdb_btn)
+
         buttons = QHBoxLayout()
         ok_btn = QPushButton("OK")
         cancel_btn = QPushButton("Cancel")
@@ -83,3 +91,22 @@ class ProjectSettingsDialog(QDialog):
             "TopImageXCoord": float(self.top_x_edit.text() or 0.0),
             "TopImageYCoord": float(self.top_y_edit.text() or 0.0),
         }
+
+    def choose_mdb(self) -> None:
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Select MDB File", "", "MDB Files (*.mdb);;All Files (*)"
+        )
+        if not path:
+            return
+        try:
+            data = extract_visual_task_dict(path)
+        except Exception as e:
+            QMessageBox.critical(self, "MDB Error", str(e))
+            return
+
+        self.mm_top_edit.setText(str(data.get("ImagePxMmX", self.mm_top_edit.text())))
+        self.mm_bot_edit.setText(str(data.get("BottomImagePxMmX", self.mm_bot_edit.text())))
+        self.bottom_x_edit.setText(str(data.get("BottomImageXCoord", self.bottom_x_edit.text())))
+        self.bottom_y_edit.setText(str(data.get("BottomImageYCoord", self.bottom_y_edit.text())))
+        self.top_x_edit.setText(str(data.get("ImageXCoord", self.top_x_edit.text())))
+        self.top_y_edit.setText(str(data.get("ImageYCoord", self.top_y_edit.text())))
