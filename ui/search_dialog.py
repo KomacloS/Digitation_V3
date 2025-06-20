@@ -50,7 +50,7 @@ class SearchDialog(QDialog):
         self.component_line_edit.setPlaceholderText("Enter component")
         self.comp_model = QStringListModel([])
         self.comp_completer = QCompleter(self.comp_model, self)
-        self.comp_completer.setCaseSensitivity(Qt.CaseInsensitive)
+        self.comp_completer.setCaseSensitivity(Qt.CaseSensitive)
         self.component_line_edit.setCompleter(self.comp_completer)
         self.comp_error_action = self.component_line_edit.addAction(error_icon, QLineEdit.TrailingPosition)
         self.comp_error_action.setVisible(False)
@@ -66,7 +66,7 @@ class SearchDialog(QDialog):
         self.pin_line_edit.setEnabled(False)
         self.pin_model = QStringListModel([])
         self.pin_completer = QCompleter(self.pin_model, self)
-        self.pin_completer.setCaseSensitivity(Qt.CaseInsensitive)
+        self.pin_completer.setCaseSensitivity(Qt.CaseSensitive)
         self.pin_line_edit.setCompleter(self.pin_completer)
         self.pin_error_action = self.pin_line_edit.addAction(error_icon, QLineEdit.TrailingPosition)
         self.pin_error_action.setVisible(False)
@@ -81,7 +81,7 @@ class SearchDialog(QDialog):
         self.signal_line_edit.setPlaceholderText("Enter signal")
         self.signal_model = QStringListModel([])
         self.signal_completer = QCompleter(self.signal_model, self)
-        self.signal_completer.setCaseSensitivity(Qt.CaseInsensitive)
+        self.signal_completer.setCaseSensitivity(Qt.CaseSensitive)
         self.signal_line_edit.setCompleter(self.signal_completer)
         self.signal_error_action = self.signal_line_edit.addAction(error_icon, QLineEdit.TrailingPosition)
         self.signal_error_action.setVisible(False)
@@ -96,7 +96,7 @@ class SearchDialog(QDialog):
         self.channel_line_edit.setPlaceholderText("Enter channel")
         self.channel_model = QStringListModel([])
         self.channel_completer = QCompleter(self.channel_model, self)
-        self.channel_completer.setCaseSensitivity(Qt.CaseInsensitive)
+        self.channel_completer.setCaseSensitivity(Qt.CaseSensitive)
         self.channel_line_edit.setCompleter(self.channel_completer)
         self.channel_error_action = self.channel_line_edit.addAction(error_icon, QLineEdit.TrailingPosition)
         self.channel_error_action.setVisible(False)
@@ -188,7 +188,7 @@ class SearchDialog(QDialog):
         valid = False
         if field == "component":
             valid_list = self.comp_model.stringList()
-            valid = any(item.lower() == text.lower() for item in valid_list)
+            valid = text in valid_list
             self.comp_error_action.setVisible(not valid)
             self.component_line_edit.setStyleSheet("" if valid else "border: 1px solid red;")
         elif field == "pin":
@@ -229,14 +229,27 @@ class SearchDialog(QDialog):
 
         # Query candidate pads based on the driver field.
         if driver == "component":
-            candidates = [pad for pad in self.search_library.object_library.get_all_objects()
-                          if pad.component_name.lower().startswith(comp_text.lower())]
+            candidates = [
+                pad
+                for pad in self.search_library.object_library.get_all_objects()
+                if pad.component_name.startswith(comp_text)
+            ]
         elif driver == "pin":
-            candidates = [] if not comp_text else [pad for pad in self.search_library.object_library.get_all_objects()
-                          if pad.component_name.lower() == comp_text.lower() and str(pad.pin).startswith(pin_text)]
+            candidates = (
+                []
+                if not comp_text
+                else [
+                    pad
+                    for pad in self.search_library.object_library.get_all_objects()
+                    if pad.component_name == comp_text and str(pad.pin).startswith(pin_text)
+                ]
+            )
         elif driver == "signal":
-            candidates = [pad for pad in self.search_library.object_library.get_all_objects()
-                          if pad.signal and pad.signal.lower().startswith(signal_text.lower())]
+            candidates = [
+                pad
+                for pad in self.search_library.object_library.get_all_objects()
+                if pad.signal and pad.signal.startswith(signal_text)
+            ]
         elif driver == "channel":
             candidates = [pad for pad in self.search_library.object_library.get_all_objects()
                           if pad.channel is not None and str(pad.channel).startswith(channel_text)]
@@ -311,7 +324,7 @@ class SearchDialog(QDialog):
                 continue
             if 'pin' in criteria and str(pad.pin) != criteria['pin']:
                 continue
-            if 'signal' in criteria and (not pad.signal or pad.signal.lower() != criteria['signal'].lower()):
+            if 'signal' in criteria and (not pad.signal or pad.signal != criteria['signal']):
                 continue
             if 'channel' in criteria:
                 if isinstance(criteria['channel'], int):

@@ -402,23 +402,24 @@ class ComponentPlacer(QObject):
                     self.log.log("warning", f"No object found for channel {ch}.")
                     continue
 
-                # --------- 1) update live fields ----------
-                orig_obj.x_coord_mm = pos_x
-                orig_obj.y_coord_mm = pos_y
-                orig_obj.angle_deg = final_angle
-                orig_obj.test_position = side  # keep side in sync
+                # Create a copy so we don't mutate the library before push_state
+                obj_copy = copy.deepcopy(orig_obj)
 
-                # --------- 2) sync backup fields ----------
-                # Most save / export code serialises the “_original” attrs
-                # if they exist, so keep them coherent:
+                # --------- 1) update live fields on the copy ----------
+                obj_copy.x_coord_mm = pos_x
+                obj_copy.y_coord_mm = pos_y
+                obj_copy.angle_deg = final_angle
+                obj_copy.test_position = side  # keep side in sync
+
+                # --------- 2) sync backup fields on the copy ----------
                 for attr_name, value in (
                     ("x_coord_mm_original", pos_x),
                     ("y_coord_mm_original", pos_y),
                     ("angle_deg_original", final_angle),
                 ):
-                    setattr(orig_obj, attr_name, value)
+                    setattr(obj_copy, attr_name, value)
 
-                updates.append(orig_obj)
+                updates.append(obj_copy)
 
             # Push the mutations through the partial-render path
             if updates:
