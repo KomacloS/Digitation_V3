@@ -1,5 +1,6 @@
 from typing import List, Dict
 import os
+from constants import FUNCTIONS_REF_PATH
 from PyQt5.QtWidgets import (
     QDialog, QTableWidget, QTableWidgetItem, QVBoxLayout, QHBoxLayout,
     QLabel, QPushButton, QComboBox, QMessageBox
@@ -85,13 +86,13 @@ class BOMEditorDialog(QDialog):
     def _load_function_reference(self):
         """
         Loads function options and their prefixes from the reference text file.
-        The file "functions_ref.txt" (located in the same folder as this module)
-        should have one line per entry in the format:
+        The file ``constants/functions_ref.txt`` should have one line per entry
+        in the format:
             FUNCTION_NAME,PREFIX
         Blank lines or lines starting with '#' are ignored.
         Returns a tuple: (list of function options, dict mapping function option to prefix)
         """
-        ref_file = os.path.join(os.path.dirname(__file__), "functions_ref.txt")
+        ref_file = FUNCTIONS_REF_PATH
         function_options = []
         prefix_mapping = {}
         try:

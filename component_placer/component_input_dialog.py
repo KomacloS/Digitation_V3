@@ -2,6 +2,7 @@
 
 import os
 import re
+from constants import FUNCTIONS_REF_PATH
 from PyQt5.QtWidgets import (
     QDialog,
     QVBoxLayout,
@@ -75,13 +76,11 @@ class ComponentInputDialog(QDialog):
 
     def _load_function_reference(self):
         """
-        Reads component_placer/bom_handler/functions_ref.txt for lines of the form:
+        Reads ``constants/functions_ref.txt`` for lines of the form::
             FUNCTION_NAME,PREFIX
-        Ignores blank or '#' lines.
+        Ignores blank or ``#`` lines.
         """
-        ref_file = os.path.join(
-            os.path.dirname(__file__), "bom_handler", "functions_ref.txt"
-        )
+        ref_file = FUNCTIONS_REF_PATH
         function_options, prefix_mapping = [], {}
         try:
             with open(ref_file, "r") as f:
