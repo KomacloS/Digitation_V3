@@ -17,10 +17,12 @@ class SearchLibrary:
         """
         self.log.log("debug", f"Searching for pad with Component: {component}, Pin: {pin}, Signal: {signal}, Channel: {channel}")
         for obj in self.object_library.get_all_objects():
-            if (obj.component_name.lower() == component.lower() and
-                str(obj.pin) == pin and
-                obj.signal.lower() == signal.lower() and
-                obj.channel == channel):
+            if (
+                obj.component_name == component
+                and str(obj.pin) == pin
+                and obj.signal == signal
+                and obj.channel == channel
+            ):
                 self.log.log("info", f"Pad found: {obj}")
                 self.log.log("debug", f"Pad coordinates: x={obj.x_coord_mm}, y={obj.y_coord_mm}")
                 return obj
@@ -34,7 +36,7 @@ class SearchLibrary:
         """
         self.log.log("debug", f"Searching for pad with Signal: {signal}")
         for obj in self.object_library.get_all_objects():
-            if obj.signal.lower() == signal.lower():
+            if obj.signal == signal:
                 self.log.log("info", f"Pad found by signal: {obj}")
                 return obj
         self.log.log("warning", f"No pad found for Signal: {signal}")
@@ -65,8 +67,13 @@ class SearchLibrary:
         """
         Retrieves a list of pins for the specified component.
         """
-        pins = sorted({str(obj.pin) for obj in self.object_library.get_all_objects()
-                      if obj.component_name.lower() == component.lower()})
+        pins = sorted(
+            {
+                str(obj.pin)
+                for obj in self.object_library.get_all_objects()
+                if obj.component_name == component
+            }
+        )
         self.log.log("debug", f"Retrieved pins for component '{component}': {pins}")
         return pins
 
@@ -74,8 +81,13 @@ class SearchLibrary:
         """
         Retrieves a list of signals for the specified component and pin.
         """
-        signals = sorted({obj.signal for obj in self.object_library.get_all_objects()
-                          if obj.component_name.lower() == component.lower() and str(obj.pin) == pin})
+        signals = sorted(
+            {
+                obj.signal
+                for obj in self.object_library.get_all_objects()
+                if obj.component_name == component and str(obj.pin) == pin
+            }
+        )
         self.log.log("debug", f"Retrieved signals for component '{component}' and pin '{pin}': {signals}")
         return signals
 
@@ -83,9 +95,16 @@ class SearchLibrary:
         """
         Retrieves a list of channels for the specified component, pin, and signal.
         """
-        channels = sorted({str(obj.channel) for obj in self.object_library.get_all_objects()
-                           if (obj.component_name.lower() == component.lower() and
-                               str(obj.pin) == pin and
-                               obj.signal.lower() == signal.lower())})
+        channels = sorted(
+            {
+                str(obj.channel)
+                for obj in self.object_library.get_all_objects()
+                if (
+                    obj.component_name == component
+                    and str(obj.pin) == pin
+                    and obj.signal == signal
+                )
+            }
+        )
         self.log.log("debug", f"Retrieved channels for component '{component}', pin '{pin}', signal '{signal}': {channels}")
         return channels

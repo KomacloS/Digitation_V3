@@ -1,4 +1,5 @@
 import time
+import copy
 from typing import List, Optional
 from PyQt5.QtWidgets import (
     QDialog, QTableWidget, QTableWidgetItem, QVBoxLayout, QHBoxLayout,
@@ -514,13 +515,14 @@ class PadEditorDialog(QDialog):
         for row in range(self.pad_table.rowCount()):
             pad = self.get_pad_for_row(row)
             if pad and pad.channel in selected_channels:
+                pad_copy = copy.deepcopy(pad)
                 modified = False
                 for attr, val in changes.items():
-                    if getattr(pad, attr, None) != val:
-                        setattr(pad, attr, val)
+                    if getattr(pad_copy, attr, None) != val:
+                        setattr(pad_copy, attr, val)
                         modified = True
                 if modified:
-                    updated_pads.append(pad)
+                    updated_pads.append(pad_copy)
 
         if not updated_pads:
             QMessageBox.information(self, "No Changes",
@@ -532,6 +534,13 @@ class PadEditorDialog(QDialog):
         # ------------------------------------------------------------------
         if self.object_library:
             self.object_library.bulk_update_objects(updated_pads, changes)
+            channel_map = {obj.channel: obj for obj in updated_pads}
+            self.selected_pads = [
+                channel_map.get(p.channel, p) for p in self.selected_pads
+            ]
+            self.filtered_pads = [
+                channel_map.get(p.channel, p) for p in self.filtered_pads
+            ]
 
         # ------------------------------------------------------------------
         # STEP 4 – refresh table *and* restore multi-row selection
