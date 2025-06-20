@@ -41,3 +41,24 @@ See `CHANGELOG.md` for release history and upcoming milestones.
 ## License
 
 Released under the MIT License – see `LICENSE` for details.
+
+## Stand-alone Build
+
+To create a frozen copy that can run without a Python installation:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pip install pyinstaller
+
+pyinstaller --noconfirm --onedir \
+    --add-data "constants:constants" \
+    --add-data "component_libraries:component_libraries" \
+    --icon=icon.ico \
+    --name Digitation main.py
+```
+
+The resulting `dist/Digitation` directory contains the application along with
+`constants/constants.txt`, `constants/functions_ref.txt` and the
+`component_libraries` folder, all of which remain editable after installation.
