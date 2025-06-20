@@ -2,6 +2,7 @@
 
 import os
 import shutil
+import copy
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QDoubleValidator
 from PyQt5.QtWidgets import (
@@ -550,14 +551,15 @@ class MainWindow(QMainWindow):
             return
         updates = []
         for obj in self.object_library.get_all_objects():
-            obj.x_coord_mm += dx
-            obj.y_coord_mm += dy
+            obj_copy = copy.deepcopy(obj)
+            obj_copy.x_coord_mm += dx
+            obj_copy.y_coord_mm += dy
             # keep “original” coords too, if they exist
-            if hasattr(obj, "x_coord_mm_original"):
-                obj.x_coord_mm_original += dx
-            if hasattr(obj, "y_coord_mm_original"):
-                obj.y_coord_mm_original += dy
-            updates.append(obj)
+            if hasattr(obj_copy, "x_coord_mm_original"):
+                obj_copy.x_coord_mm_original += dx
+            if hasattr(obj_copy, "y_coord_mm_original"):
+                obj_copy.y_coord_mm_original += dy
+            updates.append(obj_copy)
         self.object_library.bulk_update_objects(updates, {})
 
     # --------------------------------------------------------------------------
