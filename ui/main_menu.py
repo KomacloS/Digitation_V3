@@ -1,6 +1,7 @@
 # ui/main_menu.py
 
 import os
+import shutil
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QDoubleValidator
 from PyQt5.QtWidgets import (
@@ -380,9 +381,6 @@ class MainWindow(QMainWindow):
         redo_action = QAction("Redo", self)
         redo_action.triggered.connect(self.board_view.perform_redo)
         edit_menu.addAction(redo_action)
-        align_action = QAction("Align Pads", self)
-        align_action.triggered.connect(self.align_pads_action)
-        edit_menu.addAction(align_action)
         # New BOM action:
         bom_action = QAction("BOM", self)
         bom_action.triggered.connect(self.open_bom_editor)
@@ -424,42 +422,53 @@ class MainWindow(QMainWindow):
 
         # ------------------- PROPERTIES Menu ------------------
         properties_menu = menubar.addMenu("Properties")
+
+        # ----- UI submenu -----
+        ui_menu = properties_menu.addMenu("UI")
         ui_custom_action = QAction("UI Customization", self)
         ui_custom_action.triggered.connect(self.open_ui_customization_dialog)
-        properties_menu.addAction(ui_custom_action)
+        ui_menu.addAction(ui_custom_action)
 
+        # ----- Backup submenu -----
+        backup_menu = properties_menu.addMenu("Backup")
+        choose_backup_action = QAction("Choose Backup Folder", self)
+        choose_backup_action.triggered.connect(self.choose_backup_folder)
+        backup_menu.addAction(choose_backup_action)
         autosave_action = QAction("Set Auto-Save Threshold", self)
         autosave_action.triggered.connect(self.set_auto_save_threshold)
-        properties_menu.addAction(autosave_action)
+        backup_menu.addAction(autosave_action)
 
-        # -- NEW: Add two separate menu actions for top & bottom mm-per-pixels
+        # ----- Board Settings submenu -----
+        board_menu = properties_menu.addMenu("Board Settings")
         set_mm_per_pixels_top_action = QAction("Set mm_per_pixels_top", self)
         set_mm_per_pixels_top_action.triggered.connect(self.set_mm_per_pixels_top)
-        properties_menu.addAction(set_mm_per_pixels_top_action)
+        board_menu.addAction(set_mm_per_pixels_top_action)
 
         set_mm_per_pixels_bot_action = QAction("Set mm_per_pixels_bot", self)
         set_mm_per_pixels_bot_action.triggered.connect(self.set_mm_per_pixels_bot)
-        properties_menu.addAction(set_mm_per_pixels_bot_action)
+        board_menu.addAction(set_mm_per_pixels_bot_action)
 
-        # --- Anchor Nudge Step ---
-        set_anchor_step_action = QAction("Set Anchor Nudge Step", self)
-        set_anchor_step_action.triggered.connect(self.set_anchor_nudge_step)
-        properties_menu.addAction(set_anchor_step_action)
-
-        # --- Quick Prefix Table ---
-        set_prefix_table_action = QAction("Set Quick Prefix Table", self)
-        set_prefix_table_action.triggered.connect(self.set_quick_prefix_table)
-        properties_menu.addAction(set_prefix_table_action)
-
-        # --- Max Zoom ---
-        set_max_zoom_action = QAction("Set Max Zoom", self)
-        set_max_zoom_action.triggered.connect(self.set_max_zoom)
-        properties_menu.addAction(set_max_zoom_action)
-
-        # --- Board Origin ---
         set_origin_action = QAction("Set Board Origin (mm)", self)
         set_origin_action.triggered.connect(self.set_board_origin)
-        edit_menu.addAction(set_origin_action)
+        board_menu.addAction(set_origin_action)
+
+        # ----- Controls submenu -----
+        controls_menu = properties_menu.addMenu("Controls")
+        set_anchor_step_action = QAction("Set Anchor Nudge Step", self)
+        set_anchor_step_action.triggered.connect(self.set_anchor_nudge_step)
+        controls_menu.addAction(set_anchor_step_action)
+
+        set_max_zoom_action = QAction("Set Max Zoom", self)
+        set_max_zoom_action.triggered.connect(self.set_max_zoom)
+        controls_menu.addAction(set_max_zoom_action)
+
+        # ----- Prefix submenu -----
+        prefix_menu = properties_menu.addMenu("Prefix")
+        set_prefix_table_action = QAction("Set Quick Prefix Table", self)
+        set_prefix_table_action.triggered.connect(self.set_quick_prefix_table)
+        prefix_menu.addAction(set_prefix_table_action)
+
+
 
     # ------------------------------------------------------------------
     #  Board Origin Setter
@@ -908,6 +917,45 @@ class MainWindow(QMainWindow):
             self.constants.save()
             self.log.log("info", f"Auto-Save Threshold changed to {value}")
             # (Optionally, update any local thresholds in your ProjectManager if needed.)
+
+    def choose_backup_folder(self):
+        """Allow the user to select a new backup folder and optionally move existing backups."""
+        current_dir = str(self.constants.get("central_backup_dir") or "")
+        new_dir = QFileDialog.getExistingDirectory(
+            self,
+            "Select Backup Folder",
+            current_dir,
+            QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks,
+        )
+        if not new_dir or new_dir == current_dir:
+            return
+
+        move_backups = False
+        if os.path.isdir(current_dir):
+            reply = QMessageBox.question(
+                self,
+                "Move Backups",
+                "Transfer existing backups to the new folder?",
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.Yes,
+            )
+            move_backups = reply == QMessageBox.Yes
+
+        if move_backups and os.path.isdir(current_dir):
+            has_backup = False
+            for _root, _dirs, files in os.walk(current_dir):
+                if any(f.endswith(".bak") for f in files):
+                    has_backup = True
+                    break
+            if has_backup:
+                for name in os.listdir(current_dir):
+                    src = os.path.join(current_dir, name)
+                    dst = os.path.join(new_dir, name)
+                    if not os.path.exists(dst):
+                        shutil.move(src, dst)
+
+        self.constants.set("central_backup_dir", new_dir)
+        self.constants.save()
 
     def align_pads_action(self):
         """
