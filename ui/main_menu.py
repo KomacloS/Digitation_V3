@@ -126,6 +126,10 @@ class MainWindow(QMainWindow):
         # ─── Show window ────────────────────────────────────────────────
         self.show()
 
+        # Prompt for backup folder on first run
+        if not str(self.constants.get("central_backup_dir") or "").strip():
+            self.choose_backup_folder()
+
         # ─── Startup dialog to open or create a project ──────────────────
         start_dlg = StartDialog(self)
 
@@ -436,6 +440,10 @@ class MainWindow(QMainWindow):
         choose_backup_action.triggered.connect(self.choose_backup_folder)
         backup_menu.addAction(choose_backup_action)
 
+        set_max_backups_action = QAction("Set Max Backups", self)
+        set_max_backups_action.triggered.connect(self.set_max_backups)
+        backup_menu.addAction(set_max_backups_action)
+
         # ----- Board Settings submenu -----
         board_menu = properties_menu.addMenu("Board Settings")
         set_mm_per_pixels_top_action = QAction("Set mm_per_pixels_top", self)
@@ -465,8 +473,6 @@ class MainWindow(QMainWindow):
         set_prefix_table_action = QAction("Set Quick Prefix Table", self)
         set_prefix_table_action.triggered.connect(self.set_quick_prefix_table)
         prefix_menu.addAction(set_prefix_table_action)
-
-
 
     # ------------------------------------------------------------------
     #  Board Origin Setter
@@ -955,6 +961,22 @@ class MainWindow(QMainWindow):
 
         self.constants.set("central_backup_dir", new_dir)
         self.constants.save()
+
+    def set_max_backups(self):
+        """Prompt user to set the maximum number of backup files."""
+        current_value = int(self.constants.get("max_backups", 5) or 5)
+        value, ok = QInputDialog.getInt(
+            self,
+            "Max Backups",
+            "Enter maximum number of backup files to keep:",
+            current_value,
+            1,
+            100,
+        )
+        if ok:
+            self.constants.set("max_backups", value)
+            self.constants.save()
+            self.log.log("info", f"Max backups set to {value}")
 
     def align_pads_action(self):
         """
