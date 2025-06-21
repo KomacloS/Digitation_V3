@@ -19,17 +19,19 @@ class LogHandler:
             return
         self._initialized = True
 
-        constants = Constants()
+        # Set up the logger early so Constants can use it during loading
+        self.logger = logging.getLogger("ProgramLogger")
+        self.logger.setLevel(logging.DEBUG)
+        self.logger.propagate = False
+
+        constants = Constants(logger=self)
         log_file = constants.get("log_file", "logs/program.txt")
         max_size = constants.get("log_max_size", 5_000_000)
         backup_count = constants.get("log_backup_count", 5)
         debug_mode = constants.get("debug_mode", False)
 
-        # Set up the logger early so we can log initialization problems
-        self.logger = logging.getLogger("ProgramLogger")
         level = logging.DEBUG if debug_mode else logging.INFO
         self.logger.setLevel(level)
-        self.logger.propagate = False
 
         # Ensure the logs directory exists
         log_dir = os.path.dirname(log_file)
