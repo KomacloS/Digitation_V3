@@ -8,24 +8,7 @@ from typing import Optional, Any
 
 
 class Constants:
-    """Singleton wrapper around a JSON dictionary of persistent settings."""
-
-    _instance: Optional["Constants"] = None
-
-    def __new__(cls, file_path: Optional[str] = None, logger: Optional[Any] = None):
-        if file_path is None:
-            if cls._instance is None:
-                cls._instance = super().__new__(cls)
-                cls._instance._initialized = False
-            return cls._instance
-        inst = super().__new__(cls)
-        inst._initialized = False
-        return inst
-
     def __init__(self, file_path: Optional[str] = None, logger: Optional[Any] = None):
-        if getattr(self, "_initialized", False):
-            return
-        self._initialized = True
         if file_path is None:
             current_dir = os.path.dirname(os.path.abspath(__file__))
             file_path = os.path.join(current_dir, "constants.txt")
