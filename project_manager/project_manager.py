@@ -32,8 +32,8 @@ class ProjectManager(QObject):
         self.nod_handler = NODHandler(self)
         self.image_handler = ImageHandler(self)
         self.auto_save_counter = 0
-        constants = Constants()
-        self.auto_save_threshold = constants.get("auto_save_threshold", 20)
+        self.constants = main_window.constants
+        self.auto_save_threshold = self.constants.get("auto_save_threshold", 20)
         self.project_loaded = False  # Set to True after project load
         self.object_library.bulk_operation_completed.connect(
             self.handle_bulk_operation_completed
@@ -62,7 +62,7 @@ class ProjectManager(QObject):
         progress.show()
         QApplication.processEvents()
 
-        consts = Constants()
+        consts = self.constants
         backup_root = str(consts.get("central_backup_dir") or "").strip()
         accessible = bool(backup_root) and os.path.isdir(backup_root) and os.access(backup_root, os.W_OK)
 
@@ -95,7 +95,7 @@ class ProjectManager(QObject):
         folder = folder or self.main_window.current_project_path
         if not folder or folder.strip().lower().endswith("[none]"):
             return
-        consts = Constants()
+        consts = self.constants
         save_settings(folder, consts, logger=self.log)
 
     def handle_bulk_operation_completed(self, operation: str):
@@ -118,7 +118,7 @@ class ProjectManager(QObject):
                 f"Auto-saving project to {nod_path} after {self.auto_save_counter} bulk actions.",
             )
             nod_file = BoardNodFile(nod_path, object_library=self.object_library)
-            nod_file.save_with_logging(logger=self.log)
+            nod_file.save(backup=True, logger=self.log)
             self.auto_save_counter = 0
         else:
             self.log.log("warning", "Auto-save skipped: No valid project folder.")
@@ -176,7 +176,7 @@ class ProjectManager(QObject):
             self.ensure_backup_dir(project_dir)
 
             # Load any project-specific settings before manipulating the view
-            consts = Constants()
+            consts = self.constants
             load_settings(project_dir, consts, logger=self.log)
 
             mm_top = consts.get("mm_per_pixels_top", 0.0333)
@@ -826,7 +826,7 @@ class ProjectManager(QObject):
 
         project_name = os.path.basename(proj_dir.rstrip(os.sep))
 
-        const_root = Constants().get("central_backup_dir")
+        const_root = self.constants.get("central_backup_dir")
         backup_root = str(const_root).strip() if const_root else ""
         if not backup_root:
             backup_root = os.path.join(proj_dir, "backups")
@@ -848,7 +848,7 @@ class ProjectManager(QObject):
             if not b_dir:
                 return
             # Persist the chosen backup folder to constants
-            consts = Constants()
+            consts = self.constants
             root_dir = (
                 os.path.dirname(b_dir)
                 if os.path.basename(b_dir) == project_name
