@@ -23,7 +23,7 @@
     "BottomImageYCoord": 0.0,
     "TopImageXCoord": 0.0,
     "TopImageYCoord": 0.0,
-    "central_backup_dir": "",
+    "central_backup_dir": "Z:/Project Management/Seica/other/Digitation_backups",
     "max_backups": 5,
     "anchor_nudge_step_mm": 0.2,
     "max_zoom": 10.0,
@@ -55,6 +55,6 @@
         "AE",
         "AF",
         "AG",
-        "AH",
-    ],
+        "AH"
+    ]
 }
