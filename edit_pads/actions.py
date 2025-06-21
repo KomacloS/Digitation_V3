@@ -25,7 +25,9 @@ def _ensure_selection(action_title, pads):
     Displays a warning and returns False if not.
     """
     if not pads:
-        QMessageBox.warning(None, action_title, f"No pads selected for {action_title.lower()}.")
+        QMessageBox.warning(
+            None, action_title, f"No pads selected for {action_title.lower()}."
+        )
         return False
     return True
 
@@ -50,7 +52,9 @@ def _get_valid_pads(action_title, pad_items):
     """
     valid_pads = [pad for pad in pad_items if hasattr(pad, "board_object")]
     if not valid_pads:
-        QMessageBox.warning(None, action_title, f"No valid pads selected for {action_title.lower()}.")
+        QMessageBox.warning(
+            None, action_title, f"No valid pads selected for {action_title.lower()}."
+        )
     return valid_pads
 
 
@@ -88,10 +92,9 @@ def _extract_pad_data(pad, current_side, board_view):
         "hole_mm": obj.hole_mm,
         "testability": obj.testability,
         "technology": obj.technology,
-        "prefix": getattr(obj, "prefix", "")
+        "prefix": getattr(obj, "prefix", ""),
     }
     return pad_data
-
 
 
 def _update_scene(board_view):
@@ -128,12 +131,24 @@ def copy_pads(object_library, pad_items):
     current_side = board_view.flags.get_flag("side", "top").lower()
 
     log = board_view.log
-    log.log("info", f"copy_pads: current_side = {current_side}", module="copy_pads", func="start")
+    log.log(
+        "info",
+        f"copy_pads: current_side = {current_side}",
+        module="copy_pads",
+        func="start",
+    )
 
     try:
-        sorted_pad_items = sorted(valid_pad_items, key=lambda pad: int(pad.board_object.pin))
+        sorted_pad_items = sorted(
+            valid_pad_items, key=lambda pad: int(pad.board_object.pin)
+        )
     except Exception as e:
-        log.log("warning", f"Sorting pads by pin failed: {e}. Using original order.", module="copy_pads", func="start")
+        log.log(
+            "warning",
+            f"Sorting pads by pin failed: {e}. Using original order.",
+            module="copy_pads",
+            func="start",
+        )
         sorted_pad_items = valid_pad_items
 
     pads_data = []
@@ -144,11 +159,14 @@ def copy_pads(object_library, pad_items):
         pad_data["pin"] = new_pin
         pads_data.append(pad_data)
 
-        log.log("debug",
-                f"Copied pad: original pin={pad.board_object.pin}, new pin={new_pin}, x={pad_data['x_coord_mm']:.2f} mm, y={pad_data['y_coord_mm']:.2f} mm, "
-                f"angle={pad_data['angle_deg']:.2f}°, shape={pad_data['shape_type']}, width={pad_data['width_mm']:.2f}, "
-                f"height={pad_data['height_mm']:.2f}, hole={pad_data['hole_mm']:.2f}, prefix='{pad_data['prefix']}'",
-                module="copy_pads", func="for-loop")
+        log.log(
+            "debug",
+            f"Copied pad: original pin={pad.board_object.pin}, new pin={new_pin}, x={pad_data['x_coord_mm']:.2f} mm, y={pad_data['y_coord_mm']:.2f} mm, "
+            f"angle={pad_data['angle_deg']:.2f}°, shape={pad_data['shape_type']}, width={pad_data['width_mm']:.2f}, "
+            f"height={pad_data['height_mm']:.2f}, hole={pad_data['hole_mm']:.2f}, prefix='{pad_data['prefix']}'",
+            module="copy_pads",
+            func="for-loop",
+        )
 
     if pads_data:
         xs = [pad["x_coord_mm"] for pad in pads_data]
@@ -179,22 +197,28 @@ def paste_pads(object_library, component_placer):
 
     if component_placer.ghost_component is None:
         from component_placer.ghost import GhostComponent
+
         component_placer.ghost_component = GhostComponent(component_placer.board_view)
         component_placer.log.log("info", "Ghost component created for pasting.")
 
-    log.log("debug", f"ComponentPlacer ghost_component: {component_placer.ghost_component}")
+    log.log(
+        "debug", f"ComponentPlacer ghost_component: {component_placer.ghost_component}"
+    )
 
     component_placer.load_footprint_from_clipboard(copied_data)
     component_placer.activate_placement()
 
     # Delay focus enforcement as before.
-    QTimer.singleShot(150, lambda: (
-        component_placer.board_view.setFocus(Qt.ActiveWindowFocusReason),
-        component_placer.board_view.viewport().setFocus(Qt.ActiveWindowFocusReason),
-        component_placer.board_view.activateWindow(),
-        component_placer.board_view.raise_(),
-        log.log("debug", "Paste action post-delay focus enforced.")
-    ))
+    QTimer.singleShot(
+        150,
+        lambda: (
+            component_placer.board_view.setFocus(Qt.ActiveWindowFocusReason),
+            component_placer.board_view.viewport().setFocus(Qt.ActiveWindowFocusReason),
+            component_placer.board_view.activateWindow(),
+            component_placer.board_view.raise_(),
+            log.log("debug", "Paste action post-delay focus enforced."),
+        ),
+    )
 
     log.log("info", "ComponentPlacer activated for pasting.")
 
@@ -221,35 +245,50 @@ def delete_pads(object_library, pad_items, display_library=None):
             QMessageBox.warning(None, "Delete Pads", "Display library not available.")
             return
 
-    channels = [pad.board_object.channel for pad in valid_pad_items if pad.board_object.channel is not None]
+    channels = [
+        pad.board_object.channel
+        for pad in valid_pad_items
+        if pad.board_object.channel is not None
+    ]
 
     reply = QMessageBox.question(
         None,
         "Delete Pads",
         f"Are you sure you want to delete the following pads?\n\n{channels}",
         QMessageBox.Yes | QMessageBox.No,
-        QMessageBox.No
+        QMessageBox.No,
     )
 
     if reply == QMessageBox.Yes:
         object_library.bulk_delete(channels)
-        
+
         # Update BOM: remove components that no longer exist in the object library.
         if hasattr(object_library, "bom_handler"):
-            current_components = {obj.component_name for obj in object_library.get_all_objects()}
+            current_components = {
+                obj.component_name for obj in object_library.get_all_objects()
+            }
             # Iterate over a copy of the BOM keys to allow safe deletion.
             for comp in list(object_library.bom_handler.bom.keys()):
                 if comp not in current_components:
                     object_library.bom_handler.remove_component(comp)
-                    display_library.log.log("info", 
+                    display_library.log.log(
+                        "info",
                         f"Removed component '{comp}' from BOM because it no longer exists.",
-                        module="delete_pads", func="delete_pads")
-        
-        display_library.log.log("info", f"Deleted pads: {channels}", module="delete_pads", func="delete_pads")
+                        module="delete_pads",
+                        func="delete_pads",
+                    )
+
+        display_library.log.log(
+            "info",
+            f"Deleted pads: {channels}",
+            module="delete_pads",
+            func="delete_pads",
+        )
         QMessageBox.information(None, "Delete", f"Deleted pads: {channels}")
     else:
-        display_library.log.log("info", "Pad deletion canceled.", module="delete_pads", func="delete_pads")
-
+        display_library.log.log(
+            "info", "Pad deletion canceled.", module="delete_pads", func="delete_pads"
+        )
 
 
 def edit_pads(object_library, pad_items):
@@ -265,45 +304,40 @@ def edit_pads(object_library, pad_items):
         return
 
     selected_channels = [pad.board_object.channel for pad in valid_pad_items]
-    board_objects = [object_library.objects[ch] for ch in selected_channels if ch in object_library.objects]
+    board_objects = [
+        object_library.objects[ch]
+        for ch in selected_channels
+        if ch in object_library.objects
+    ]
 
     if not board_objects:
         QMessageBox.warning(None, "Edit Pads", "No valid pads found to edit.")
         return
 
-    log.log("info", f"Editing pads with channels: {selected_channels}", module="edit_pads", func="edit_pads")
+    log.log(
+        "info",
+        f"Editing pads with channels: {selected_channels}",
+        module="edit_pads",
+        func="edit_pads",
+    )
 
     # Retrieve the current board_view from the first pad item.
     # This ensures we have the correct QGraphicsView instance to refresh the scene.
     board_view = valid_pad_items[0].scene().views()[0] if valid_pad_items else None
 
     from edit_pads.pad_editor_dialog import PadEditorDialog
+
     dialog = PadEditorDialog(
         selected_pads=board_objects,
         object_library=object_library,
-        board_view=board_view  # <-- Pass the board_view to the dialog
+        board_view=board_view,  # <-- Pass the board_view to the dialog
     )
     if dialog.exec_():
-        log.log("info", "Pads edited successfully.", module="edit_pads", func="edit_pads")
+        log.log(
+            "info", "Pads edited successfully.", module="edit_pads", func="edit_pads"
+        )
     else:
         log.log("info", "Pad edit canceled.", module="edit_pads", func="edit_pads")
-
-
-
-def list_pads(pad_items):
-    """
-    Lists the selected pads in the log.
-    """
-    if not _ensure_selection("List Pads", pad_items):
-        return
-
-    valid_pad_items = _get_valid_pads("List Pads", pad_items)
-    if not valid_pad_items:
-        return
-
-    channels = [pad.board_object.channel for pad in valid_pad_items]
-    log.log("info", f"[List] Currently selected pad channels: {channels}")
-    QMessageBox.information(None, "List Selected Pads", f"Selected pads: {channels}")
 
 
 def cut_pads(object_library, pad_items):
@@ -327,8 +361,12 @@ def cut_pads(object_library, pad_items):
         pad_data = _extract_pad_data(pad, current_side, board_view)
         copied_data.append(pad_data)
     clipboard.copy(copied_data)
-    
-    channels = [pad.board_object.channel for pad in valid_pad_items if pad.board_object.channel is not None]
+
+    channels = [
+        pad.board_object.channel
+        for pad in valid_pad_items
+        if pad.board_object.channel is not None
+    ]
     object_library.bulk_delete(channels)
 
     QMessageBox.information(None, "Cut Pads", f"Cut {len(copied_data)} pads.")
@@ -372,28 +410,31 @@ def move_pads(object_library, pad_items, component_placer):
     footprint = {
         "pads": pads_data,
         "center_x": (min(xs) + max(xs)) / 2.0,
-        "center_y": (min(ys) + max(ys)) / 2.0
+        "center_y": (min(ys) + max(ys)) / 2.0,
     }
 
     if component_placer.ghost_component is None:
         from component_placer.ghost import GhostComponent
+
         component_placer.ghost_component = GhostComponent(component_placer.board_view)
         board_view.log.log("info", "Ghost component created for moving.")
 
     component_placer.load_footprint_from_clipboard(pads_data)
     component_placer.activate_placement()
-    component_placer._move_channels = [pad.board_object.channel for pad in valid_pad_items]
+    component_placer._move_channels = [
+        pad.board_object.channel for pad in valid_pad_items
+    ]
 
 
 def align_selected_pads(object_library, selected_pads, component_placer):
     """
     Initiates an align operation based on the selected pads.
-    
+
     Builds a ghost footprint from the selected pads (using their original coordinates).
     If the current board side is 'bottom', the x‑coordinate is flipped (as in move mode).
     Computes the average center and assigns the footprint to the ComponentPlacer.
     Sets the align_mode flag so that no component name is prompted and rotation/side switching are disabled.
-    
+
     After the user moves the ghost to the desired location, the ghost’s final center (in mm)
     will be used to call align_pads() to update all pads.
     """
@@ -408,7 +449,9 @@ def align_selected_pads(object_library, selected_pads, component_placer):
     current_side = board_view.flags.get_flag("side", "top").lower()
     board_width_mm = None
     if current_side == "bottom":
-        board_width_mm = board_view.converter.image_width * board_view.converter.mm_per_pixels_bot
+        board_width_mm = (
+            board_view.converter.image_width * board_view.converter.mm_per_pixels_bot
+        )
 
     pads_data = []
     for pad in valid_pad_items:
@@ -428,28 +471,28 @@ def align_selected_pads(object_library, selected_pads, component_placer):
             "hole_mm": obj.hole_mm,
             "angle_deg": obj.angle_deg,  # Keep the existing angle.
             "testability": obj.testability,
-            "technology": obj.technology
+            "technology": obj.technology,
         }
         pads_data.append(pad_data)
-    
+
     if not pads_data:
         QMessageBox.warning(None, "Align Pads", "No valid pad data found.")
         return
 
     center_x = mean([pad["x_coord_mm"] for pad in pads_data])
     center_y = mean([pad["y_coord_mm"] for pad in pads_data])
-    
-    footprint = {
-        "pads": pads_data,
-        "center_x": center_x,
-        "center_y": center_y
-    }
+
+    footprint = {"pads": pads_data, "center_x": center_x, "center_y": center_y}
     component_placer.footprint = footprint
     component_placer.align_mode = True
     component_placer.activate_placement()
-    log.log("info", "Align mode activated (flipping applied if on bottom; rotation and side switching disabled). "
-                     "Please move the ghost to the correct alignment position.")
-    
+    log.log(
+        "info",
+        "Align mode activated (flipping applied if on bottom; rotation and side switching disabled). "
+        "Please move the ghost to the correct alignment position.",
+    )
+
+
 # ------------------------------------------------------------------
 # Flip ghost helper (called from BoardView shortcut)
 # ------------------------------------------------------------------

@@ -412,7 +412,6 @@ class BoardView(QGraphicsView):
                 follow_mouse=follow_mouse,
             )
 
-
     def fit_in_view(self):
         if not self.current_pixmap_item:
             self.log.log("warning", "No current pixmap item to fit.")
@@ -516,7 +515,6 @@ class BoardView(QGraphicsView):
         paste_action = QAction("Paste", self)
         delete_action = QAction("Delete", self)
         edit_action = QAction("Edit", self)
-        list_action = QAction("List Selected Pads", self)
         cut_action = QAction("Cut", self)
         move_action = QAction("Move", self)
 
@@ -532,7 +530,6 @@ class BoardView(QGraphicsView):
         edit_action.triggered.connect(
             lambda: actions.edit_pads(self.object_library, selected_pads)
         )
-        list_action.triggered.connect(lambda: actions.list_pads(selected_pads))
         cut_action.triggered.connect(
             lambda: actions.cut_pads(self.object_library, selected_pads)
         )
@@ -555,8 +552,6 @@ class BoardView(QGraphicsView):
         menu.addAction(move_action)
         menu.addAction(delete_action)
         menu.addAction(edit_action)
-        menu.addSeparator()
-        menu.addAction(list_action)
         menu.addSeparator()
         menu.addAction(export_footprint_action)  # <-- new
 
@@ -754,14 +749,6 @@ class BoardView(QGraphicsView):
             self.log.log("warning", "No pads selected to edit.")
             return
         actions.edit_pads(self.object_library, selected_pads)
-
-    def list_selected_pads(self):
-        """Handles Ctrl+L (List)"""
-        selected_pads = self._get_selected_pads()
-        if not selected_pads:
-            self.log.log("warning", "No pads selected to list.")
-            return
-        actions.list_pads(selected_pads)
 
     def cut_selected_pads(self):
         """Handles Ctrl+X (Cut)"""
