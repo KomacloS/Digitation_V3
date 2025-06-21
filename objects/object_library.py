@@ -200,6 +200,7 @@ class ObjectLibrary(QObject):
                 self.display_library.add_rendered_objects(added_objects)
 
             self.log.log("info", f"bulk_add: Added {len(added_objects)} objects.")
+            self.bulk_operation_completed.emit("Bulk Add")
 
     # Remove or leave a no-op save() method since auto-save is not desired.
     def save(self):
@@ -307,8 +308,8 @@ class ObjectLibrary(QObject):
                 if deleted_channels:
                     self.display_library.remove_rendered_objects(deleted_channels)
 
-            # Optionally remove or comment out this signal if not needed
-            # self.bulk_operation_completed.emit("Bulk Modify")
+            # Emit bulk operation signal for auto-save logic
+            self.bulk_operation_completed.emit("Bulk Modify")
 
             self.log.log(
                 "info",
@@ -337,7 +338,7 @@ class ObjectLibrary(QObject):
             self.log.log(
                 "info", f"bulk_delete: Deleted {len(removed_channels)} objects."
             )
-            # self.bulk_operation_completed.emit("Bulk Delete")  # <-- remove/comment out
+            self.bulk_operation_completed.emit("Bulk Delete")
 
     def bulk_update_objects(self, updates: List[BoardObject], changes: dict) -> None:
         """
@@ -359,3 +360,4 @@ class ObjectLibrary(QObject):
             self.log.log(
                 "info", f"bulk_update_objects: Updated {len(updates)} objects."
             )
+            self.bulk_operation_completed.emit("Bulk Update")
