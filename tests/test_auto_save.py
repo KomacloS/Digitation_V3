@@ -12,7 +12,13 @@ from objects.nod_file import BoardNodFile
 def test_auto_save_trigger(tmp_path, monkeypatch):
     log = LogHandler()
     obj_lib = ObjectLibrary()
-    main_window = SimpleNamespace(log=log, object_library=obj_lib, current_project_path=str(tmp_path))
+    constants = SimpleNamespace(get=lambda k, d=None: d, set=lambda k, v: None, save=lambda: None)
+    main_window = SimpleNamespace(
+        log=log,
+        object_library=obj_lib,
+        current_project_path=str(tmp_path),
+        constants=constants,
+    )
     pm = ProjectManager(main_window, bom_handler=BOMHandler())
     pm.project_loaded = True
     pm.auto_save_threshold = 2
