@@ -31,13 +31,14 @@ class ProjectManager(QObject):
         self.object_library = main_window.object_library
         self.nod_handler = NODHandler(self)
         self.image_handler = ImageHandler(self)
-        self.auto_save_counter = 0
-        constants = Constants()
-        self.auto_save_threshold = constants.get("auto_save_threshold", 20)
+        self.auto_save_counter = 0  # Auto-save disabled
+        self.constants = main_window.constants
+        # self.auto_save_threshold = self.constants.get("auto_save_threshold", 20)
         self.project_loaded = False  # Set to True after project load
-        self.object_library.bulk_operation_completed.connect(
-            self.handle_bulk_operation_completed
-        )
+        # Auto-save feature disabled for now
+        # self.object_library.bulk_operation_completed.connect(
+        #     self.handle_bulk_operation_completed
+        # )
 
         # Use the shared BOMHandler instance provided from MainWindow.
         self.bom_handler = bom_handler
@@ -62,7 +63,7 @@ class ProjectManager(QObject):
         progress.show()
         QApplication.processEvents()
 
-        consts = Constants()
+        consts = self.constants
         backup_root = str(consts.get("central_backup_dir") or "").strip()
         accessible = bool(backup_root) and os.path.isdir(backup_root) and os.access(backup_root, os.W_OK)
 
@@ -95,33 +96,34 @@ class ProjectManager(QObject):
         folder = folder or self.main_window.current_project_path
         if not folder or folder.strip().lower().endswith("[none]"):
             return
-        consts = Constants()
+        consts = self.constants
         save_settings(folder, consts, logger=self.log)
 
-    def handle_bulk_operation_completed(self, operation: str):
-        if not self.project_loaded:
-            return
-        self.auto_save_counter += 1
-        self.log.log(
-            "debug",
-            f"Auto-save counter increased to {self.auto_save_counter} after operation: {operation}",
-        )
-        if self.auto_save_counter >= self.auto_save_threshold:
-            self.auto_save()
+    # def handle_bulk_operation_completed(self, operation: str):
+    #     """Auto-save callback (currently disabled)."""
+    #     if not self.project_loaded:
+    #         return
+    #     self.auto_save_counter += 1
+    #     self.log.log(
+    #         "debug",
+    #         f"Auto-save counter increased to {self.auto_save_counter} after operation: {operation}",
+    #     )
+    #     if self.auto_save_counter >= self.auto_save_threshold:
+    #         self.auto_save()
 
-    def auto_save(self):
-        folder = self.main_window.current_project_path
-        if folder and folder.strip() and not folder.strip().lower().endswith("[none]"):
-            nod_path = os.path.join(folder, "project.nod")
-            self.log.log(
-                "info",
-                f"Auto-saving project to {nod_path} after {self.auto_save_counter} bulk actions.",
-            )
-            nod_file = BoardNodFile(nod_path, object_library=self.object_library)
-            nod_file.save_with_logging(logger=self.log)
-            self.auto_save_counter = 0
-        else:
-            self.log.log("warning", "Auto-save skipped: No valid project folder.")
+    # def auto_save(self):
+    #     folder = self.main_window.current_project_path
+    #     if folder and folder.strip() and not folder.strip().lower().endswith("[none]"):
+    #         nod_path = os.path.join(folder, "project.nod")
+    #         self.log.log(
+    #             "info",
+    #             f"Auto-saving project to {nod_path} after {self.auto_save_counter} bulk actions.",
+    #         )
+    #         nod_file = BoardNodFile(nod_path, object_library=self.object_library)
+    #         nod_file.save(backup=True, logger=self.log)
+    #         self.auto_save_counter = 0
+    #     else:
+    #         self.log.log("warning", "Auto-save skipped: No valid project folder.")
 
     def open_project_dialog(self):
         try:
@@ -176,7 +178,7 @@ class ProjectManager(QObject):
             self.ensure_backup_dir(project_dir)
 
             # Load any project-specific settings before manipulating the view
-            consts = Constants()
+            consts = self.constants
             load_settings(project_dir, consts, logger=self.log)
 
             mm_top = consts.get("mm_per_pixels_top", 0.0333)
@@ -242,7 +244,7 @@ class ProjectManager(QObject):
             self.main_window.update_project_name(folder_name)
 
             self.project_loaded = True
-            self.auto_save_counter = 0
+            # self.auto_save_counter = 0  # Auto-save disabled
 
             # Update working side label based on the BoardView's flag.
             self.main_window.update_working_side_label()
@@ -330,7 +332,7 @@ class ProjectManager(QObject):
                 "[create_project_manual] User chose NO => staying blank (empty project).",
             )
             self.project_loaded = True
-            self.auto_save_counter = 0
+            # self.auto_save_counter = 0  # Auto-save disabled
             self.project_loaded_signal.emit()
 
         # Update working side label based on the BoardView's flag.
@@ -436,7 +438,7 @@ class ProjectManager(QObject):
                 "info", "[create_project_automatic] User chose NO => staying blank (empty project)."
             )
             self.project_loaded = True
-            self.auto_save_counter = 0
+            # self.auto_save_counter = 0  # Auto-save disabled
             self.project_loaded_signal.emit()
 
         self.main_window.update_working_side_label()
@@ -506,7 +508,7 @@ class ProjectManager(QObject):
             self.log.log("info", report)
 
             self.object_library.undo_redo_manager.clear()
-            self.auto_save_counter = 0
+            # self.auto_save_counter = 0  # Auto-save disabled
 
             # Save project specific settings
             self.save_project_settings(folder)
@@ -628,7 +630,7 @@ class ProjectManager(QObject):
 
         self.main_window.current_project_path = new_proj_dir
         self.main_window.update_project_name(project_name)
-        self.auto_save_counter = 0
+        # self.auto_save_counter = 0  # Auto-save disabled
         self.project_loaded = True
 
         self.ensure_backup_dir(new_proj_dir)
@@ -714,7 +716,7 @@ class ProjectManager(QObject):
             project_folder = os.path.dirname(file_path)
             project_name = os.path.basename(project_folder)
             self.main_window.update_project_name(project_name)
-            self.auto_save_counter = 0
+            # self.auto_save_counter = 0  # Auto-save disabled
             self.project_loaded = True
 
             # Update working side label after loading NOD file.
@@ -826,7 +828,7 @@ class ProjectManager(QObject):
 
         project_name = os.path.basename(proj_dir.rstrip(os.sep))
 
-        const_root = Constants().get("central_backup_dir")
+        const_root = self.constants.get("central_backup_dir")
         backup_root = str(const_root).strip() if const_root else ""
         if not backup_root:
             backup_root = os.path.join(proj_dir, "backups")
@@ -848,7 +850,7 @@ class ProjectManager(QObject):
             if not b_dir:
                 return
             # Persist the chosen backup folder to constants
-            consts = Constants()
+            consts = self.constants
             root_dir = (
                 os.path.dirname(b_dir)
                 if os.path.basename(b_dir) == project_name

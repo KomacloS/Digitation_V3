@@ -17,7 +17,6 @@
     "statusbar_font_size": 12,
     "tab_font_size": 10,
     "properties_dock_height": 127,
-    "auto_save_threshold": 20,
     "mm_per_pixels_top": 0.01659387744,
     "mm_per_pixels_bot": 0.01668184257,
     "BottomImageXCoord": 0.0,

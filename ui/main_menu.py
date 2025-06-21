@@ -435,9 +435,6 @@ class MainWindow(QMainWindow):
         choose_backup_action = QAction("Choose Backup Folder", self)
         choose_backup_action.triggered.connect(self.choose_backup_folder)
         backup_menu.addAction(choose_backup_action)
-        autosave_action = QAction("Set Auto-Save Threshold", self)
-        autosave_action.triggered.connect(self.set_auto_save_threshold)
-        backup_menu.addAction(autosave_action)
 
         # ----- Board Settings submenu -----
         board_menu = properties_menu.addMenu("Board Settings")
@@ -902,25 +899,23 @@ class MainWindow(QMainWindow):
             f"[restore_properties_dock_size] Applied saved height={saved_height}"
         )
 
-    def set_auto_save_threshold(self):
-        # Retrieve the current value from constants; default to 20 if not set.
-        current_value = self.constants.get("auto_save_threshold", 20)
-        # Open a dialog for the user to input an integer between 1 and 100.
-        value, ok = QInputDialog.getInt(
-            self,
-            "Auto-Save Threshold",
-            "Enter new auto-save threshold (number of bulk actions before auto-saving):",
-            current_value,
-            1,
-            100,
-        )
-        if ok:
-            self.constants.set("auto_save_threshold", value)
-            self.constants.save()
-            self.log.log("info", f"Auto-Save Threshold changed to {value}")
-            # Update ProjectManager to use the new threshold immediately
-            if hasattr(self, "project_manager"):
-                self.project_manager.auto_save_threshold = value
+    # def set_auto_save_threshold(self):
+    #     """Placeholder for future auto-save threshold configuration."""
+    #     current_value = self.constants.get("auto_save_threshold", 20)
+    #     value, ok = QInputDialog.getInt(
+    #         self,
+    #         "Auto-Save Threshold",
+    #         "Enter new auto-save threshold (number of bulk actions before auto-saving):",
+    #         current_value,
+    #         1,
+    #         100,
+    #     )
+    #     if ok:
+    #         self.constants.set("auto_save_threshold", value)
+    #         self.constants.save()
+    #         self.log.log("info", f"Auto-Save Threshold changed to {value}")
+    #         if hasattr(self, "project_manager"):
+    #             self.project_manager.auto_save_threshold = value
 
     def choose_backup_folder(self):
         """Allow the user to select a new backup folder and optionally move existing backups."""
