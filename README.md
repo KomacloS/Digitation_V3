@@ -56,8 +56,12 @@ pyinstaller --noconfirm --onedir \
     --add-data "constants:constants" \
     --add-data "component_libraries:component_libraries" \
     --icon=icon.ico \
+    --windowed \
     --name Digitation main.py
 ```
+
+Including the `--windowed` option ensures no console window appears when
+running the resulting executable under Windows.
 
 The resulting `dist/Digitation` directory contains the application along with
 `constants/constants.txt`, `constants/functions_ref.txt` and the
