@@ -118,7 +118,7 @@ class ProjectManager(QObject):
                 f"Auto-saving project to {nod_path} after {self.auto_save_counter} bulk actions.",
             )
             nod_file = BoardNodFile(nod_path, object_library=self.object_library)
-            nod_file.save(backup=True, logger=self.log)
+            nod_file.save_with_logging(logger=self.log)
             self.auto_save_counter = 0
         else:
             self.log.log("warning", "Auto-save skipped: No valid project folder.")
