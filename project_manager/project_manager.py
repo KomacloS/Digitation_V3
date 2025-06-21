@@ -49,6 +49,19 @@ class ProjectManager(QObject):
 
     def ensure_backup_dir(self, project_dir: str) -> None:
         """Ensure that the backup directory is accessible or prompt for a new one."""
+        progress = QProgressDialog(
+            "Searching for backup folder...",
+            None,
+            0,
+            0,
+            self.main_window,
+        )
+        progress.setWindowTitle("Please Wait")
+        progress.setCancelButton(None)
+        progress.setWindowModality(Qt.WindowModal)
+        progress.show()
+        QApplication.processEvents()
+
         consts = Constants()
         backup_root = str(consts.get("central_backup_dir") or "").strip()
         accessible = bool(backup_root) and os.path.isdir(backup_root) and os.access(backup_root, os.W_OK)
@@ -59,6 +72,7 @@ class ProjectManager(QObject):
                 "Backup Folder Unavailable",
                 "The configured backup folder cannot be accessed.\nPlease select a folder for backups.",
             )
+            progress.close()
             new_dir = QFileDialog.getExistingDirectory(
                 self.main_window,
                 "Select Backup Folder",
@@ -71,6 +85,8 @@ class ProjectManager(QObject):
                 backup_root = os.path.join(project_dir, "backups")
             consts.set("central_backup_dir", backup_root)
             consts.save()
+
+        progress.close()
 
         os.makedirs(os.path.join(backup_root, os.path.basename(project_dir)), exist_ok=True)
 
@@ -794,6 +810,20 @@ class ProjectManager(QObject):
             )
             return
 
+        # Show a tiny progress dialog while we determine the backup folder
+        progress = QProgressDialog(
+            "Searching for backup folder...",
+            None,
+            0,
+            0,
+            self.main_window,
+        )
+        progress.setWindowTitle("Please Wait")
+        progress.setCancelButton(None)
+        progress.setWindowModality(Qt.WindowModal)
+        progress.show()
+        QApplication.processEvents()
+
         project_name = os.path.basename(proj_dir.rstrip(os.sep))
 
         const_root = Constants().get("central_backup_dir")
@@ -802,6 +832,7 @@ class ProjectManager(QObject):
             backup_root = os.path.join(proj_dir, "backups")
 
         b_dir = os.path.join(backup_root, project_name)
+        progress.close()
         if not os.path.isdir(b_dir):
             QMessageBox.information(
                 self.main_window,
@@ -816,6 +847,15 @@ class ProjectManager(QObject):
             )
             if not b_dir:
                 return
+            # Persist the chosen backup folder to constants
+            consts = Constants()
+            root_dir = (
+                os.path.dirname(b_dir)
+                if os.path.basename(b_dir) == project_name
+                else b_dir
+            )
+            consts.set("central_backup_dir", root_dir)
+            consts.save()
 
         dlg = BackupBrowserDialog(proj_dir, b_dir, parent=self.main_window)
         if dlg.exec_() == dlg.Accepted:
