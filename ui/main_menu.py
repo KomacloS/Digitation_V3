@@ -918,7 +918,9 @@ class MainWindow(QMainWindow):
             self.constants.set("auto_save_threshold", value)
             self.constants.save()
             self.log.log("info", f"Auto-Save Threshold changed to {value}")
-            # (Optionally, update any local thresholds in your ProjectManager if needed.)
+            # Update ProjectManager to use the new threshold immediately
+            if hasattr(self, "project_manager"):
+                self.project_manager.auto_save_threshold = value
 
     def choose_backup_folder(self):
         """Allow the user to select a new backup folder and optionally move existing backups."""
