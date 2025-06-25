@@ -295,6 +295,7 @@ class ComponentInputDialog(QDialog):
         self.auto_numbering_checkbox.setChecked(
             self.settings.value("auto_numbering", False, type=bool)
         )
+        manual_prefix = self.settings.value("manual_prefix", "")
         last_str = self.settings.value("last_numbers", "{}")
         try:
             if self.__class__.last_numbers:
@@ -305,6 +306,9 @@ class ComponentInputDialog(QDialog):
         except Exception:
             self.last_numbers = {}
             self.__class__.last_numbers = {}
+        if not self.auto_prefix_checkbox.isChecked() and manual_prefix:
+            self.name_edit.setText(manual_prefix)
+        self.update_component_name()
 
     def save_settings(self):
         self.settings.setValue("function", self.function_combo.currentText())
@@ -316,6 +320,11 @@ class ComponentInputDialog(QDialog):
             "auto_numbering", self.auto_numbering_checkbox.isChecked()
         )
         self.settings.setValue("last_numbers", repr(self.last_numbers))
+        if not self.auto_prefix_checkbox.isChecked():
+            m = re.match(r"^([A-Za-z]+)\d*$", self.name_edit.text().strip())
+            self.settings.setValue("manual_prefix", m.group(1) if m else "")
+        else:
+            self.settings.setValue("manual_prefix", "")
         self.log.info(
             "Settings saved.", module="ComponentInputDialog", func="save_settings"
         )
