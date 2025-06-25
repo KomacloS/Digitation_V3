@@ -557,9 +557,14 @@ class ComponentPlacer(QObject):
         # Prepare a message for the user.
         msg = f"Component '{comp_name}' already exists with pins: {sorted(existing_pins)}.\n"
         if missing:
-            msg += f"Missing pins: {missing}.\nDo you want to fill these gaps with new pads?"
+            msg += (
+                f"Missing pins: {missing}.\nDo you want to fill these gaps with new pads?"
+            )
         else:
-            msg += "No gaps found. Do you want to append new pads at the end?"
+            msg += (
+                "No gaps found. Do you want to append new pads at the end?\n"
+                "Closing this window is the same as pressing 'Cancel'."
+            )
 
         # Show a dialog with three options.
         msg_box = QMessageBox()
