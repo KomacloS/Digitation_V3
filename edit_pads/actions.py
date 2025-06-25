@@ -82,7 +82,7 @@ def _extract_pad_data(pad, current_side, board_view):
 
     # Build a data dict describing this pad
     pad_data = {
-        "pin": obj.pin,  # May be overridden in copy steps
+        "pin": obj.pin,
         "x_coord_mm": x_mm,
         "y_coord_mm": y_mm,
         "angle_deg": angle,
@@ -118,7 +118,9 @@ def copy_pads(object_library, pad_items):
     Copies the selected pads into the clipboard.
     The copied pad data are normalized so that they are expressed in a top‑oriented coordinate system.
     If the current board side is 'bottom', the x‑coordinate is flipped using the board width.
-    Also, the pin numbers are re-assigned sequentially (1, 2, 3, ...) and the pad's prefix is copied.
+    Pin numbers are preserved by default and the pad's prefix is copied. If the
+    selected pins have numeric gaps (e.g. 1, 3 or 1, 2, 4), the user is asked
+    whether to keep the numbering or renumber sequentially starting at 1.
     """
     if not _ensure_selection("Copy Pads", pad_items):
         return
@@ -151,17 +153,40 @@ def copy_pads(object_library, pad_items):
         )
         sorted_pad_items = valid_pad_items
 
+    preserve_numbers = True
+    numeric_pins = []
+    for pad in sorted_pad_items:
+        pin_str = str(pad.board_object.pin)
+        if pin_str.isdigit():
+            numeric_pins.append(int(pin_str))
+        else:
+            numeric_pins = []
+            break
+
+    if len(numeric_pins) > 1:
+        numbers_sorted = sorted(numeric_pins)
+        gaps = any(b - a != 1 for a, b in zip(numbers_sorted, numbers_sorted[1:]))
+        if gaps:
+            reply = QMessageBox.question(
+                None,
+                "Copy Pads",
+                "Gaps detected in pin numbers. Preserve numbering?",
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.Yes,
+            )
+            preserve_numbers = reply == QMessageBox.Yes
+
     pads_data = []
     for idx, pad in enumerate(sorted_pad_items):
         pad_data = _extract_pad_data(pad, current_side, board_view)
-        # Reassign pin sequentially (starting at 1).
-        new_pin = str(idx + 1)
-        pad_data["pin"] = new_pin
+        pad_data["order"] = idx
+        if not preserve_numbers:
+            pad_data["pin"] = str(idx + 1)
         pads_data.append(pad_data)
 
         log.log(
             "debug",
-            f"Copied pad: original pin={pad.board_object.pin}, new pin={new_pin}, x={pad_data['x_coord_mm']:.2f} mm, y={pad_data['y_coord_mm']:.2f} mm, "
+            f"Copied pad: pin={pad.board_object.pin}, x={pad_data['x_coord_mm']:.2f} mm, y={pad_data['y_coord_mm']:.2f} mm, "
             f"angle={pad_data['angle_deg']:.2f}°, shape={pad_data['shape_type']}, width={pad_data['width_mm']:.2f}, "
             f"height={pad_data['height_mm']:.2f}, hole={pad_data['hole_mm']:.2f}, prefix='{pad_data['prefix']}'",
             module="copy_pads",
