@@ -16,7 +16,7 @@ from PyQt5.QtWidgets import (
     QMessageBox,
 )
 from PyQt5.QtGui import QDoubleValidator
-from PyQt5.QtCore import Qt, QSettings, pyqtSlot, pyqtSignal
+from PyQt5.QtCore import Qt, QSettings, pyqtSlot, pyqtSignal, QLocale
 from logs.log_handler import LogHandler
 from component_placer.bom_handler.bom_handler import BOMHandler
 
@@ -182,13 +182,20 @@ class ComponentInputDialog(QDialog):
         )
 
         self.width_edit = QLineEdit()
-        self.width_edit.setValidator(QDoubleValidator(0.0, 10.0, 8, self.width_edit))
+        # Force C-locale so the decimal separator is '.' regardless of system locale
+        width_validator = QDoubleValidator(0.0, 10.0, 8, self.width_edit)
+        width_validator.setLocale(QLocale("C"))
+        self.width_edit.setValidator(width_validator)
         self.width_edit.setText("1.0")
         self.height_edit = QLineEdit()
-        self.height_edit.setValidator(QDoubleValidator(0.0, 10.0, 8, self.height_edit))
+        height_validator = QDoubleValidator(0.0, 10.0, 8, self.height_edit)
+        height_validator.setLocale(QLocale("C"))
+        self.height_edit.setValidator(height_validator)
         self.height_edit.setText("0.5")
         self.hole_edit = QLineEdit()
-        self.hole_edit.setValidator(QDoubleValidator(0.0, 10.0, 8, self.hole_edit))
+        hole_validator = QDoubleValidator(0.0, 10.0, 8, self.hole_edit)
+        hole_validator.setLocale(QLocale("C"))
+        self.hole_edit.setValidator(hole_validator)
         self.hole_edit.setText("0.0")
 
         # add to form
