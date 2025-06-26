@@ -309,16 +309,18 @@ class ComponentPlacer(QObject):
             return pos_x, pos_y, final_angle
 
         def calc_new_pin(original_pin):
+            if merge_choice is None:
+                return original_pin
+            nonlocal merge_counter
             if merge_choice:
                 if missing_pins:
                     return missing_pins.pop(0)
-                else:
-                    nonlocal merge_counter
-                    new_val = highest_pin + merge_counter
-                    merge_counter += 1
-                    return new_val
-            else:
-                return original_pin + highest_pin
+                new_val = highest_pin + merge_counter
+                merge_counter += 1
+                return new_val
+            new_val = highest_pin + merge_counter
+            merge_counter += 1
+            return new_val
 
         def get_alf_mapping(comp_base, comp_dir):
             alf_path = (
@@ -745,14 +747,16 @@ class ComponentPlacer(QObject):
         def calc_new_pin(original_pin: int) -> int:
             if merge_choice is None:
                 return original_pin
+            nonlocal merge_counter
             if merge_choice:
                 if missing_pins:
                     return missing_pins.pop(0)
-                nonlocal merge_counter
                 new_val = highest_pin + merge_counter
                 merge_counter += 1
                 return new_val
-            return original_pin + highest_pin
+            new_val = highest_pin + merge_counter
+            merge_counter += 1
+            return new_val
 
         # ------------------------------------------------------------------
         # 2)  Build BoardObject list
