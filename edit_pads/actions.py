@@ -166,11 +166,12 @@ def copy_pads(object_library, pad_items):
     if len(numeric_pins) > 1:
         numbers_sorted = sorted(numeric_pins)
         gaps = any(b - a != 1 for a, b in zip(numbers_sorted, numbers_sorted[1:]))
-        if gaps:
+        starts_at_one = numbers_sorted[0] == 1
+        if gaps or not starts_at_one:
             reply = QMessageBox.question(
                 None,
                 "Copy Pads",
-                "Gaps detected in pin numbers. Preserve numbering?",
+                "Gaps detected or numbering doesn't start at 1. Preserve numbering?",
                 QMessageBox.Yes | QMessageBox.No,
                 QMessageBox.Yes,
             )
