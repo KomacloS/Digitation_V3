@@ -226,30 +226,20 @@ class BOMEditorDialog(QDialog):
           propagated to all board objects (pads) whose component_name equals the old name.
           Duplicate names (i.e. renaming to an already-existing component) are blocked.
         """
-        new_bom = {}
-        removed_comps = set()
-        added_comps = set()
-        renamed_components = {}  # Map old_name -> new_name for renames
-        row_count = self.table.rowCount()
+        # Reset background colors
+        for r in range(self.table.rowCount()):
+            item = self.table.item(r, 0)
+            if item:
+                item.setBackground(QColor("white"))
 
+        collected = []
+        row_count = self.table.rowCount()
         for row_idx in range(row_count):
-            # Get the component name item and its stored original value.
             comp_item = self.table.item(row_idx, 0)
             if not comp_item:
                 continue
             original_name = comp_item.data(Qt.UserRole)
             new_name = comp_item.text().strip()
-            if not new_name:
-                QMessageBox.warning(self, "Invalid Name", "Component name cannot be blank.")
-                return
-
-            # If renaming, ensure the new name is not already used by another row.
-            if new_name != original_name and new_name in new_bom:
-                QMessageBox.warning(self, "Duplicate Component",
-                                    f"Component name '{new_name}' already exists. Renaming aborted.")
-                return
-
-            # Retrieve remaining fields.
             combo_func = self.table.cellWidget(row_idx, 1)
             fn_str = combo_func.currentText().strip() if combo_func else ""
             val_item = self.table.item(row_idx, 2)
@@ -261,46 +251,75 @@ class BOMEditorDialog(QDialog):
             status_widget = self.table.cellWidget(row_idx, 5)
             status_text = status_widget.currentText().strip() if status_widget else "OK"
 
-            if "EXTRA" in status_text:
-                removed_comps.add(original_name)
-                continue  # Do not include in new BOM.
-            elif "MISSING" in status_text:
-                if fn_str == "":
-                    QMessageBox.warning(self, "Missing Function",
-                                        f"Component '{new_name}' is marked as missing and must have a function specified.")
-                    return
-                else:
-                    added_comps.add(new_name)
-                    new_bom[new_name] = {
-                        "function": fn_str,
-                        "value": value,
-                        "package": package,
-                        "part_number": part_number
-                    }
-            else:
-                new_bom[new_name] = {
+            collected.append(
+                {
+                    "row": row_idx,
+                    "original": original_name,
+                    "new": new_name,
                     "function": fn_str,
                     "value": value,
                     "package": package,
-                    "part_number": part_number
+                    "part_number": part_number,
+                    "status": status_text,
                 }
+            )
 
-            # Record rename if the name has changed.
-            if original_name != new_name:
-                renamed_components[original_name] = new_name
+        # ---- duplicate check (case-insensitive) ----
+        name_map = {}
+        for entry in collected:
+            lname = entry["new"].lower()
+            name_map.setdefault(lname, []).append(entry["row"])
+        dup_rows = [rows for rows in name_map.values() if len(rows) > 1]
+        if any(dup_rows):
+            for rows in dup_rows:
+                for r in rows:
+                    item = self.table.item(r, 0)
+                    if item:
+                        item.setBackground(QColor("#FF8888"))
+            QMessageBox.warning(
+                self,
+                "Duplicate Component",
+                "Duplicate component names detected. Please ensure all names are unique.",
+            )
+            return
 
-        # Update BOMHandler's BOM.
-        self.bom_handler.bom = new_bom
+        new_bom = {}
+        removed_comps = set()
+        added_comps = set()
+        renamed_components = {}
 
-        # Propagate renames to all board objects (pads) if available.
-        if self.parent() and hasattr(self.parent(), "object_library"):
-            object_library = self.parent().object_library
-            for old_name, new_name in renamed_components.items():
-                for obj in object_library.get_all_objects():
-                    if obj.component_name == old_name:
-                        obj.component_name = new_name
-                self.bom_handler.log.info(f"Renamed component '{old_name}' to '{new_name}' in ObjectLibrary.",
-                                            module="BOMEditorDialog", func="on_apply")
+        for entry in collected:
+            new_name = entry["new"].strip()
+            if not new_name:
+                QMessageBox.warning(self, "Invalid Name", "Component name cannot be blank.")
+                return
+            fn_str = entry["function"]
+            value = entry["value"]
+            package = entry["package"]
+            part_number = entry["part_number"]
+            status_text = entry["status"]
+
+            if "EXTRA" in status_text:
+                removed_comps.add(entry["original"])
+                continue
+            elif "MISSING" in status_text:
+                if fn_str == "":
+                    QMessageBox.warning(
+                        self,
+                        "Missing Function",
+                        f"Component '{new_name}' is marked as missing and must have a function specified.",
+                    )
+                    return
+                added_comps.add(new_name)
+            new_bom[new_name] = {
+                "function": fn_str,
+                "value": value,
+                "package": package,
+                "part_number": part_number,
+            }
+
+            if entry["original"] != new_name:
+                renamed_components[entry["original"]] = new_name
 
         messages = []
         if removed_comps:
@@ -308,9 +327,33 @@ class BOMEditorDialog(QDialog):
         if added_comps:
             messages.append(f"Added: {', '.join(sorted(added_comps))}")
         if renamed_components:
-            renamed_msg = ", ".join([f"{old}->{new}" for old, new in renamed_components.items()])
+            renamed_msg = ", ".join([f"{o}->{n}" for o, n in renamed_components.items()])
             messages.append(f"Renamed: {renamed_msg}")
         summary = "\n".join(messages) if messages else "BOM updated with no new additions, removals, or renames."
+        reply = QMessageBox.question(
+            self,
+            "Apply BOM Changes",
+            summary + "\n\nApply these changes?",
+            QMessageBox.Yes | QMessageBox.No,
+        )
+        if reply != QMessageBox.Yes:
+            return
+
+        # Update BOMHandler's BOM
+        self.bom_handler.bom = new_bom
+
+        if self.parent() and hasattr(self.parent(), "object_library"):
+            object_library = self.parent().object_library
+            for old_name, new_name in renamed_components.items():
+                for obj in object_library.get_all_objects():
+                    if obj.component_name.lower() == old_name.lower():
+                        obj.component_name = new_name
+                self.bom_handler.log.info(
+                    f"Renamed component '{old_name}' to '{new_name}' in ObjectLibrary.",
+                    module="BOMEditorDialog",
+                    func="on_apply",
+                )
+
         QMessageBox.information(self, "Edits Applied", summary)
         self.accept()
 
