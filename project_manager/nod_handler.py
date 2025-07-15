@@ -46,6 +46,31 @@ class NODHandler:
             nod_file = BoardNodFile(nod_path=file_path, object_library=self.object_library)
             nod_file.load(skip_undo=True)
 
+            # After loading, check for components that have duplicate pin numbers.
+            dups = self._find_components_with_duplicate_pins()
+            if dups:
+                names = ", ".join(sorted(dups))
+                QMessageBox.critical(
+                    self.main_window,
+                    "Invalid Components",
+                    (
+                        "Duplicate pins detected for component(s): "
+                        f"{names}. All pads for these components will be removed."
+                    ),
+                )
+                channels = [
+                    obj.channel
+                    for obj in self.object_library.get_all_objects()
+                    if obj.component_name.lower() in dups
+                ]
+                if channels:
+                    self.object_library.bulk_delete(channels)
+                self.log.warning(
+                    f"Removed components with duplicate pins: {names}",
+                    module="NODHandler",
+                    func="load_nod_file",
+                )
+
             # Reset the undo/redo history so that the loaded state is now the baseline.
             self.object_library.undo_redo_manager.clear()
             self.object_library.undo_redo_manager.push_state()
@@ -64,6 +89,18 @@ class NODHandler:
                 "Load NOD File Error",
                 f"An error occurred while loading the NOD file:\n{e}"
             )
+
+    def _find_components_with_duplicate_pins(self) -> set[str]:
+        """Return a set of component names that have duplicate pin numbers."""
+        seen = {}
+        duplicates = set()
+        for obj in self.object_library.get_all_objects():
+            key = (obj.component_name.lower(), str(obj.pin))
+            if key in seen:
+                duplicates.add(obj.component_name.lower())
+            else:
+                seen[key] = True
+        return duplicates
 
     def save_project_nod(self, file_path: Optional[str] = None) -> bool:
         """
