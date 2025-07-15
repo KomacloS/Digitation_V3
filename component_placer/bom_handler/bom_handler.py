@@ -410,3 +410,42 @@ class BOMHandler:
                     module="BOMHandler", func="import_from_mismatch_xlsx")
         self.log.debug(f"New BOM state: {self.bom}", module="BOMHandler", func="import_from_mismatch_xlsx")
         return True
+
+    def fix_duplicate_names(self, object_library=None):
+        """Ensure component names are unique (case-insensitive).
+
+        If duplicates are found, later occurrences are renamed with a trailing
+        ``_A``. Renamed board objects in ``object_library`` are also updated.
+
+        Returns a list of tuples ``(old_name, new_name)`` for any renames made.
+        """
+        seen = {}
+        renames = []
+        for name in list(self.bom.keys()):
+            key = name.lower()
+            if key in seen:
+                new_name = name + "_A"
+                existing_lower = {n.lower() for n in self.bom.keys()}
+                while new_name.lower() in existing_lower:
+                    new_name += "A"
+                self.bom[new_name] = self.bom.pop(name)
+                renames.append((name, new_name))
+                seen[new_name.lower()] = new_name
+            else:
+                seen[key] = name
+
+        if renames and object_library:
+            lookup = {old.lower(): new for old, new in renames}
+            for obj in object_library.get_all_objects():
+                original = obj.component_name
+                new_name = lookup.get(original.lower())
+                if new_name:
+                    obj.component_name = new_name
+
+        if renames:
+            self.log.warning(
+                f"Duplicate component names fixed: {renames}",
+                module="BOMHandler",
+                func="fix_duplicate_names",
+            )
+        return renames
