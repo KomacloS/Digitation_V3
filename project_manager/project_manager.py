@@ -453,6 +453,27 @@ class ProjectManager(QObject):
 
             self.log.log("info", "Skipping image check; images already up‑to‑date.")
 
+            # --- ensure unique component names ---
+            renames = self.bom_handler.fix_duplicate_names(self.object_library)
+            if renames:
+                rename_msg = "\n".join([f"{old} -> {new}" for old, new in renames])
+                QMessageBox.warning(
+                    self.main_window,
+                    "Duplicate Names Fixed",
+                    "Duplicate component names were detected and renamed:\n" + rename_msg,
+                )
+                board_set = set(
+                    [obj.component_name for obj in self.object_library.get_all_objects()]
+                )
+                from component_placer.bom_handler.bom_editor_dialog import BOMEditorDialog
+                dlg = BOMEditorDialog(
+                    bom_handler=self.bom_handler,
+                    board_component_names=board_set,
+                    parent=self.main_window,
+                )
+                if dlg.exec_() != dlg.Accepted:
+                    return
+
             # NOD ----------------------------------------------------------------
             t0 = time.perf_counter()
             nod_file = BoardNodFile(nod_path, object_library=self.object_library)
@@ -586,6 +607,27 @@ class ProjectManager(QObject):
         bom_path = os.path.join(new_proj_dir, "project_bom.csv")
 
         self.log.log("info", f"Saving project to new folder: {new_proj_dir}")
+
+        # --- ensure unique component names ---
+        renames = self.bom_handler.fix_duplicate_names(self.object_library)
+        if renames:
+            rename_msg = "\n".join([f"{old} -> {new}" for old, new in renames])
+            QMessageBox.warning(
+                self.main_window,
+                "Duplicate Names Fixed",
+                "Duplicate component names were detected and renamed:\n" + rename_msg,
+            )
+            board_set = set(
+                [obj.component_name for obj in self.object_library.get_all_objects()]
+            )
+            from component_placer.bom_handler.bom_editor_dialog import BOMEditorDialog
+            dlg = BOMEditorDialog(
+                bom_handler=self.bom_handler,
+                board_component_names=board_set,
+                parent=self.main_window,
+            )
+            if dlg.exec_() != dlg.Accepted:
+                return
 
         # ── 5. save images (same as before) ───────────────────────
         self.image_handler.save_image(top_image_path, "top")
