@@ -126,7 +126,9 @@ class GhostComponent:
             )
             item = QGraphicsPathItem(path)
             item.setPos(px, py)
-            item.setRotation((pad.get("angle_deg", 0.0) + self.rotation_deg) % 360)
+            # Rotate counter-clockwise when angle increases
+            total_angle = pad.get("angle_deg", 0.0) + self.rotation_deg
+            item.setRotation((-total_angle) % 360)
 
             # colour logic ---------------------------------------------------
             if pin_int(pad) == lowest_pin:

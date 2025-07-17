@@ -291,7 +291,8 @@ class DisplayLibrary(QObject):
         item.setPen(pen)
         item.setBrush(brush)
         item.setPos(x_scene, y_scene)
-        item.setRotation(pad.angle_deg)
+        # Rotate counter-clockwise for positive angles
+        item.setRotation(-pad.angle_deg)
         item.setZValue(self.z_value_pads)
         return item
 

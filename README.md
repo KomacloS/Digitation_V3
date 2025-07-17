@@ -56,7 +56,7 @@ pyinstaller --noconfirm --onedir \
     --add-data "constants:constants" \
     --add-data "component_libraries:component_libraries" \
     --icon=icon.ico \
-    --windowed \
+    --windowed \  # hide the console window
     --name Digitation main.py
 ```
 
