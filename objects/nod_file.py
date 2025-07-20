@@ -12,6 +12,7 @@ from utils.file_ops import safe_write, rotate_backups
 
 # Helper functions are included here for parsing and formatting
 
+
 def parse_component_nod_file(nod_file_path):
     """
     Parses a .nod file and extracts components into a structured format.
@@ -29,14 +30,15 @@ def parse_component_nod_file(nod_file_path):
     pads = []
     component_name = None  # Initialize the component name
 
-    with open(nod_file_path, 'r') as f:
+    with open(nod_file_path, "r") as f:
         for line in f:
             line = line.strip()
             # Skip empty lines or lines starting with an asterisk (comments)
-            if not line or line.startswith('*'):
+            if not line or line.startswith("*"):
                 continue
 
             import shlex
+
             tokens = shlex.split(line)
             # Skip header row if detected (e.g., first token is 'signal')
             if tokens and tokens[0].lower() == "signal":
@@ -62,10 +64,19 @@ def parse_component_nod_file(nod_file_path):
                 component_name = comp
 
             test_position = {"T": "Top", "B": "Bottom", "O": "Both"}.get(pos, "Top")
-            technology = {"S": "SMD", "T": "Through Hole", "M": "Mechanical"}.get(tecn, "SMD")
-            testability = {"F": "Forced", "T": "Testable", "N": "Not Testable", "E": "Terminal"}.get(test, "Not Testable")
+            technology = {"S": "SMD", "T": "Through Hole", "M": "Mechanical"}.get(
+                tecn, "SMD"
+            )
+            testability = {
+                "F": "Forced",
+                "T": "Testable",
+                "N": "Not Testable",
+                "E": "Terminal",
+            }.get(test, "Not Testable")
 
-            shape_type, width_mils, height_mils, hole_mils, angle_deg = parse_pad(pad_str)
+            shape_type, width_mils, height_mils, hole_mils, angle_deg = parse_pad(
+                pad_str
+            )
 
             width_mm = mils_to_mm(width_mils)
             height_mm = mils_to_mm(height_mils)
@@ -85,16 +96,12 @@ def parse_component_nod_file(nod_file_path):
                 "testability": testability,
                 "technology": technology,
                 "test_position": test_position,
-                "channel": int(tokens[9])
+                "channel": int(tokens[9]),
             }
 
             pads.append(pad_info)
 
-    return {
-        "component_name": component_name,
-        "pads": pads
-    }
-
+    return {"component_name": component_name, "pads": pads}
 
 
 def parse_pad(pad_str: str):
@@ -103,10 +110,10 @@ def parse_pad(pad_str: str):
     The pad string is expected to contain letter-number groups (X, Y, R, H, A)
     in any order. In addition, if only X (or only Y) is present, it is assumed
     to be a square, i.e. Y is set equal to X.
-    
+
     Returns:
         tuple: (shape_type, width_mils, height_mils, hole_mils, angle_deg)
-    
+
     Examples:
       - "X79Y59A270H35" returns:
             shape_type = "Square/rectangle with Hole"
@@ -125,7 +132,7 @@ def parse_pad(pad_str: str):
     pad_str = pad_str.upper()
 
     # Use a regex to find all letter-number groups.
-    pattern = re.compile(r'([XYRAH])([\d\.]+)')
+    pattern = re.compile(r"([XYRAH])([\d\.]+)")
     matches = pattern.findall(pad_str)
 
     # Build a dictionary from the found groups.
@@ -138,24 +145,26 @@ def parse_pad(pad_str: str):
         data[letter] = value
 
     # Additional logic: if only X is present (or only Y), set the missing value equal.
-    if 'X' in data and 'Y' not in data:
-        data['Y'] = data['X']
-    if 'Y' in data and 'X' not in data:
-        data['X'] = data['Y']
+    if "X" in data and "Y" not in data:
+        data["Y"] = data["X"]
+    if "Y" in data and "X" not in data:
+        data["X"] = data["Y"]
 
     # Get the angle (if present) and hole size.
-    angle_deg = data.get('A', 0.0)
-    hole_mils = data.get('H', 0.0)
+    angle_deg = data.get("A", 0.0)
+    hole_mils = data.get("H", 0.0)
 
     # Determine the shape and dimensions.
     # If X and Y are provided, treat it as a square/rectangle.
-    if 'X' in data and 'Y' in data:
-        width_mils = data['X']
-        height_mils = data['Y']
-        shape_type = "Square/rectangle with Hole" if hole_mils > 0 else "Square/rectangle"
+    if "X" in data and "Y" in data:
+        width_mils = data["X"]
+        height_mils = data["Y"]
+        shape_type = (
+            "Square/rectangle with Hole" if hole_mils > 0 else "Square/rectangle"
+        )
     # If R is provided, treat it as a round pad.
-    elif 'R' in data:
-        width_mils = data['R']
+    elif "R" in data:
+        width_mils = data["R"]
         height_mils = width_mils
         shape_type = "Round with Hole" if hole_mils > 0 else "Round"
     else:
@@ -165,8 +174,6 @@ def parse_pad(pad_str: str):
         shape_type = "Square/rectangle"
 
     return shape_type, width_mils, height_mils, hole_mils, angle_deg
-
-
 
 
 def get_footprint_for_placer(nod_file_path):
@@ -189,7 +196,9 @@ def get_footprint_for_placer(nod_file_path):
 
     footprint_data = parse_component_nod_file(nod_file_path)
     if not footprint_data:
-        log.log("warning", f"Failed to parse .nod file or file not found: {nod_file_path}")
+        log.log(
+            "warning", f"Failed to parse .nod file or file not found: {nod_file_path}"
+        )
         return None
 
     pads = footprint_data.get("pads", [])
@@ -209,7 +218,7 @@ def get_footprint_for_placer(nod_file_path):
     log.log(
         "info",
         f"Loaded footprint '{comp_name}' with {len(pads)} pad(s). "
-        f"Center at ({center_x:.2f}, {center_y:.2f}) mm."
+        f"Center at ({center_x:.2f}, {center_y:.2f}) mm.",
     )
 
     return footprint_data
@@ -263,25 +272,37 @@ def obj_to_nod_line(obj: dict, logger: Optional[LogHandler] = None) -> str:
     height_mils = mm_to_mils(obj["height_mm"])
     hole_mils = mm_to_mils(hole_mm)
     # Get pad code. (get_pad_code() already checks shape type and includes an 'H' value if hole_mils > 0.)
-    pad = get_pad_code(obj["shape_type"], width_mils, height_mils, hole_mils, obj["angle_deg"])
-    
+    pad = get_pad_code(
+        obj["shape_type"], width_mils, height_mils, hole_mils, obj["angle_deg"]
+    )
+
     # Map test position (case–insensitive)
     test_position_lower = obj["test_position"].lower()
     pos_map = {"top": "T", "bottom": "B", "both": "O"}
     pos = pos_map.get(test_position_lower, "T")
-    
+
     # Map technology and testability.
-    tecn = {"SMD": "S", "Through Hole": "T", "Mechanical": "M"}.get(obj["technology"], "S")
-    test = {"Forced": "F", "Testable": "T", "Not Testable": "N", "Terminal": "E"}.get(obj["testability"], "N")
-    
+    tecn = {"SMD": "S", "Through Hole": "T", "Mechanical": "M"}.get(
+        obj["technology"], "S"
+    )
+    test = {"Forced": "F", "Testable": "T", "Not Testable": "N", "Terminal": "E"}.get(
+        obj["testability"], "N"
+    )
+
     # Construct and return the line.
     return f"\"{signal}\" \"{component_name}\" {pin} {x_mm:.3f} {y_mm:.3f} {pad} {pos} {tecn} {test} {obj['channel']}"
 
 
-def get_pad_code(shape_type: str, width_mils: float, height_mils: float, hole_mils: float, angle_deg: float) -> str:
+def get_pad_code(
+    shape_type: str,
+    width_mils: float,
+    height_mils: float,
+    hole_mils: float,
+    angle_deg: float,
+) -> str:
     """
     Generates a pad code for a .nod file based on the shape parameters.
-    
+
     - If shape_type == "Round", ignore the hole and include angle only if non-zero.
     - If shape_type == "Round with Hole" or "Hole", include the hole if > 0, but ignore the angle.
     - If shape_type includes "square/rectangle":
@@ -313,7 +334,8 @@ def get_pad_code(shape_type: str, width_mils: float, height_mils: float, hole_mi
 
     # 3) Square/rectangle with hole
     elif "square/rectangle with hole" in lower_shape:
-        return f"X{w}Y{h}H{hole}{angle_str}"
+        hole_part = f"H{hole}" if hole > 0 else ""
+        return f"X{w}Y{h}{hole_part}{angle_str}"
 
     # 4) Square/rectangle (no hole)
     elif "square/rectangle" in lower_shape:
@@ -327,11 +349,6 @@ def get_pad_code(shape_type: str, width_mils: float, height_mils: float, hole_mi
     # 6) Otherwise => fallback to round
     else:
         return f"R{w}"
-
-
-
-
-
 
 
 class BoardNodFile:
@@ -365,16 +382,19 @@ class BoardNodFile:
             self.log.log(
                 "debug",
                 f"add_object: Added {board_obj.component_name}, pin={board_obj.pin}, "
-                f"channel={board_obj.channel}, total_objs={len(self.object_library.get_all_objects())}"
+                f"channel={board_obj.channel}, total_objs={len(self.object_library.get_all_objects())}",
             )
         else:
-            self.log.log("warning", f"add_object: Failed to add {board_obj.component_name}, channel already exists.")
+            self.log.log(
+                "warning",
+                f"add_object: Failed to add {board_obj.component_name}, channel already exists.",
+            )
 
     def add_objects_batch(
         self,
         objects_list: List[BoardObject],
         skip_auto_save: bool = False,
-        skip_undo: bool = False
+        skip_undo: bool = False,
     ):
         """
         Adds multiple BoardObjects to the library in one shot.
@@ -394,39 +414,60 @@ class BoardNodFile:
 
     def remove_object(self, board_obj: BoardObject):
         if board_obj.channel is None:
-            self.log.log("warning", "remove_object: Cannot remove object without a channel.")
+            self.log.log(
+                "warning", "remove_object: Cannot remove object without a channel."
+            )
             return
 
         # Remove the object using ObjectLibrary
         removed = self.object_library.remove_object(board_obj.channel)
         if removed:
             self.changed = True
-            self.log.log("debug", f"remove_object: Removed {board_obj.component_name}, channel={board_obj.channel}")
+            self.log.log(
+                "debug",
+                f"remove_object: Removed {board_obj.component_name}, channel={board_obj.channel}",
+            )
         else:
-            self.log.log("warning", f"remove_object: Failed to remove {board_obj.component_name}, channel not found.")
+            self.log.log(
+                "warning",
+                f"remove_object: Failed to remove {board_obj.component_name}, channel not found.",
+            )
 
     def remove_objects_batch(self, objects_to_remove: List[BoardObject]):
         """Remove multiple BoardObjects WITHOUT pushing a new state (since done externally)."""
-        channels_to_remove = [obj.channel for obj in objects_to_remove if obj.channel is not None]
+        channels_to_remove = [
+            obj.channel for obj in objects_to_remove if obj.channel is not None
+        ]
         if not channels_to_remove:
-            self.log.log("warning", "remove_objects_batch: No valid channels to remove.")
+            self.log.log(
+                "warning", "remove_objects_batch: No valid channels to remove."
+            )
             return
 
         self.object_library.bulk_delete(channels_to_remove)
         self.changed = True
-        self.log.log("debug", f"remove_objects_batch: Removed {len(channels_to_remove)} objects.")
+        self.log.log(
+            "debug", f"remove_objects_batch: Removed {len(channels_to_remove)} objects."
+        )
         # Removed automatic save after deletion.
-        self.log.log("debug", "remove_objects_batch: Removed objects; manual save is required if needed.")
+        self.log.log(
+            "debug",
+            "remove_objects_batch: Removed objects; manual save is required if needed.",
+        )
 
         # Remove objects in bulk using ObjectLibrary
         self.object_library.bulk_delete(channels_to_remove)
         self.changed = True
         self.change_counter += len(channels_to_remove)
-        self.log.log("debug", f"remove_objects_batch: Removed {len(channels_to_remove)} objects.")
+        self.log.log(
+            "debug", f"remove_objects_batch: Removed {len(channels_to_remove)} objects."
+        )
 
         # Save changes immediately after bulk removal
         self.save()
-        self.log.log("debug", "remove_objects_batch: Removed objects and saved NOD file.")
+        self.log.log(
+            "debug", "remove_objects_batch: Removed objects and saved NOD file."
+        )
 
     def load(self, skip_undo: bool = False):
         """
@@ -434,7 +475,9 @@ class BoardNodFile:
         If skip_undo=True, we do NOT push an undo state for this load operation.
         """
         if not self.nod_path or not os.path.exists(self.nod_path):
-            self.log.log("warning", f"No NOD file found at {self.nod_path}. Nothing loaded.")
+            self.log.log(
+                "warning", f"No NOD file found at {self.nod_path}. Nothing loaded."
+            )
             return
 
         parsed_data = parse_component_nod_file(self.nod_path)
@@ -456,7 +499,7 @@ class BoardNodFile:
                 angle_deg=pad["angle_deg"],
                 testability=pad["testability"],
                 technology=pad["technology"],
-                test_position=pad["test_position"]
+                test_position=pad["test_position"],
             )
             # Keep the original coords for saving
             obj.x_coord_mm_original = pad["x_coord_mm"]
@@ -477,7 +520,7 @@ class BoardNodFile:
 
         self.log.log(
             "info",
-            f"Loaded {len(loaded_objects)} objects from NOD file. Next channel set to {self.next_channel}."
+            f"Loaded {len(loaded_objects)} objects from NOD file. Next channel set to {self.next_channel}.",
         )
 
     def _build_payload(self) -> str:
@@ -493,14 +536,17 @@ class BoardNodFile:
             d = obj.to_dict()
 
             # Ensure original coords & hole are present; fall back if missing
-            d["x_coord_mm"] = getattr(obj, "x_coord_mm_original", d.get("x_coord_mm", 0.0))
-            d["y_coord_mm"] = getattr(obj, "y_coord_mm_original", d.get("y_coord_mm", 0.0))
-            d["hole_mm"]    = getattr(obj, "hole_mm", 0.0)
+            d["x_coord_mm"] = getattr(
+                obj, "x_coord_mm_original", d.get("x_coord_mm", 0.0)
+            )
+            d["y_coord_mm"] = getattr(
+                obj, "y_coord_mm_original", d.get("y_coord_mm", 0.0)
+            )
+            d["hole_mm"] = getattr(obj, "hole_mm", 0.0)
 
             buf.write(obj_to_nod_line(d) + "\n")
 
         return buf.getvalue()
-
 
     def save(self, backup: bool = False, logger=None, fixed_ts: str | None = None):
         """
@@ -516,14 +562,15 @@ class BoardNodFile:
             if not safe_write(self.nod_path, payload):
                 raise RuntimeError("safe_write failed")
             self.changed = False
-            log.log("info",
-                    f"NOD file saved safely to '{self.nod_path}' "
-                    f"{'(with backup)' if backup else '(soft)'}")
+            log.log(
+                "info",
+                f"NOD file saved safely to '{self.nod_path}' "
+                f"{'(with backup)' if backup else '(soft)'}",
+            )
             return True
         except Exception as e:
             log.log("error", f"Failed to save NOD file: {e}")
             return False
-
 
     def update_objects_batch(self, updates: List[BoardObject], changes: dict):
         """
@@ -537,13 +584,18 @@ class BoardNodFile:
             for key, value in changes.items():
                 if hasattr(obj, key):
                     setattr(obj, key, value)
-                    self.log.log("debug", f"Updated {key} for {obj.component_name}, Pin: {obj.pin} to {value}")
+                    self.log.log(
+                        "debug",
+                        f"Updated {key} for {obj.component_name}, Pin: {obj.pin} to {value}",
+                    )
                 else:
                     self.log.log("warning", f"{key} is not a valid attribute for {obj}")
 
         self.changed = True
         # Removed auto-save call; manual save is now required.
-        self.log.log("debug", f"Batch updated {len(updates)} objects with changes: {changes}.")
+        self.log.log(
+            "debug", f"Batch updated {len(updates)} objects with changes: {changes}."
+        )
 
     def delete_objects_batch(self, objects_to_remove: List[BoardObject]):
         """
@@ -552,9 +604,13 @@ class BoardNodFile:
         self.remove_objects_batch(objects_to_remove)
 
     def debug_print_objects(self, title="BoardNodFile.objects"):
-        self.log.log("debug", f"{title}: We have {len(self.object_library.get_all_objects())} objects in memory.")
+        self.log.log(
+            "debug",
+            f"{title}: We have {len(self.object_library.get_all_objects())} objects in memory.",
+        )
         for idx, obj in enumerate(self.object_library.get_all_objects()):
-            self.log.log("debug",
-                         f"  [{idx}] '{obj.component_name}' pin={obj.pin}, channel={obj.channel}, "
-                         f"x={obj.x_coord_mm:.3f}, y={obj.y_coord_mm:.3f}")
-
+            self.log.log(
+                "debug",
+                f"  [{idx}] '{obj.component_name}' pin={obj.pin}, channel={obj.channel}, "
+                f"x={obj.x_coord_mm:.3f}, y={obj.y_coord_mm:.3f}",
+            )
