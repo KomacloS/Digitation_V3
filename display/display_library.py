@@ -1,12 +1,14 @@
 # display/display_library.py
 
+import logging
 from typing import List
-from PyQt5.QtCore import Qt, QObject
+from PyQt5.QtCore import Qt, QRectF, QObject
 from PyQt5.QtGui import QColor, QPen, QBrush, QPainterPath
-from PyQt5.QtWidgets import QGraphicsObject, QGraphicsItemGroup
+from PyQt5.QtWidgets import QGraphicsObject, QGraphicsItemGroup, QGraphicsScene
 from objects.board_object import BoardObject
 from logs.log_handler import LogHandler
 from constants.constants import Constants
+from display.coord_converter import CoordinateConverter
 from utils.flag_manager import FlagManager
 from display.pad_shapes import build_pad_path  # Helper to create QPainterPath for a pad
 
@@ -15,7 +17,6 @@ class SelectablePadItem(QGraphicsObject):
     """
     A custom QGraphicsObject that is selectable.
     """
-
     def __init__(self, path, board_object, log_handler, parent=None):
         super().__init__(parent)
         self.path = path
@@ -24,7 +25,8 @@ class SelectablePadItem(QGraphicsObject):
 
         # Make it selectable (and focusable if desired).
         self.setFlags(
-            QGraphicsObject.ItemIsSelectable | QGraphicsObject.ItemIsFocusable
+            QGraphicsObject.ItemIsSelectable
+            | QGraphicsObject.ItemIsFocusable
         )
 
         # Accept hover, touch, and all mouse buttons
@@ -121,7 +123,7 @@ class DisplayLibrary(QObject):
             "info",
             f"DisplayLibrary initialized for side '{self.current_side}'. Starting render with 0 objects.",
             module="DisplayLibrary",
-            func="__init__",
+            func="__init__"
         )
 
         # Render everything initially
@@ -139,7 +141,7 @@ class DisplayLibrary(QObject):
             "info",
             f"Rendering initial objects: found {len(all_objects)} in library.",
             module="DisplayLibrary",
-            func="render_initial_objects",
+            func="render_initial_objects"
         )
         rendered_count = 0
         for obj in all_objects:
@@ -150,7 +152,7 @@ class DisplayLibrary(QObject):
             f"Rendered {rendered_count} object(s) for side '{self.current_side}'. "
             f"Display now has {len(self.displayed_objects)} objects.",
             module="DisplayLibrary",
-            func="render_initial_objects",
+            func="render_initial_objects"
         )
 
     # --------------------------------------------------------------------------
@@ -166,14 +168,14 @@ class DisplayLibrary(QObject):
             "info",
             f"Object added: '{board_obj.component_name}' (ch {board_obj.channel}). Now rendering...",
             module="DisplayLibrary",
-            func="on_object_added",
+            func="on_object_added"
         )
         self.render_object(board_obj)
         self.log.log(
             "info",
             f"Display now has {len(self.displayed_objects)} objects after addition.",
             module="DisplayLibrary",
-            func="on_object_added",
+            func="on_object_added"
         )
 
     def on_object_removed(self, board_obj: BoardObject):
@@ -185,14 +187,14 @@ class DisplayLibrary(QObject):
             "info",
             f"Removing object '{board_obj.component_name}' (ch {board_obj.channel}).",
             module="DisplayLibrary",
-            func="on_object_removed",
+            func="on_object_removed"
         )
         self.remove_rendered_object(board_obj.channel)
         self.log.log(
             "info",
             f"Display now has {len(self.displayed_objects)} objects after removal.",
             module="DisplayLibrary",
-            func="on_object_removed",
+            func="on_object_removed"
         )
 
     def on_object_updated(self, board_obj: BoardObject):
@@ -204,7 +206,7 @@ class DisplayLibrary(QObject):
             "info",
             f"Updating object '{board_obj.component_name}' (ch {board_obj.channel}).",
             module="DisplayLibrary",
-            func="on_object_updated",
+            func="on_object_updated"
         )
         self.remove_rendered_object(board_obj.channel)
         self.render_object(board_obj)
@@ -212,7 +214,7 @@ class DisplayLibrary(QObject):
             "info",
             f"Display now has {len(self.displayed_objects)} objects after update.",
             module="DisplayLibrary",
-            func="on_object_updated",
+            func="on_object_updated"
         )
 
     # --------------------------------------------------------------------------
@@ -232,12 +234,12 @@ class DisplayLibrary(QObject):
                 "debug",
                 f"Skipping render: Channel {board_obj.channel} => visible=False.",
                 module="DisplayLibrary",
-                func="render_object",
+                func="render_object"
             )
             return False
 
         tp = board_obj.test_position.lower()  # e.g. 'top', 'bottom', or 'both'
-        tech = board_obj.technology.lower()  # e.g. 'smd', 'through hole'
+        tech = board_obj.technology.lower()   # e.g. 'smd', 'through hole'
         current = self.current_side
         created_anything = False
 
@@ -257,7 +259,7 @@ class DisplayLibrary(QObject):
                     "warning",
                     f"Failed to create primary pad item for channel={board_obj.channel}.",
                     module="DisplayLibrary",
-                    func="render_object",
+                    func="render_object"
                 )
 
         # 2) Secondary pad for through-hole if on opposite side
@@ -275,16 +277,12 @@ class DisplayLibrary(QObject):
 
         return created_anything
 
-    def create_pad_item(
-        self, pad: BoardObject, pen: QPen, brush: QBrush
-    ) -> QGraphicsObject:
+    def create_pad_item(self, pad: BoardObject, pen: QPen, brush: QBrush) -> QGraphicsObject:
         """
         Builds the QPainterPath for the pad, then creates a SelectablePadItem,
         positions it, and returns it. Returns None if build_pad_path fails.
         """
-        path = self._build_pad_path(
-            pad.width_mm, pad.height_mm, pad.hole_mm, pad.shape_type
-        )
+        path = self._build_pad_path(pad.width_mm, pad.height_mm, pad.hole_mm, pad.shape_type)
         if not path:
             return None
 
@@ -293,12 +291,8 @@ class DisplayLibrary(QObject):
         item.setPen(pen)
         item.setBrush(brush)
         item.setPos(x_scene, y_scene)
-
-        angle = pad.angle_deg
-        if self.current_side == "bottom":
-            angle = (180 - angle) % 360
         # Rotate counter-clockwise for positive angles
-        item.setRotation(-angle)
+        item.setRotation(-pad.angle_deg)
         item.setZValue(self.z_value_pads)
         return item
 
@@ -312,7 +306,13 @@ class DisplayLibrary(QObject):
         else:
             mm_per_pixel = self.converter.mm_per_pixels_bot
 
-        return build_pad_path(width_mm, height_mm, hole_mm, shape_type, mm_per_pixel)
+        return build_pad_path(
+            width_mm,
+            height_mm,
+            hole_mm,
+            shape_type,
+            mm_per_pixel
+        )
 
     # --------------------------------------------------------------------------
     #  REMOVING / CLEARING
@@ -340,12 +340,7 @@ class DisplayLibrary(QObject):
             self.group.removeFromGroup(itm)
             self.scene.removeItem(itm)
         self.displayed_objects.clear()
-        self.log.log(
-            "info",
-            "All rendered objects cleared.",
-            module="DisplayLibrary",
-            func="clear_all_rendered_objects",
-        )
+        self.log.log("info", "All rendered objects cleared.", module="DisplayLibrary", func="clear_all_rendered_objects")
 
     # --------------------------------------------------------------------------
     #  PARTIAL UPDATE METHODS (for bulk operations)
@@ -387,7 +382,7 @@ class DisplayLibrary(QObject):
             "info",
             f"Side changed to '{self.current_side}'. Re-rendering display...",
             module="DisplayLibrary",
-            func="update_display_side",
+            func="update_display_side"
         )
         self.clear_all_rendered_objects()
         self.render_initial_objects()
@@ -397,13 +392,18 @@ class DisplayLibrary(QObject):
     # --------------------------------------------------------------------------
     def get_pad_color(self, testability_code: str) -> QColor:
         color_mapping = {
-            "F": QColor(0xC0, 0x60, 0xC0),  # Forced  (magenta-ish)
-            "T": QColor(0x00, 0x64, 0x00),  # Testable (dark green)
-            "N": QColor(0x60, 0x60, 0x60),  # Not testable (grey)
-            "E": QColor(0x80, 0x80, 0x00),  # Terminal (olive)
+            'F': QColor(0xC0, 0x60, 0xC0),  # Forced  (magenta-ish)
+            'T': QColor(0x00, 0x64, 0x00),  # Testable (dark green)
+            'N': QColor(0x60, 0x60, 0x60),  # Not testable (grey)
+            'E': QColor(0x80, 0x80, 0x00)   # Terminal (olive)
         }
         return color_mapping.get(testability_code, QColor(0, 0, 0))
 
     def testability_to_code(self, testability_str: str) -> str:
-        mapping = {"Forced": "F", "Testable": "T", "Not Testable": "N", "Terminal": "E"}
+        mapping = {
+            "Forced": "F",
+            "Testable": "T",
+            "Not Testable": "N",
+            "Terminal": "E"
+        }
         return mapping.get(testability_str, "N")

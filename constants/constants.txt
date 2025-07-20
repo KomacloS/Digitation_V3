@@ -26,7 +26,6 @@
     "central_backup_dir": "",
     "max_backups": 5,
     "anchor_nudge_step_mm": 0.2,
-    "ghost_rotation_step_deg": 15,
     "max_zoom": 10.0,
     "quick_prefix_table": [
         "A",
@@ -56,6 +55,6 @@
         "AE",
         "AF",
         "AG",
-        "AH",
-    ],
+        "AH"
+    ]
 }
