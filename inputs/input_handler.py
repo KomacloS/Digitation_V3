@@ -2,6 +2,7 @@ import logging
 from PyQt5.QtCore import QObject, QEvent, Qt, QPoint, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QWidget, QGraphicsScene
 
+
 class InputHandler(QObject):
     """
     A single event filter that:
@@ -10,13 +11,14 @@ class InputHandler(QObject):
       - Handles middle mouse (panning), right mouse (context menu), Ctrl+Wheel (zoom)
       - Supports ESC, Ctrl+R, and arrow keys.
     """
-    mouse_clicked = pyqtSignal(float, float, str)
-    wheel_moved  = pyqtSignal(int)
 
-    arrow_up     = pyqtSignal()
-    arrow_down   = pyqtSignal()
-    arrow_left   = pyqtSignal()
-    arrow_right  = pyqtSignal()
+    mouse_clicked = pyqtSignal(float, float, str)
+    wheel_moved = pyqtSignal(int)
+
+    arrow_up = pyqtSignal()
+    arrow_down = pyqtSignal()
+    arrow_left = pyqtSignal()
+    arrow_right = pyqtSignal()
 
     def __init__(self, board_view=None, component_placer=None, ghost_component=None):
         super().__init__()
@@ -97,18 +99,29 @@ class InputHandler(QObject):
         # Map the mouse position to the scene
         scene_pos = self.board_view.mapToScene(event.pos())
         btn = event.button()
-        btn_str = ("left" if btn == Qt.LeftButton
-                   else "middle" if btn == Qt.MiddleButton
-                   else "right" if btn == Qt.RightButton
-                   else "unknown")
-        self.log.debug(f"Detected {btn_str}-click at scene=({scene_pos.x():.2f}, {scene_pos.y():.2f}).")
+        btn_str = (
+            "left"
+            if btn == Qt.LeftButton
+            else (
+                "middle"
+                if btn == Qt.MiddleButton
+                else "right" if btn == Qt.RightButton else "unknown"
+            )
+        )
+        self.log.debug(
+            f"Detected {btn_str}-click at scene=({scene_pos.x():.2f}, {scene_pos.y():.2f})."
+        )
         self.mouse_clicked.emit(scene_pos.x(), scene_pos.y(), btn_str)
 
-        placer_active = (self.component_placer and getattr(self.component_placer, "is_active", False))
+        placer_active = self.component_placer and getattr(
+            self.component_placer, "is_active", False
+        )
 
         if btn == Qt.LeftButton:
             if placer_active:
-                self.log.info("Left-click while placer active: finalizing component placement.")
+                self.log.info(
+                    "Left-click while placer active: finalizing component placement."
+                )
                 self.component_placer.on_user_left_click(scene_pos.x(), scene_pos.y())
                 return True
             else:
@@ -125,7 +138,9 @@ class InputHandler(QObject):
             # If nothing is selected, try selecting the topmost item
             selected_pads = self.board_view._get_selected_pads()
             if not selected_pads:
-                item = self.board_view.scene.itemAt(scene_pos, self.board_view.transform())
+                item = self.board_view.scene.itemAt(
+                    scene_pos, self.board_view.transform()
+                )
                 if item and hasattr(item, "setSelected"):
                     item.setSelected(True)
                     selected_pads = [item]
@@ -157,8 +172,12 @@ class InputHandler(QObject):
             v_scroll.setValue(v_scroll.value() - delta.y())
             return True
 
-        if (self.component_placer and getattr(self.component_placer, "is_active", False)
-            and self.ghost_component and getattr(self.ghost_component, "is_active", False)):
+        if (
+            self.component_placer
+            and getattr(self.component_placer, "is_active", False)
+            and self.ghost_component
+            and getattr(self.ghost_component, "is_active", False)
+        ):
             # Update ghost component position
             self.ghost_component.move_ghost_to(scene_pos.x(), scene_pos.y())
             return True
@@ -183,12 +202,25 @@ class InputHandler(QObject):
         mods = QApplication.keyboardModifiers()
         delta = event.angleDelta().y()
         if mods & Qt.ControlModifier:
-            if delta > 0:
-                if self.board_view and self.board_view.zoom_manager:
-                    self.board_view.zoom_manager.zoom_in()
-            elif delta < 0:
-                if self.board_view and self.board_view.zoom_manager:
-                    self.board_view.zoom_manager.zoom_out()
+            if (
+                self.component_placer
+                and getattr(self.component_placer, "is_active", False)
+                and self.ghost_component
+                and getattr(self.ghost_component, "is_active", False)
+                and self.board_view
+            ):
+                step = int(self.board_view.constants.get("ghost_rotation_step_deg", 15))
+                if delta > 0:
+                    self.component_placer.rotate_footprint(step)
+                elif delta < 0:
+                    self.component_placer.rotate_footprint(-step)
+            else:
+                if delta > 0:
+                    if self.board_view and self.board_view.zoom_manager:
+                        self.board_view.zoom_manager.zoom_in()
+                elif delta < 0:
+                    if self.board_view and self.board_view.zoom_manager:
+                        self.board_view.zoom_manager.zoom_out()
             return True
         return False
 
@@ -199,11 +231,15 @@ class InputHandler(QObject):
 
         # ESC cancels placement or ghost
         if key == Qt.Key_Escape:
-            if self.component_placer and getattr(self.component_placer, "is_active", False):
+            if self.component_placer and getattr(
+                self.component_placer, "is_active", False
+            ):
                 self.component_placer.deactivate_placement()
                 self.log.info("ESC pressed: deactivated component placement.")
                 return True
-            if self.ghost_component and getattr(self.ghost_component, "is_active", False):
+            if self.ghost_component and getattr(
+                self.ghost_component, "is_active", False
+            ):
                 self.ghost_component.remove_ghost()
                 self.log.info("ESC pressed: removed ghost component.")
                 return True
@@ -212,16 +248,22 @@ class InputHandler(QObject):
         # Ctrl+R rotates the ghost or placer
         if key == Qt.Key_R and (mods & Qt.ControlModifier):
             self.log.info("Ctrl+R detected.")
-            if self.component_placer and getattr(self.component_placer, "is_active", False):
+            if self.component_placer and getattr(
+                self.component_placer, "is_active", False
+            ):
                 self.log.info("Rotating component placer footprint by 90°.")
                 self.component_placer.rotate_footprint(90)
                 return True
-            elif self.ghost_component and getattr(self.ghost_component, "is_active", False):
+            elif self.ghost_component and getattr(
+                self.ghost_component, "is_active", False
+            ):
                 self.log.info("Rotating ghost component by 90°.")
                 self.ghost_component.rotate_footprint(90)
                 return True
             else:
-                self.log.warning("Ctrl+R pressed but no active placer or ghost component.")
+                self.log.warning(
+                    "Ctrl+R pressed but no active placer or ghost component."
+                )
                 return False
 
         # ── Arrow keys: emit signals and consume the event ─────────────
