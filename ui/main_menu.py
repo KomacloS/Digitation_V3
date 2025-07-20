@@ -478,6 +478,12 @@ class MainWindow(QMainWindow):
         set_prefix_table_action.triggered.connect(self.set_quick_prefix_table)
         prefix_menu.addAction(set_prefix_table_action)
 
+        # ------------------- HELP Menu ------------------
+        help_menu = menubar.addMenu("Help")
+        help_action = QAction("User Guide", self)
+        help_action.triggered.connect(self.open_help_dialog)
+        help_menu.addAction(help_action)
+
     # ------------------------------------------------------------------
     #  Board Origin Setter
     # ------------------------------------------------------------------
@@ -1267,3 +1273,15 @@ class MainWindow(QMainWindow):
         # pad text to constant width (5 chars = 'Top  ' / 'Bottom')
         txt = f"Side: {current_side:<6}"
         self.working_side_label.setText(txt)
+
+    def open_help_dialog(self):
+        """Open a simple dialog displaying the README as a user guide."""
+        from ui.help_dialog import HelpDialog
+
+        dlg = HelpDialog(self)
+        # Locate README relative to the project root
+        root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        readme_path = os.path.join(root_dir, "README.md")
+        dlg.load_help_content(readme_path)
+        dlg.resize(700, 600)
+        dlg.exec_()
