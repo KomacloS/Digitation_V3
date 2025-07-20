@@ -1,14 +1,25 @@
 import time
 import copy
-from typing import List, Optional
+from typing import List
 from PyQt5.QtWidgets import (
-    QDialog, QTableWidget, QTableWidgetItem, QVBoxLayout, QHBoxLayout,
-    QLabel, QLineEdit, QPushButton, QComboBox, QGroupBox, QFormLayout,
-    QHeaderView, QMessageBox, QSizePolicy, QFileDialog
+    QDialog,
+    QTableWidget,
+    QTableWidgetItem,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QComboBox,
+    QGroupBox,
+    QFormLayout,
+    QHeaderView,
+    QMessageBox,
+    QSizePolicy,
+    QFileDialog,
 )
 from PyQt5 import QtCore
-from PyQt5.QtCore import Qt, pyqtSignal, QItemSelection, QItemSelectionModel
-from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt, pyqtSignal
 import pandas as pd  # New import for Excel export
 
 from objects.board_object import BoardObject
@@ -17,19 +28,23 @@ from logs.log_handler import LogHandler
 # Conversion factor for mm to mils.
 MM_TO_MILS = 39.37
 
+
 class PadEditorDialog(QDialog):
     """
     A dialog to view and edit multiple pads at once.
     (Features include filtering, bulk editing, temporary removal of rows, toggling units,
      and exporting the currently visible table to an Excel file.)
     """
+
     pads_updated = pyqtSignal()  # Emitted when changes are applied
 
-    def __init__(self, 
-                selected_pads: List[BoardObject], 
-                object_library=None, 
-                board_view=None,       # <-- NEW: pass in BoardView here
-                parent=None):
+    def __init__(
+        self,
+        selected_pads: List[BoardObject],
+        object_library=None,
+        board_view=None,  # <-- NEW: pass in BoardView here
+        parent=None,
+    ):
         super().__init__(parent)
 
         self.setWindowTitle("Pad Editor")
@@ -79,8 +94,16 @@ class PadEditorDialog(QDialog):
         self.tech_filter.addItems(["", "SMD", "Through Hole", "Mechanical"])
         self.tech_filter.setFixedWidth(100)
         self.shape_filter = QComboBox()
-        self.shape_filter.addItems(["", "Round", "Square/rectangle",
-                                    "Square/rectangle with Hole", "Ellipse", "Hole"])
+        self.shape_filter.addItems(
+            [
+                "",
+                "Round",
+                "Square/rectangle",
+                "Square/rectangle with Hole",
+                "Ellipse",
+                "Hole",
+            ]
+        )
         self.shape_filter.setFixedWidth(150)
         self.width_filter = QLineEdit()
         self.width_filter.setFixedWidth(80)
@@ -117,12 +140,23 @@ class PadEditorDialog(QDialog):
         # 2. TABLE FOR DISPLAYING PAD DATA
         # ---------------------------------------------------------
         self.pad_table = QTableWidget()
-        self.pad_table.setColumnCount(11)
-        self.pad_table.setHorizontalHeaderLabels([
-            "Pin", "Component", "Channel", "Signal",
-            "Test Pos", "Testability", "Tech", "Shape",
-            "Width", "Height", "Hole"
-        ])
+        self.pad_table.setColumnCount(12)
+        self.pad_table.setHorizontalHeaderLabels(
+            [
+                "Pin",
+                "Component",
+                "Channel",
+                "Signal",
+                "Test Pos",
+                "Testability",
+                "Tech",
+                "Shape",
+                "Width",
+                "Height",
+                "Hole",
+                "Angle",
+            ]
+        )
         header = self.pad_table.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.ResizeToContents)
         self.pad_table.setMinimumHeight(350)
@@ -155,15 +189,24 @@ class PadEditorDialog(QDialog):
         self.combo_test_position.addItems(["No change", "Top", "Bottom", "Both"])
         self.combo_test_position.setFixedWidth(combo_width)
         self.combo_testability = QComboBox()
-        self.combo_testability.addItems(["No change", "Testable",
-                                        "Not Testable", "Forced", "Terminal"])
+        self.combo_testability.addItems(
+            ["No change", "Testable", "Not Testable", "Forced", "Terminal"]
+        )
         self.combo_testability.setFixedWidth(combo_width)
         self.combo_tech = QComboBox()
         self.combo_tech.addItems(["No change", "SMD", "Through Hole", "Mechanical"])
         self.combo_tech.setFixedWidth(combo_width)
         self.combo_shape = QComboBox()
-        self.combo_shape.addItems(["No change", "Round", "Square/rectangle",
-                                "Square/rectangle with Hole", "Ellipse", "Hole"])
+        self.combo_shape.addItems(
+            [
+                "No change",
+                "Round",
+                "Square/rectangle",
+                "Square/rectangle with Hole",
+                "Ellipse",
+                "Hole",
+            ]
+        )
         self.combo_shape.setFixedWidth(combo_width)
         self.combo_shape.currentTextChanged.connect(self.update_bulk_edit_fields)
 
@@ -229,7 +272,6 @@ class PadEditorDialog(QDialog):
 
         self.resize(900, 550)
 
-
     # --------------------------------------------------------------------------
     # New slot: toggle_units (also update bulk edit labels)
     # --------------------------------------------------------------------------
@@ -259,17 +301,25 @@ class PadEditorDialog(QDialog):
     def remove_selected_rows(self):
         selected_ranges = self.pad_table.selectedRanges()
         if not selected_ranges:
-            QMessageBox.information(self, "No Rows Selected", "Select at least one row to remove.")
+            QMessageBox.information(
+                self, "No Rows Selected", "Select at least one row to remove."
+            )
             return
         rows_to_remove = set()
         for sel in selected_ranges:
             for row in range(sel.topRow(), sel.bottomRow() + 1):
                 rows_to_remove.add(row)
-        new_filtered = [pad for idx, pad in enumerate(self.filtered_pads) if idx not in rows_to_remove]
+        new_filtered = [
+            pad
+            for idx, pad in enumerate(self.filtered_pads)
+            if idx not in rows_to_remove
+        ]
         removed_count = len(self.filtered_pads) - len(new_filtered)
         self.filtered_pads = new_filtered
         self.populate_table(self.filtered_pads)
-        self.log.log("info", f"Removed {removed_count} rows from the table (temporary removal).")
+        self.log.log(
+            "info", f"Removed {removed_count} rows from the table (temporary removal)."
+        )
 
     # --------------------------------------------------------------------------
     # Updated populate_table with timing instrumentation, unit conversion, and read-only cells
@@ -277,7 +327,9 @@ class PadEditorDialog(QDialog):
     def populate_table(self, pads: List[BoardObject]) -> None:
         start_time = time.perf_counter()
         # Sort the pads by component name and then by numeric pin value.
-        self.filtered_pads = sorted(pads, key=lambda p: (p.component_name.lower(), int(p.pin)))
+        self.filtered_pads = sorted(
+            pads, key=lambda p: (p.component_name.lower(), int(p.pin))
+        )
         self.pad_table.setSortingEnabled(False)
         self.pad_table.setUpdatesEnabled(False)
         self.pad_table.blockSignals(True)
@@ -299,6 +351,10 @@ class PadEditorDialog(QDialog):
             signal_text = pad.signal if hasattr(pad, "signal") else ""
 
             # Prepare the list of table items.
+            angle_val = pad.angle_deg
+            if pad.test_position.lower() == "bottom":
+                angle_val = (180 - angle_val) % 360
+
             items = [
                 QTableWidgetItem(str(pad.pin)),
                 QTableWidgetItem(pad.component_name),
@@ -310,7 +366,8 @@ class PadEditorDialog(QDialog):
                 QTableWidgetItem(pad.shape_type),
                 QTableWidgetItem(f"{width:.2f}"),
                 QTableWidgetItem(f"{height:.2f}"),
-                QTableWidgetItem(f"{hole:.2f}")
+                QTableWidgetItem(f"{hole:.2f}"),
+                QTableWidgetItem(f"{angle_val:.2f}"),
             ]
             # Set each cell as read-only and insert into the table.
             for col_idx, item in enumerate(items):
@@ -320,8 +377,10 @@ class PadEditorDialog(QDialog):
         self.pad_table.setUpdatesEnabled(True)
         self.pad_table.setSortingEnabled(True)
         elapsed = time.perf_counter() - start_time
-        self.log.log("info", f"Table refresh: populated {row_count} rows in {elapsed:.4f} seconds.")
-
+        self.log.log(
+            "info",
+            f"Table refresh: populated {row_count} rows in {elapsed:.4f} seconds.",
+        )
 
     # --------------------------------------------------------------------------
     # Updated on_item_changed remains unchanged (if needed)...
@@ -333,20 +392,33 @@ class PadEditorDialog(QDialog):
 
     def get_column_attr(self, col_idx):
         mapping = [
-            "pin", "component_name", "channel", "signal",
-            "test_position", "testability", "technology", "shape_type",
-            "width_mm", "height_mm", "hole_mm"
+            "pin",
+            "component_name",
+            "channel",
+            "signal",
+            "test_position",
+            "testability",
+            "technology",
+            "shape_type",
+            "width_mm",
+            "height_mm",
+            "hole_mm",
+            "angle_deg",
         ]
         return mapping[col_idx]
 
     def get_pad_for_row(self, row_idx: int) -> BoardObject:
         if 0 <= row_idx < len(self.filtered_pads):
             pad = self.filtered_pads[row_idx]
-            self.log.log("debug",
-                         f"get_pad_for_row: Table row {row_idx} -> Pad {pad.channel} (Component {pad.component_name}, Pin {pad.pin})")
+            self.log.log(
+                "debug",
+                f"get_pad_for_row: Table row {row_idx} -> Pad {pad.channel} (Component {pad.component_name}, Pin {pad.pin})",
+            )
             return pad
-        self.log.log("warning",
-                     f"get_pad_for_row: Invalid row index {row_idx}. Filtered pads count = {len(self.filtered_pads)}")
+        self.log.log(
+            "warning",
+            f"get_pad_for_row: Invalid row index {row_idx}. Filtered pads count = {len(self.filtered_pads)}",
+        )
         return None
 
     # --------------------------------------------------------------------------
@@ -419,7 +491,9 @@ class PadEditorDialog(QDialog):
         self.hole_filter.clear()
         self.filtered_pads = list(self.selected_pads)
         self.populate_table(self.filtered_pads)
-        self.log.log("debug", f"Filter cleared. Showing {len(self.filtered_pads)} pads.")
+        self.log.log(
+            "debug", f"Filter cleared. Showing {len(self.filtered_pads)} pads."
+        )
 
     # --------------------------------------------------------------------------
     # Updated bulk edit: disable/enable dimension edit boxes based on shape selection.
@@ -452,7 +526,6 @@ class PadEditorDialog(QDialog):
             self.hole_edit.setEnabled(True)
         self.log.log("debug", f"Bulk edit fields updated for shape '{new_shape}'.")
 
-
     # --------------------------------------------------------------------------
     # Updated apply_edits with timing instrumentation
     # --------------------------------------------------------------------------
@@ -464,8 +537,9 @@ class PadEditorDialog(QDialog):
         # ------------------------------------------------------------------
         selected_ranges = self.pad_table.selectedRanges()
         if not selected_ranges:
-            QMessageBox.information(self, "No Rows Selected",
-                                    "Select at least one row.")
+            QMessageBox.information(
+                self, "No Rows Selected", "Select at least one row."
+            )
             return
 
         selected_channels = set()
@@ -475,36 +549,47 @@ class PadEditorDialog(QDialog):
                 if pad:
                     selected_channels.add(pad.channel)
 
-        self.log.log("debug",
-                     f"Selected rows capture: channels={sorted(selected_channels)}")
+        self.log.log(
+            "debug", f"Selected rows capture: channels={sorted(selected_channels)}"
+        )
 
         # ------------------------------------------------------------------
         # STEP 1  – collect requested changes from the bulk-edit widgets
         # ------------------------------------------------------------------
-        shape      = self.combo_shape.currentText()
-        test_pos   = self.combo_test_position.currentText()
-        testab     = self.combo_testability.currentText()
-        tech       = self.combo_tech.currentText()
-        width_txt  = self.width_edit.text().strip()
+        shape = self.combo_shape.currentText()
+        test_pos = self.combo_test_position.currentText()
+        testab = self.combo_testability.currentText()
+        tech = self.combo_tech.currentText()
+        width_txt = self.width_edit.text().strip()
         height_txt = self.height_edit.text().strip()
-        hole_txt   = self.hole_edit.text().strip()
-        angle_txt  = self.angle_edit.text().strip()
+        hole_txt = self.hole_edit.text().strip()
+        angle_txt = self.angle_edit.text().strip()
 
         changes = {}
-        if shape     != "No change": changes["shape_type"]   = shape
-        if test_pos  != "No change": changes["test_position"] = test_pos
-        if testab    != "No change": changes["testability"]   = testab
-        if tech      != "No change": changes["technology"]    = tech
+        if shape != "No change":
+            changes["shape_type"] = shape
+        if test_pos != "No change":
+            changes["test_position"] = test_pos
+        if testab != "No change":
+            changes["testability"] = testab
+        if tech != "No change":
+            changes["technology"] = tech
 
-        def _f(x):  # safe float parser
-            try: return float(x)
-            except ValueError: return None
+        def _f(x):
+            try:
+                return float(x)
+            except ValueError:
+                return None
 
-        if (v := _f(width_txt))  is not None: changes["width_mm"]  = v
-        if (v := _f(height_txt)) is not None: changes["height_mm"] = v
-        if (v := _f(hole_txt))   is not None: changes["hole_mm"]   = v
+        if (v := _f(width_txt)) is not None:
+            changes["width_mm"] = v
+        if (v := _f(height_txt)) is not None:
+            changes["height_mm"] = v
+        if (v := _f(hole_txt)) is not None:
+            changes["hole_mm"] = v
         if angle_txt and angle_txt.lower() != "no change":
-            if (v := _f(angle_txt)) is not None: changes["angle_deg"] = v
+            if (v := _f(angle_txt)) is not None:
+                changes["angle_deg"] = v
 
         self.log.log("debug", f"Bulk edit changes: {changes}")
 
@@ -525,8 +610,7 @@ class PadEditorDialog(QDialog):
                     updated_pads.append(pad_copy)
 
         if not updated_pads:
-            QMessageBox.information(self, "No Changes",
-                                    "No attributes changed.")
+            QMessageBox.information(self, "No Changes", "No attributes changed.")
             return
 
         # ------------------------------------------------------------------
@@ -552,41 +636,41 @@ class PadEditorDialog(QDialog):
         for row_idx, pad in enumerate(self.filtered_pads):
             if pad.channel in selected_channels:
                 first = self.pad_table.model().index(row_idx, 0)
-                last  = self.pad_table.model().index(
-                            row_idx, self.pad_table.columnCount() - 1)
+                last = self.pad_table.model().index(
+                    row_idx, self.pad_table.columnCount() - 1
+                )
                 sel_range = QtCore.QItemSelection(first, last)
                 sel_model.select(
                     sel_range,
-                    QtCore.QItemSelectionModel.Select
-                    | QtCore.QItemSelectionModel.Rows
+                    QtCore.QItemSelectionModel.Select | QtCore.QItemSelectionModel.Rows,
                 )
 
         # ------------------------------------------------------------------
         # STEP 5  – wrap-up
         # ------------------------------------------------------------------
         self.pads_updated.emit()
-        QMessageBox.information(self, "Edits Applied",
-                                "Bulk edits have been applied.")
+        QMessageBox.information(self, "Edits Applied", "Bulk edits have been applied.")
 
         elapsed = time.perf_counter() - overall_start
-        self.log.log("info",
-                     f"apply_edits completed in {elapsed:.4f}s – "
-                     f"updated {len(updated_pads)} pad(s).")
-
-
-
+        self.log.log(
+            "info",
+            f"apply_edits completed in {elapsed:.4f}s – "
+            f"updated {len(updated_pads)} pad(s).",
+        )
 
     def delete_selected_pads(self):
         selected_ranges = self.pad_table.selectedRanges()
         if not selected_ranges:
-            QMessageBox.information(self, "No Rows Selected", "Select at least one row.")
+            QMessageBox.information(
+                self, "No Rows Selected", "Select at least one row."
+            )
             return
 
         confirm = QMessageBox.question(
             self,
             "Confirm Deletion",
             "Remove selected pads from the ObjectLibrary?",
-            QMessageBox.Yes | QMessageBox.No
+            QMessageBox.Yes | QMessageBox.No,
         )
         if confirm != QMessageBox.Yes:
             return
@@ -604,9 +688,10 @@ class PadEditorDialog(QDialog):
             self.filtered_pads = [p for p in self.filtered_pads if p not in to_delete]
             self.populate_table(self.filtered_pads)
             self.pads_updated.emit()
-            QMessageBox.information(self, "Pads Removed", f"Removed {len(to_delete)} pad(s).")
+            QMessageBox.information(
+                self, "Pads Removed", f"Removed {len(to_delete)} pad(s)."
+            )
             self.log.log("debug", f"Deleted {len(to_delete)} pads and updated UI.")
-
 
     # --------------------------------------------------------------------------
     # New method: export_to_excel to export the current visible table
@@ -624,40 +709,52 @@ class PadEditorDialog(QDialog):
                 width = pad.width_mm
                 height = pad.height_mm
                 hole = pad.hole_mm
-            data.append({
-                "Pin": pad.pin,
-                "Component": pad.component_name,
-                "Channel": pad.channel,
-                "Signal": pad.signal,
-                "Test Pos": pad.test_position,
-                "Testability": pad.testability,
-                "Tech": pad.technology,
-                "Shape": pad.shape_type,
-                "Width": f"{width:.2f}",
-                "Height": f"{height:.2f}",
-                "Hole": f"{hole:.2f}",
-                "Units": self.current_unit
-            })
+            angle_val = pad.angle_deg
+            if pad.test_position.lower() == "bottom":
+                angle_val = (180 - angle_val) % 360
+
+            data.append(
+                {
+                    "Pin": pad.pin,
+                    "Component": pad.component_name,
+                    "Channel": pad.channel,
+                    "Signal": pad.signal,
+                    "Test Pos": pad.test_position,
+                    "Testability": pad.testability,
+                    "Tech": pad.technology,
+                    "Shape": pad.shape_type,
+                    "Width": f"{width:.2f}",
+                    "Height": f"{height:.2f}",
+                    "Hole": f"{hole:.2f}",
+                    "Angle": f"{angle_val:.2f}",
+                    "Units": self.current_unit,
+                }
+            )
         if not data:
             QMessageBox.information(self, "No Data", "There are no pads to export.")
             return
         df = pd.DataFrame(data)
         # Ask the user where to save the file.
-        filename, _ = QFileDialog.getSaveFileName(self, "Save as Excel File", "", "Excel Files (*.xlsx)")
+        filename, _ = QFileDialog.getSaveFileName(
+            self, "Save as Excel File", "", "Excel Files (*.xlsx)"
+        )
         if filename:
             try:
-                df.to_excel(filename, index=False, engine='openpyxl')
+                df.to_excel(filename, index=False, engine="openpyxl")
                 self.log.log("info", f"Exported table to Excel file: {filename}")
-                QMessageBox.information(self, "Export Successful", f"Table exported to {filename}")
+                QMessageBox.information(
+                    self, "Export Successful", f"Table exported to {filename}"
+                )
             except Exception as e:
                 self.log.log("error", f"Failed to export table: {e}")
-                QMessageBox.critical(self, "Export Failed", f"Failed to export table:\n{e}")
-
+                QMessageBox.critical(
+                    self, "Export Failed", f"Failed to export table:\n{e}"
+                )
 
     def closeEvent(self, event):
         """
         When the dialog is closed, re-select the pads in the board view that were originally selected.
-        
+
         if self.board_view and self.selected_pads:
             # Iterate over the originally selected pads.
             for pad in self.selected_pads:

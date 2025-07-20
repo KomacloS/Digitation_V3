@@ -305,8 +305,15 @@ class ComponentPlacer(QObject):
             pos_x = x_mm + rx
             pos_y = y_mm + ry
 
-            final_angle = (pad.get("angle_deg", 0.0) + self.footprint_rotation) % 360
-            return pos_x, pos_y, final_angle
+            base_angle = (pad.get("angle_deg", 0.0) + self.footprint_rotation) % 360
+
+            if self.is_flipped:
+                base_angle = (180 - base_angle) % 360
+
+            if side == "bottom":
+                base_angle = (180 - base_angle) % 360
+
+            return pos_x, pos_y, base_angle
 
         def calc_new_pin(original_pin):
             if merge_choice is None:
@@ -559,9 +566,7 @@ class ComponentPlacer(QObject):
         # Prepare a message for the user.
         msg = f"Component '{comp_name}' already exists with pins: {sorted(existing_pins)}.\n"
         if missing:
-            msg += (
-                f"Missing pins: {missing}.\nDo you want to fill these gaps with new pads?"
-            )
+            msg += f"Missing pins: {missing}.\nDo you want to fill these gaps with new pads?"
         else:
             msg += (
                 "No gaps found. Do you want to append new pads at the end?\n"
