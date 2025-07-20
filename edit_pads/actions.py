@@ -73,12 +73,14 @@ def _extract_pad_data(pad, current_side, board_view):
     angle = obj.angle_deg
 
     # If side is "bottom", flip x by the board's physical width in mm
+    # and convert the stored angle back to the visual orientation
     if current_side == "bottom":
         # The bottom scale factor for width
         mm_per_pixel = board_view.converter.mm_per_pixels_bot
         # The board's pixel width * mm_per_pixel => total width in mm
         board_width_mm = board_view.converter.image_width * mm_per_pixel
         x_mm = board_width_mm - x_mm
+        angle = (180 - angle) % 360
 
     # Build a data dict describing this pad
     pad_data = {

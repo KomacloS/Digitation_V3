@@ -468,6 +468,10 @@ class MainWindow(QMainWindow):
         set_max_zoom_action.triggered.connect(self.set_max_zoom)
         controls_menu.addAction(set_max_zoom_action)
 
+        set_rotation_step_action = QAction("Set Ghost Rotation Step", self)
+        set_rotation_step_action.triggered.connect(self.set_ghost_rotation_step)
+        controls_menu.addAction(set_rotation_step_action)
+
         # ----- Prefix submenu -----
         prefix_menu = properties_menu.addMenu("Prefix")
         set_prefix_table_action = QAction("Set Quick Prefix Table", self)
@@ -1188,6 +1192,22 @@ class MainWindow(QMainWindow):
                 self.board_view.zoom_manager.max_user_scale = value
                 self.board_view.zoom_manager.update_zoom_limits()
             self.log.log("debug", f"Max zoom updated to {value}")
+
+    def set_ghost_rotation_step(self):
+        """Prompt user for new ghost rotation step in degrees."""
+        current_value = int(self.constants.get("ghost_rotation_step_deg", 15))
+        value, ok = QInputDialog.getInt(
+            self,
+            "Ghost Rotation Step",
+            "Enter rotation step (degrees):",
+            value=current_value,
+            min=1,
+            max=360,
+        )
+        if ok:
+            self.constants.set("ghost_rotation_step_deg", value)
+            self.constants.save()
+            self.log.log("debug", f"Ghost rotation step updated to {value} degrees")
 
     def set_quick_prefix_table(self):
         """Prompt user to edit the comma-separated quick prefix table."""
