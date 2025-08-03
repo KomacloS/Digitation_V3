@@ -3,7 +3,7 @@ import os
 from constants import FUNCTIONS_REF_PATH
 from PyQt5.QtWidgets import (
     QDialog, QTableWidget, QTableWidgetItem, QVBoxLayout, QHBoxLayout,
-    QLabel, QPushButton, QComboBox, QMessageBox
+    QLabel, QPushButton, QComboBox, QMessageBox, QLineEdit
 )
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
@@ -57,6 +57,29 @@ class BOMEditorDialog(QDialog):
         filter_layout.addWidget(self.filter_combo)
         filter_layout.addStretch()
         main_layout.addLayout(filter_layout)
+
+        # Overall search bar
+        search_layout = QHBoxLayout()
+        search_label = QLabel("Search:")
+        self.search_line = QLineEdit()
+        self.search_line.setPlaceholderText("Search all columns...")
+        self.search_line.setClearButtonEnabled(True)
+        self.search_line.textChanged.connect(self.populate_table)
+        search_layout.addWidget(search_label)
+        search_layout.addWidget(self.search_line)
+        main_layout.addLayout(search_layout)
+
+        # Per-column search fields
+        column_search_layout = QHBoxLayout()
+        self.column_search_edits = []
+        for header in ["Component", "Function", "Value", "Package", "Part Number"]:
+            edit = QLineEdit()
+            edit.setPlaceholderText(header)
+            edit.setClearButtonEnabled(True)
+            edit.textChanged.connect(self.populate_table)
+            self.column_search_edits.append(edit)
+            column_search_layout.addWidget(edit)
+        main_layout.addLayout(column_search_layout)
         
         # Create the table (6 columns)
         self.table = QTableWidget()
@@ -169,6 +192,36 @@ class BOMEditorDialog(QDialog):
             rows_to_show = [r for r in self.all_rows if r["type"] in ("extra", "missing")]
         else:
             rows_to_show = self.all_rows
+
+        # Apply overall search query
+        overall_query = self.search_line.text().strip().lower()
+        if overall_query:
+            rows_to_show = [
+                r for r in rows_to_show
+                if overall_query in r["component_name"].lower()
+                or overall_query in r["function"].lower()
+                or overall_query in r["value"].lower()
+                or overall_query in r["package"].lower()
+                or overall_query in r["part_number"].lower()
+            ]
+
+        # Apply per-column search queries
+        col_queries = [edit.text().strip().lower() for edit in self.column_search_edits]
+
+        def row_matches(row):
+            values = [
+                row["component_name"],
+                row["function"],
+                row["value"],
+                row["package"],
+                row["part_number"],
+            ]
+            for q, v in zip(col_queries, values):
+                if q and q not in v.lower():
+                    return False
+            return True
+
+        rows_to_show = [r for r in rows_to_show if row_matches(r)]
 
         self.table.setRowCount(0)
         row_index = 0
