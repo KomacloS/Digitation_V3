@@ -517,6 +517,7 @@ class BoardView(QGraphicsView):
         edit_action = QAction("Edit", self)
         cut_action = QAction("Cut", self)
         move_action = QAction("Move", self)
+        connect_action = QAction("Connect", self)
 
         copy_action.triggered.connect(
             lambda: actions.copy_pads(self.object_library, selected_pads)
@@ -538,6 +539,9 @@ class BoardView(QGraphicsView):
                 self.object_library, selected_pads, self.component_placer
             )
         )
+        connect_action.triggered.connect(
+            lambda: actions.connect_pads(self.object_library, selected_pads)
+        )
 
         # NEW: "Export Footprint"
         export_footprint_action = QAction("Export Footprint", self)
@@ -550,6 +554,7 @@ class BoardView(QGraphicsView):
         menu.addAction(cut_action)
         menu.addAction(paste_action)
         menu.addAction(move_action)
+        menu.addAction(connect_action)
         menu.addAction(delete_action)
         menu.addAction(edit_action)
         menu.addSeparator()
@@ -771,6 +776,17 @@ class BoardView(QGraphicsView):
             actions.move_pads(self.object_library, selected, self.component_placer)
         except Exception as e:
             self.log.log("error", f"Error in move_selected_pads: {e}")
+
+    def connect_selected_pads(self):
+        """Connects multiple pads to share one signal."""
+        selected = self._get_selected_pads()
+        if not selected:
+            self.log.log("warning", "No pads selected to connect.")
+            return
+        try:
+            actions.connect_pads(self.object_library, selected)
+        except Exception as e:
+            self.log.log("error", f"Error in connect_selected_pads: {e}")
 
     def open_pad_editor_dialog(self, pad_items):
         """

@@ -454,6 +454,63 @@ def move_pads(object_library, pad_items, component_placer):
     ]
 
 
+def connect_pads(object_library, pad_items):
+    """Connects multiple selected pads to share the same signal.
+
+    The user chooses one of the existing signal names from the selection. All
+    pads are updated to use that signal. Exactly one pad remains with
+    ``testability == "Forced"`` (the first pad already forced or, if none,
+    the first pad in the selection) and the rest become ``"Terminal"``.
+    """
+    if not _ensure_selection("Connect Pads", pad_items):
+        return
+
+    valid_pad_items = _get_valid_pads("Connect Pads", pad_items)
+    if len(valid_pad_items) < 2:
+        QMessageBox.warning(
+            None, "Connect Pads", "Select at least two pads to connect."
+        )
+        return
+
+    # Collect unique signal names from the selection
+    signal_map = {}
+    for pad in valid_pad_items:
+        obj = pad.board_object
+        sig = getattr(obj, "signal", f"S{obj.channel}")
+        signal_map[sig] = sig
+
+    signals = list(signal_map.keys())
+    signal_to_use = signals[0]
+    if len(signals) > 1:
+        signal_to_use, ok = QInputDialog.getItem(
+            None, "Connect Pads", "Select signal:", signals, 0, False
+        )
+        if not ok:
+            return
+
+    # Determine which pad remains forced
+    forced_obj = None
+    for pad in valid_pad_items:
+        if pad.board_object.testability == "Forced":
+            forced_obj = pad.board_object
+            break
+    if forced_obj is None:
+        forced_obj = valid_pad_items[0].board_object
+
+    updates = []
+    for pad in valid_pad_items:
+        obj = pad.board_object
+        updated = copy.deepcopy(obj)
+        updated.signal = signal_to_use
+        if obj is forced_obj:
+            updated.testability = "Forced"
+        else:
+            updated.testability = "Terminal"
+        updates.append(updated)
+
+    object_library.bulk_update_objects(updates, {})
+    _update_scene(valid_pad_items[0].scene().views()[0])
+
 def align_selected_pads(object_library, selected_pads, component_placer):
     """
     Initiates an align operation based on the selected pads.

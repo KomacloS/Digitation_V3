@@ -8,6 +8,7 @@ class BoardObject:
         component_name: str,
         pin: int,
         channel: Optional[int] = None,
+        signal: Optional[str] = None,
         test_position: str = "Top",
         testability: str = "Not Testable",
         x_coord_mm: float = 0.0,
@@ -23,6 +24,7 @@ class BoardObject:
         self.component_name = component_name
         self.pin = pin
         self.channel = channel
+        self.signal = signal or (f"S{channel}" if channel is not None else "S0")
         self.test_position = test_position
         self.testability = testability
 
@@ -50,10 +52,6 @@ class BoardObject:
         # New attribute to control visibility (default is True)
         self.visible = True
 
-    @property
-    def signal(self) -> str:
-        return f"S{self.channel}" if self.channel is not None else "S0"
-
     def update_coordinates(self, x_mm: float, y_mm: float):
         self.x_coord_mm = x_mm
         self.y_coord_mm = y_mm
@@ -63,6 +61,7 @@ class BoardObject:
             "component_name": self.component_name,
             "pin": self.pin,
             "channel": self.channel,
+            "signal": self.signal,
             "test_position": self.test_position,
             "testability": self.testability,
             "x_coord_mm": self.x_coord_mm,

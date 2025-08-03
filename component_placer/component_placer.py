@@ -463,6 +463,7 @@ class ComponentPlacer(QObject):
                     component_name=comp_name,
                     pin=new_pin_str,
                     channel=None,
+                    signal=pad.get("signal"),
                     test_position=side,
                     testability=pad.get("testability", "Not Testable"),
                     x_coord_mm=pos_x,
@@ -778,6 +779,7 @@ class ComponentPlacer(QObject):
             obj = BoardObject(
                 component_name=comp_name,
                 pin=str(new_pin),
+                signal=pad.get("signal"),
                 x_coord_mm=pad["x_coord_mm"],
                 y_coord_mm=pad["y_coord_mm"],
                 width_mm=pad["width_mm"],
