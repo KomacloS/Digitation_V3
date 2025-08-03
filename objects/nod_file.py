@@ -490,6 +490,7 @@ class BoardNodFile:
                 component_name=pad["component_name"],
                 pin=pad["pin"],
                 channel=pad["channel"],
+                signal=pad.get("signal"),
                 x_coord_mm=pad["x_coord_mm"],
                 y_coord_mm=pad["y_coord_mm"],
                 shape_type=pad["shape_type"],

@@ -58,6 +58,10 @@ def setup_board_view_shortcuts(board_view):
     board_view.move_shortcut.setContext(Qt.WidgetWithChildrenShortcut)
     board_view.move_shortcut.activated.connect(board_view.move_selected_pads)
 
+    board_view.connect_shortcut = QShortcut(QKeySequence("Ctrl+Q"), board_view)
+    board_view.connect_shortcut.setContext(Qt.WidgetWithChildrenShortcut)
+    board_view.connect_shortcut.activated.connect(board_view.connect_selected_pads)
+
     #  Flip ghost horizontally  (Ctrl+H)
     board_view.flip_shortcut = QShortcut(QKeySequence("Ctrl+H"), board_view)
     board_view.flip_shortcut.setContext(Qt.WidgetWithChildrenShortcut)
