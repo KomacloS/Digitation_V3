@@ -1,19 +1,13 @@
-import logging
-from PyQt5.QtWidgets import QMessageBox, QInputDialog
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import Qt, QTimer
 from logs.log_handler import LogHandler
 from edit_pads.pad_editor_dialog import PadEditorDialog
-from objects.board_object import BoardObject
-from objects.nod_file import BoardNodFile
-from component_placer.component_placer import clipboard, ComponentPlacer
-from component_placer.ghost import GhostComponent
+from component_placer.component_placer import clipboard
 from statistics import mean
 import copy
 
 # Initialize a logger
 log = LogHandler(output="both")
-
-from PyQt5.QtWidgets import QMessageBox
 
 
 # --------------------
@@ -353,8 +347,6 @@ def edit_pads(object_library, pad_items):
     # This ensures we have the correct QGraphicsView instance to refresh the scene.
     board_view = valid_pad_items[0].scene().views()[0] if valid_pad_items else None
 
-    from edit_pads.pad_editor_dialog import PadEditorDialog
-
     dialog = PadEditorDialog(
         selected_pads=board_objects,
         object_library=object_library,
@@ -433,14 +425,6 @@ def move_pads(object_library, pad_items, component_placer):
         QMessageBox.warning(None, "Move Pads", "No valid pad data available.")
         return
 
-    xs = [pad["x_coord_mm"] for pad in pads_data]
-    ys = [pad["y_coord_mm"] for pad in pads_data]
-    footprint = {
-        "pads": pads_data,
-        "center_x": (min(xs) + max(xs)) / 2.0,
-        "center_y": (min(ys) + max(ys)) / 2.0,
-    }
-
     if component_placer.ghost_component is None:
         from component_placer.ghost import GhostComponent
 
@@ -457,10 +441,10 @@ def move_pads(object_library, pad_items, component_placer):
 def connect_pads(object_library, pad_items):
     """Connects multiple selected pads to share the same signal.
 
-    The user chooses one of the existing signal names from the selection. All
-    pads are updated to use that signal. Exactly one pad remains with
-    ``testability == "Forced"`` (the first pad already forced or, if none,
-    the first pad in the selection) and the rest become ``"Terminal"``.
+    The signal from the pad with the largest area (``width_mm * height_mm``)
+    is applied to all pads. That pad remains ``testability == "Forced"`` and
+    the rest are set to ``"Terminal"``. If multiple pads share the largest
+    area, the first encountered is used.
     """
     if not _ensure_selection("Connect Pads", pad_items):
         return
@@ -472,44 +456,24 @@ def connect_pads(object_library, pad_items):
         )
         return
 
-    # Collect unique signal names from the selection
-    signal_map = {}
-    for pad in valid_pad_items:
-        obj = pad.board_object
-        sig = getattr(obj, "signal", f"S{obj.channel}")
-        signal_map[sig] = sig
-
-    signals = list(signal_map.keys())
-    signal_to_use = signals[0]
-    if len(signals) > 1:
-        signal_to_use, ok = QInputDialog.getItem(
-            None, "Connect Pads", "Select signal:", signals, 0, False
-        )
-        if not ok:
-            return
-
-    # Determine which pad remains forced
-    forced_obj = None
-    for pad in valid_pad_items:
-        if pad.board_object.testability == "Forced":
-            forced_obj = pad.board_object
-            break
-    if forced_obj is None:
-        forced_obj = valid_pad_items[0].board_object
+    # Determine which pad remains forced based on largest area
+    forced_obj = max(
+        (pad.board_object for pad in valid_pad_items),
+        key=lambda obj: obj.width_mm * obj.height_mm,
+    )
+    signal_to_use = getattr(forced_obj, "signal", f"S{forced_obj.channel}")
 
     updates = []
     for pad in valid_pad_items:
         obj = pad.board_object
         updated = copy.deepcopy(obj)
         updated.signal = signal_to_use
-        if obj is forced_obj:
-            updated.testability = "Forced"
-        else:
-            updated.testability = "Terminal"
+        updated.testability = "Forced" if obj is forced_obj else "Terminal"
         updates.append(updated)
 
     object_library.bulk_update_objects(updates, {})
     _update_scene(valid_pad_items[0].scene().views()[0])
+
 
 def align_selected_pads(object_library, selected_pads, component_placer):
     """
