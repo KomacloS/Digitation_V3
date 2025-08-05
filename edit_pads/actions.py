@@ -442,9 +442,11 @@ def connect_pads(object_library, pad_items):
     """Connects multiple selected pads to share the same signal.
 
     The signal from the pad with the largest area (``width_mm * height_mm``)
-    is applied to all pads. That pad remains ``testability == "Forced"`` and
-    the rest are set to ``"Terminal"``. If multiple pads share the largest
-    area, the first encountered is used.
+    in the selection is applied to all selected pads. Afterward, all pads
+    in the project that use that signal are examined so that exactly one pad
+    (the largest area) remains ``testability == "Forced"`` and the rest are
+    set to ``"Terminal"``. If multiple pads share the largest area, the first
+    encountered is used.
     """
     if not _ensure_selection("Connect Pads", pad_items):
         return
@@ -456,22 +458,39 @@ def connect_pads(object_library, pad_items):
         )
         return
 
-    # Determine which pad remains forced based on largest area
-    forced_obj = max(
+    # Determine which pad's signal will be used based on the largest area
+    forced_candidate = max(
         (pad.board_object for pad in valid_pad_items),
         key=lambda obj: obj.width_mm * obj.height_mm,
     )
-    signal_to_use = getattr(forced_obj, "signal", f"S{forced_obj.channel}")
+    signal_to_use = getattr(forced_candidate, "signal", f"S{forced_candidate.channel}")
 
-    updates = []
+    # Prepare updated copies for the selected pads
+    selected_channels = set()
+    selected_updates = []
     for pad in valid_pad_items:
         obj = pad.board_object
+        selected_channels.add(obj.channel)
         updated = copy.deepcopy(obj)
         updated.signal = signal_to_use
-        updated.testability = "Forced" if obj is forced_obj else "Terminal"
-        updates.append(updated)
+        selected_updates.append(updated)
 
-    object_library.bulk_update_objects(updates, {})
+    # Gather existing pads already using this signal (excluding selected ones)
+    existing_updates = []
+    for obj in object_library.objects.values():
+        if obj.signal == signal_to_use and obj.channel not in selected_channels:
+            existing_updates.append(copy.deepcopy(obj))
+
+    all_updates = selected_updates + existing_updates
+    if not all_updates:
+        return
+
+    # Determine the single forced pad across all pads with this signal
+    forced_obj = max(all_updates, key=lambda obj: obj.width_mm * obj.height_mm)
+    for obj in all_updates:
+        obj.testability = "Forced" if obj.channel == forced_obj.channel else "Terminal"
+
+    object_library.bulk_update_objects(all_updates, {})
     _update_scene(valid_pad_items[0].scene().views()[0])
 
 
