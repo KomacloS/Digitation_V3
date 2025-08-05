@@ -1,6 +1,5 @@
 # component_input_dialog.py
 
-import os
 import re
 from constants import FUNCTIONS_REF_PATH
 from PyQt5.QtWidgets import (
@@ -165,7 +164,15 @@ class ComponentInputDialog(QDialog):
         self.side_combo = QComboBox()
         self.side_combo.addItems(["Top", "Bottom", "Both"])
         self.testability_combo = QComboBox()
-        self.testability_combo.addItems(["Forced", "Testable", "Not Testable"])
+        self.testability_combo.addItems(
+            [
+                "Forced",
+                "Testable",
+                "Not Testable",
+                "Terminal",
+                "Testable Alternative",
+            ]
+        )
         self.tech_combo = QComboBox()
         self.tech_combo.addItems(["SMD", "Through Hole"])
 

@@ -6,7 +6,6 @@ from typing import List, Optional
 from objects.board_object import BoardObject
 from objects.object_library import ObjectLibrary
 from logs.log_handler import LogHandler
-from PyQt5.QtWidgets import QMessageBox
 from io import StringIO
 from utils.file_ops import safe_write, rotate_backups
 
@@ -69,9 +68,10 @@ def parse_component_nod_file(nod_file_path):
             )
             testability = {
                 "F": "Forced",
-                "T": "Testable",
+                "Y": "Testable",
                 "N": "Not Testable",
-                "E": "Terminal",
+                "T": "Terminal",
+                "A": "Testable Alternative",
             }.get(test, "Not Testable")
 
             shape_type, width_mils, height_mils, hole_mils, angle_deg = parse_pad(
@@ -285,9 +285,13 @@ def obj_to_nod_line(obj: dict, logger: Optional[LogHandler] = None) -> str:
     tecn = {"SMD": "S", "Through Hole": "T", "Mechanical": "M"}.get(
         obj["technology"], "S"
     )
-    test = {"Forced": "F", "Testable": "T", "Not Testable": "N", "Terminal": "E"}.get(
-        obj["testability"], "N"
-    )
+    test = {
+        "Forced": "F",
+        "Testable": "Y",
+        "Not Testable": "N",
+        "Terminal": "T",
+        "Testable Alternative": "A",
+    }.get(obj["testability"], "N")
 
     # Construct and return the line.
     return f"\"{signal}\" \"{component_name}\" {pin} {x_mm:.3f} {y_mm:.3f} {pad} {pos} {tecn} {test} {obj['channel']}"

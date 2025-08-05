@@ -190,7 +190,14 @@ class PadEditorDialog(QDialog):
         self.combo_test_position.setFixedWidth(combo_width)
         self.combo_testability = QComboBox()
         self.combo_testability.addItems(
-            ["No change", "Testable", "Not Testable", "Forced", "Terminal"]
+            [
+                "No change",
+                "Testable",
+                "Not Testable",
+                "Forced",
+                "Terminal",
+                "Testable Alternative",
+            ]
         )
         self.combo_testability.setFixedWidth(combo_width)
         self.combo_tech = QComboBox()

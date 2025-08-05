@@ -655,9 +655,10 @@ class BoardView(QGraphicsView):
             # Testability map
             test_map = {
                 "Forced": "F",
-                "Testable": "T",
+                "Testable": "Y",
                 "Not Testable": "N",
-                "Terminal": "E",
+                "Terminal": "T",
+                "Testable Alternative": "A",
             }
             test_ = test_map.get(obj.testability, "N")
 

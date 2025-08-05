@@ -398,12 +398,19 @@ class DisplayLibrary(QObject):
     def get_pad_color(self, testability_code: str) -> QColor:
         color_mapping = {
             "F": QColor(0xC0, 0x60, 0xC0),  # Forced  (magenta-ish)
-            "T": QColor(0x00, 0x64, 0x00),  # Testable (dark green)
+            "Y": QColor(0x00, 0x64, 0x00),  # Testable (dark green)
             "N": QColor(0x60, 0x60, 0x60),  # Not testable (grey)
-            "E": QColor(0x80, 0x80, 0x00),  # Terminal (olive)
+            "T": QColor(0x80, 0x80, 0x00),  # Terminal (olive)
+            "A": QColor(0x00, 0x00, 0xC0),  # Testable Alternative (blue)
         }
         return color_mapping.get(testability_code, QColor(0, 0, 0))
 
     def testability_to_code(self, testability_str: str) -> str:
-        mapping = {"Forced": "F", "Testable": "T", "Not Testable": "N", "Terminal": "E"}
+        mapping = {
+            "Forced": "F",
+            "Testable": "Y",
+            "Not Testable": "N",
+            "Terminal": "T",
+            "Testable Alternative": "A",
+        }
         return mapping.get(testability_str, "N")
