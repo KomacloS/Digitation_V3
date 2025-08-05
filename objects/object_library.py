@@ -99,6 +99,16 @@ class ObjectLibrary(QObject):
                 )
                 board_object.channel = assigned_channel
 
+            # Ensure the signal name matches the assigned channel if the
+            # incoming signal is missing or a library placeholder (e.g.
+            # '$FOFE$_t7/1').
+            if (
+                not board_object.signal
+                or board_object.signal == "S0"
+                or str(board_object.signal).startswith("$")
+            ):
+                board_object.signal = f"S{board_object.channel}"
+
             # Store the object
             self.objects[board_object.channel] = board_object
 
@@ -184,6 +194,14 @@ class ObjectLibrary(QObject):
                 # assign a free channel if needed
                 if (obj.channel is None) or (obj.channel in self.objects):
                     obj.channel = self.get_next_channel()
+
+                # Normalize placeholder signals (missing or library defaults)
+                if (
+                    not obj.signal
+                    or obj.signal == "S0"
+                    or str(obj.signal).startswith("$")
+                ):
+                    obj.signal = f"S{obj.channel}"
 
                 self.objects[obj.channel] = obj
                 added_objects.append(obj)

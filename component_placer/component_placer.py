@@ -645,19 +645,26 @@ class ComponentPlacer(QObject):
             old = existing.get(field, "")
             new = new_data.get(field, "")
             if old != new:
-                diffs.append(f"{field}: BOM='{old}' | Input='{new}'")
+                diffs.append((field, old, new))
 
         if not diffs:
             # No differences detected; nothing to update.
             return False
 
+        # Build an HTML table to present the differences more clearly.
+        rows = "".join(
+            f"<tr><td><b>{field}</b></td><td>{old}</td><td>{new}</td></tr>"
+            for field, old, new in diffs
+        )
         msg = (
-            f"Component '{comp_name}' exists in BOM with different data:\n"
-            + "\n".join(diffs)
-            + "\nUpdate BOM with new values?"
+            f"Component '{comp_name}' exists in BOM with different data:<br><br>"
+            "<table border='1' cellspacing='0' cellpadding='3'>"
+            "<tr><th>Field</th><th>BOM</th><th>Input</th></tr>"
+            f"{rows}</table><br>Update BOM with new values?"
         )
         msg_box = QMessageBox()
         msg_box.setWindowTitle("BOM Mismatch")
+        msg_box.setTextFormat(Qt.RichText)
         msg_box.setText(msg)
         update_btn = msg_box.addButton("Update BOM", QMessageBox.AcceptRole)
         keep_btn = msg_box.addButton("Keep Existing", QMessageBox.RejectRole)
