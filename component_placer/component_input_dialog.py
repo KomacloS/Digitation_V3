@@ -401,18 +401,15 @@ class ComponentInputDialog(QDialog):
         if self.accept_callback and not self.accept_callback(data):
             return
 
-        if self.bom_handler:
-            # Directly update BOM if handler provided
-            self.bom_handler.add_component(
-                data.get("component_name", ""),
-                data.get("function", ""),
-                data.get("value", ""),
-                data.get("package", ""),
-                data.get("part_number", ""),
-            )
-        else:
-            # Normal signal-based flow
-            self.component_data_ready.emit(data)
+        # Always emit the data but defer any BOM modifications to the
+        # component placer so that cancellations or placement failures do not
+        # inadvertently alter the BOM.  Previously the dialog updated the BOM
+        # directly which meant that even if the user later canceled the
+        # operation (for example, choosing not to append pads to an existing
+        # component) the BOM entry was already changed.  Emitting the data and
+        # letting the caller decide ensures the BOM is only touched after the
+        # placement is fully confirmed.
+        self.component_data_ready.emit(data)
 
         self.accept()
 

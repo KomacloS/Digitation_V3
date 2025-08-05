@@ -389,6 +389,22 @@ class ComponentPlacer(QObject):
             merge_counter = 1
             alf_mapping = get_alf_mapping(comp_base, comp_dir)
 
+            # Handle potential BOM mismatches before committing placement
+            existing_bom_entry = (
+                self.bom_handler.get_component(comp_name) if self.bom_handler else {}
+            )
+            bom_update_choice = True
+            if self.bom_handler:
+                if existing_bom_entry:
+                    decision = self._prompt_bom_update(
+                        comp_name, existing_bom_entry, input_data
+                    )
+                    if decision is None:
+                        return False
+                    bom_update_choice = decision
+                else:
+                    bom_update_choice = True
+
         if is_move:
             # -------------------------------------------
             #   MOVE MODE: Updating existing objects
@@ -485,6 +501,27 @@ class ComponentPlacer(QObject):
 
             # PARTIAL RENDER: no big re-render
             self.object_library.bulk_add(new_objects, skip_render=False)
+
+            # Update BOM only after successful placement and according to the
+            # user's decision above.
+            if self.bom_handler:
+                if existing_bom_entry:
+                    if bom_update_choice:
+                        self.bom_handler.update_component(
+                            comp_name,
+                            function=input_data.get("function", ""),
+                            value=input_data.get("value", ""),
+                            package=input_data.get("package", ""),
+                            part_number=input_data.get("part_number", ""),
+                        )
+                else:
+                    self.bom_handler.add_component(
+                        comp_name,
+                        input_data.get("function", ""),
+                        input_data.get("value", ""),
+                        input_data.get("package", ""),
+                        input_data.get("part_number", ""),
+                    )
 
         """
         # Attempt saving to the project file, if present
@@ -592,6 +629,48 @@ class ComponentPlacer(QObject):
         else:
             # Cancelled.
             return (None, None, 0, None)
+
+    def _prompt_bom_update(
+        self, comp_name: str, existing: Dict[str, str], new_data: Dict[str, str]
+    ) -> Optional[bool]:
+        """Ask the user how to handle BOM differences.
+
+        Returns ``True`` if the user wishes to update the BOM with ``new_data``,
+        ``False`` to keep the existing BOM entry unchanged and ``None`` if the
+        operation should be cancelled entirely.
+        """
+        fields = ["function", "value", "package", "part_number"]
+        diffs = []
+        for field in fields:
+            old = existing.get(field, "")
+            new = new_data.get(field, "")
+            if old != new:
+                diffs.append(f"{field}: BOM='{old}' | Input='{new}'")
+
+        if not diffs:
+            # No differences detected; nothing to update.
+            return False
+
+        msg = (
+            f"Component '{comp_name}' exists in BOM with different data:\n"
+            + "\n".join(diffs)
+            + "\nUpdate BOM with new values?"
+        )
+        msg_box = QMessageBox()
+        msg_box.setWindowTitle("BOM Mismatch")
+        msg_box.setText(msg)
+        update_btn = msg_box.addButton("Update BOM", QMessageBox.AcceptRole)
+        keep_btn = msg_box.addButton("Keep Existing", QMessageBox.RejectRole)
+        cancel_btn = msg_box.addButton("Cancel", QMessageBox.DestructiveRole)
+        msg_box.setDefaultButton(update_btn)
+        msg_box.exec_()
+
+        clicked = msg_box.clickedButton()
+        if clicked == update_btn:
+            return True
+        if clicked == keep_btn:
+            return False
+        return None
 
     @staticmethod
     def align_selected_pads(object_library, selected_pads, component_placer):
