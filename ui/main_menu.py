@@ -43,6 +43,7 @@ import edit_pads.actions as actions
 from ui.layers_tab import LayersTab
 from component_placer.bom_handler.bom_handler import BOMHandler
 from component_placer.quick_creation_controller import QuickCreationController
+from ui.measure_tool import MeasureTool
 from ui.start_dialog import StartDialog
 
 
@@ -116,6 +117,16 @@ class MainWindow(QMainWindow):
         self.addDockWidget(Qt.LeftDockWidgetArea, self.layers_dock)
 
         self.create_properties_dock()
+
+        # ─── Measurement Tool ───────────────────────────────────────────
+        self.measure_tool = MeasureTool(
+            board_view=self.board_view,
+            input_handler=self.input_handler,
+            marker_manager=self.board_view.marker_manager,
+            coord_converter=self.board_view.converter,
+            pad_info_label=self.pad_info_label,
+            properties_dock=self.properties_dock,
+        )
 
         # ─── Toolbar, Menus, Fonts ───────────────────────────────────────
         self.create_components_bar()
@@ -248,6 +259,26 @@ class MainWindow(QMainWindow):
         if isinstance(btn_qc, QToolButton):
             btn_qc.setIconSize(LARGE)
             btn_qc.setFixedSize(LARGE)
+
+        # ── Measurement action (big icon) ───────────────────────────────
+        measure_action = QAction(
+            self.style().standardIcon(QStyle.SP_ArrowRight),
+            self.tr("Measure"),
+            self,
+        )
+        measure_action.setToolTip(self.tr("Activate measurement mode"))
+        measure_action.triggered.connect(
+            lambda: (
+                self.quick_creation_controller.deactivate(),
+                self.measure_tool.activate(),
+            )
+        )
+        tb.addAction(measure_action)
+
+        btn_meas = tb.widgetForAction(measure_action)
+        if isinstance(btn_meas, QToolButton):
+            btn_meas.setIconSize(LARGE)
+            btn_meas.setFixedSize(LARGE)
 
         # final stretch so items stay left-aligned
         tb.addSeparator()
@@ -895,6 +926,7 @@ class MainWindow(QMainWindow):
             selected_pads,
             self.board_view.last_clicked_mm,
             self.board_view.flags.get_flag("side", "top"),
+            font_size=self.constants.get("pins_font_size", 14),
         )
         self.properties_dock.update_selected_pins_info(html)
         self.current_selected_pads = selected_pads
