@@ -34,6 +34,7 @@ class MeasureTool(QObject):
         self.state = 0  # 0=idle, 1=have A, 2=have A+B
         self.anchors = {"A": None, "B": None}
         self.lines = []
+        self._prev_label_html = ""
 
         self.input_handler.mouse_clicked.connect(self._on_click)
         self.board_view.installEventFilter(self)
@@ -70,6 +71,10 @@ class MeasureTool(QObject):
     def activate(self):
         if self.active:
             return
+        if self.properties_dock is not None:
+            self._prev_label_html = self.properties_dock.selected_pins_info_tab.toHtml()
+        else:
+            self._prev_label_html = self.pad_info_label.text()
         self.active = True
         self.state = 0
         self.anchors = {"A": None, "B": None}
@@ -85,7 +90,11 @@ class MeasureTool(QObject):
         self.marker_manager.clear_quick_anchors()
         self._clear_lines()
         self.board_view.unsetCursor()
-        self._update_labels(self.tr("No pad selected"))
+        if self._prev_label_html:
+            self._update_labels(self._prev_label_html)
+        else:
+            self._update_labels(self.tr("No pad selected"))
+        self._prev_label_html = ""
 
     # ------------------------------------------------------------------
     def _clear_lines(self):

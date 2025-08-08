@@ -922,6 +922,8 @@ class MainWindow(QMainWindow):
 
     def update_selected_pins_info(self, selected_pads):
         """Forward selected pads info to the Properties dock."""
+        if getattr(self, "measure_tool", None) and self.measure_tool.active:
+            return
         html = generate_selected_pins_html(
             selected_pads,
             self.board_view.last_clicked_mm,
