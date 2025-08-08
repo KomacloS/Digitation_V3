@@ -150,3 +150,51 @@ def test_connect_pads_reduces_existing_forced(monkeypatch):
     terminals = [o for o in obj_lib.updated if o.testability == "Terminal"]
     assert len(terminals) == 2
     assert all(o.channel in (2, 4) for o in terminals)
+
+
+def test_connect_pads_handles_pad_without_scene(monkeypatch):
+    """Pads detached from a scene should not cause errors when connecting."""
+
+    class PadWithoutScene(FakePadItem):
+        def __init__(self, board_object):
+            self.board_object = board_object
+            self._scene = None
+
+        def scene(self):
+            return self._scene
+
+    obj_lib = FakeObjectLibrary()
+
+    pad1 = PadWithoutScene(
+        BoardObject(
+            "C1",
+            1,
+            channel=1,
+            signal="S1",
+            width_mm=1,
+            height_mm=1,
+            testability="Terminal",
+        )
+    )
+    pad2 = FakePadItem(
+        BoardObject(
+            "C1",
+            2,
+            channel=2,
+            signal="S2",
+            width_mm=2,
+            height_mm=2,
+            testability="Forced",
+        )
+    )
+
+    seen_view = {}
+
+    def fake_update_scene(view):
+        seen_view["view"] = view
+
+    monkeypatch.setattr(actions, "_update_scene", fake_update_scene)
+
+    actions.connect_pads(obj_lib, [pad1, pad2])
+
+    assert seen_view["view"] is pad2.scene().views()[0]

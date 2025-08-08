@@ -491,7 +491,23 @@ def connect_pads(object_library, pad_items):
         obj.testability = "Forced" if obj.channel == forced_obj.channel else "Terminal"
 
     object_library.bulk_update_objects(all_updates, {})
-    _update_scene(valid_pad_items[0].scene().views()[0])
+
+    # Update the scene using the first pad item that still belongs to a scene.
+    # Some pad items might be detached (their ``scene()`` returns ``None``),
+    # which would previously raise an ``AttributeError`` when trying to access
+    # ``views()``. Iterate over the valid pad items until one with a scene and
+    # view is found.
+    board_view = None
+    for pad in valid_pad_items:
+        scene = pad.scene() if hasattr(pad, "scene") else None
+        if scene is not None:
+            views = scene.views()
+            if views:
+                board_view = views[0]
+                break
+
+    if board_view is not None:
+        _update_scene(board_view)
 
 
 def align_selected_pads(object_library, selected_pads, component_placer):
